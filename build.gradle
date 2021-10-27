@@ -6,6 +6,10 @@ task clean(type: Delete) {
 
 buildscript {
     ext {
-        compose_version = '1.0.1'
+        buildConfig = [
+                'compileSdk': 31,
+                'minSdk': 21,
+                'targetSdk': 31
+        ]
     }
 }
