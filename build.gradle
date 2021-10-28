@@ -26,6 +26,9 @@ buildscript {
 
 tasks.named("dependencyUpdates").configure {
     rejectVersionIf {
-        isNonStable(it.candidate.version)
+        def current = DependencyUpdates.versionToRelease(it.current)
+        if (current == ReleaseType.SNAPSHOT) return true
+        def candidate = DependencyUpdates.versionToRelease(it.candidate.version)
+        return candidate.isLessStableThan(current)
     }
 }

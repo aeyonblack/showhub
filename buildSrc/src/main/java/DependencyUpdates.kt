@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 import ReleaseType.*
 import java.util.*
 
@@ -13,6 +15,8 @@ enum class ReleaseType(private val level: Int) {
     BETA(20),
     RC(60),
     RELEASE(100);
+
+    fun isLessStableThan(other: ReleaseType): Boolean = level < other.level
 }
 
 /**
@@ -30,6 +34,7 @@ object DependencyUpdates {
     /**
      * Determines the release type of the given version
      */
+    @JvmStatic
     fun versionToRelease(version: String): ReleaseType {
         val uppercase = version.toUpperCase(Locale.ROOT)
         val stableKeyword = stableKeywords.any { uppercase.contains(it) }
