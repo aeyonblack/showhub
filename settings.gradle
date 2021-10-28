@@ -17,6 +17,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "Showhub"
 include ':app'
 

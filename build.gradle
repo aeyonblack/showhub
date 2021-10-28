@@ -4,6 +4,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+apply plugin: "com.github.ben-manes.versions"
+
 buildscript {
     ext {
         buildConfig = [
@@ -11,5 +13,19 @@ buildscript {
                 'minSdk': 21,
                 'targetSdk': 31
         ]
+        gradleDependencyUpdate = "0.39.0"
+    }
+    repositories {
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath libs.gradle.dependency.updates
+    }
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
     }
 }
