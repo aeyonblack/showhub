@@ -1,6 +1,8 @@
 name: Dependency Updates
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   build:
