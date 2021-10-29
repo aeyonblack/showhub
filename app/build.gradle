@@ -51,6 +51,7 @@ android {
     }
     testOptions {
         unitTests {
+            includeAndroidResources = true
             all {
                 useJUnitPlatform()
             }
