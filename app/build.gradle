@@ -1,6 +1,13 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
 }
 
 android {
@@ -66,6 +73,13 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.bundles.compose)
+
+    implementation(libs.hilt.library)
+    implementation(libs.androidx.hilt.compose)
+    kapt(libs.hilt.compiler)
+
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
 
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.test.junit)

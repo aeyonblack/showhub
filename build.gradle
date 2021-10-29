@@ -17,9 +17,14 @@ buildscript {
     }
     repositories {
         gradlePluginPortal()
+        google()
+        mavenCentral()
     }
 
     dependencies {
+        classpath libs.android.plugin.gradle
+        classpath libs.kotlin.plugin.gradle
+        classpath libs.hilt.plugin.gradle
         classpath libs.gradle.dependency.updates
     }
 }
