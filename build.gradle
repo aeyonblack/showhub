@@ -29,11 +29,21 @@ buildscript {
     }
 }
 
+/**
+ * Used to check for the stability of a gradle dependency and
+ * whether to accept it or not when performing automatic dependency
+ * checks and updates
+ */
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+
 tasks.named("dependencyUpdates").configure {
     rejectVersionIf {
-        def current = DependencyUpdates.versionToRelease(it.current)
-        if (current == ReleaseType.SNAPSHOT) return true
-        def candidate = DependencyUpdates.versionToRelease(it.candidate.version)
-        return candidate.isLessStableThan(current)
+        /*Reject a dependency if it is less stable than the current one*/
+        isNonStable(it.candidate.version)
     }
 }

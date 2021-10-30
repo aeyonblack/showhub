@@ -1,13 +1,8 @@
 @file:Suppress("unused")
 
-import ReleaseType.*
-import java.util.*
+import ReleaseType.RC
+import ReleaseType.RELEASE
 
-/**
- * Tells us what type of the dependency is being released
- * The level is the priority and the highest level is always preferred
- * We try to avoid low level releases by all means
- */
 enum class ReleaseType(private val level: Int) {
     SNAPSHOT(0),
     DEV(1),
@@ -16,13 +11,11 @@ enum class ReleaseType(private val level: Int) {
     RC(60),
     RELEASE(100);
 
+    fun isEqualOrMoreStableThan(other: ReleaseType): Boolean = level >= other.level
+
     fun isLessStableThan(other: ReleaseType): Boolean = level < other.level
 }
 
-/**
- * Checks if the current release is stable enough
- * to be integrated into the project
- */
 object DependencyUpdates {
     private val stableKeywords = arrayOf("RELEASE", "FINAL", "GA")
     private val releaseRegex = "^[0-9,.v-]+(-r)?$".toRegex(RegexOption.IGNORE_CASE)
@@ -31,22 +24,18 @@ object DependencyUpdates {
     private val alphaRegex = releaseKeywordRegex("alpha")
     private val devRegex = releaseKeywordRegex("dev")
 
-    /**
-     * Determines the release type of the given version
-     */
     @JvmStatic
     fun versionToRelease(version: String): ReleaseType {
-        val uppercase = version.toUpperCase(Locale.ROOT)
-        val stableKeyword = stableKeywords.any { uppercase.contains(it) }
+        val stableKeyword = stableKeywords.any { version.toUpperCase().contains(it) }
         if (stableKeyword) return RELEASE
 
         return when {
             releaseRegex.matches(version) -> RELEASE
             rcRegex.matches(version) -> RC
-            betaRegex.matches(version) -> BETA
-            alphaRegex.matches(version) -> ALPHA
-            devRegex.matches(version) -> DEV
-            else -> SNAPSHOT
+            betaRegex.matches(version) -> ReleaseType.BETA
+            alphaRegex.matches(version) -> ReleaseType.ALPHA
+            devRegex.matches(version) -> ReleaseType.DEV
+            else -> ReleaseType.SNAPSHOT
         }
     }
 
