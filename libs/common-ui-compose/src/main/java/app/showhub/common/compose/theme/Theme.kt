@@ -17,7 +17,7 @@ private val showhubDefault = darkColors(
     onSecondary = Color.Black,
     background = Color.Black,
     onBackground = Color.White,
-    surface = gray800,
+    surface = Color.Black,
     onSurface = Color.White
 )
 

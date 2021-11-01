@@ -38,3 +38,8 @@ val purple900 = Color(0xFF8400A4)
 fun Colors.compositedOnSurface(alpha: Float): Color {
     return onSurface.copy(alpha = alpha).compositeOver(surface)
 }
+
+@Composable
+fun Colors.compositedOnBackground(alpha: Float): Color {
+    return surface.copy(alpha = alpha).compositeOver(background)
+}
