@@ -1,5 +1,6 @@
 package app.showhub.common.compose.components
 
+import android.annotation.SuppressLint
 import androidx.annotation.FloatRange
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import kotlin.math.pow
  * @param numStops The number of color stops to draw in the gradient. Higher numbers result in
  * the higher visual quality at the cost of draw performance. Defaults to `16`.
  */
+@SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.drawForegroundGradientScrim(
     color: Color,
     decay: Float = 3.0f,

@@ -26,6 +26,9 @@ android {
 }
 
 dependencies {
+
+    api project(":libs:common-ui-resources")
+
     api(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.stdlib)

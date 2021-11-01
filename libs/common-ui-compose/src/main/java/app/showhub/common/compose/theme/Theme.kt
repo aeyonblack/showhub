@@ -25,7 +25,7 @@ private val showhubDefault = darkColors(
 fun ShowhubTheme(content: @Composable () -> Unit) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
-        color = Color.Transparent,
+        color = showhubDefault.background,
         darkIcons = false
     )
     val elevations = Elevations(card = 1.dp)
