@@ -68,6 +68,7 @@ compose-foundation-layout = { module = "androidx.compose.foundation:foundation-l
 compose-material-icons-ext = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 compose-ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
 compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding", version.ref = "compose" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose"}
 
 # ---------------------------------------ACCOMPANIST------------------------------------------------
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
@@ -142,6 +143,13 @@ compose = [
     "compose-ui-ui",
     "compose-material-material",
     "compose-ui-tooling-preview",
+    "compose-ui-ui-tooling",
+    "compose-foundation-foundation",
+    "compose-foundation-layout",
+    "compose-animation-animation",
+    "compose-material-icons-ext",
+    "compose-ui-util",
+    "compose-runtime"
 ]
 
 [plugins]

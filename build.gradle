@@ -30,6 +30,17 @@ buildscript {
 }
 
 /**
+ * Target Java 11 for compiling all modules
+ */
+subprojects {
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+}
+
+/**
  * Used to check for the stability of a gradle dependency and
  * whether to accept it or not when performing automatic dependency
  * checks and updates

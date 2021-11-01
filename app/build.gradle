@@ -42,9 +42,6 @@ android {
         abortOnError true
         checkDependencies true
     }
-    kotlinOptions {
-        jvmTarget = '11'
-    }
     buildFeatures {
         compose true
     }
