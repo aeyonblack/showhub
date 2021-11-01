@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package app.showhub.common.compose.theme
 
 import androidx.compose.material.Colors

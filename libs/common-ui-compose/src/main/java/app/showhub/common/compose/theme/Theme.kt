@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val showhubDefault = darkColors(
     primary = pink500,
@@ -22,6 +23,11 @@ private val showhubDefault = darkColors(
 
 @Composable
 fun ShowhubTheme(content: @Composable () -> Unit) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(
+        color = showhubDefault.background,
+        darkIcons = false
+    )
     val elevations = Elevations(card = 1.dp)
     CompositionLocalProvider(LocalElevations provides elevations) {
         MaterialTheme(

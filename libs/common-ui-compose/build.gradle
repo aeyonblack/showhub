@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.androidx.paging.compose)
     implementation(libs.coil.compose)
+    implementation(libs.accompanist.system.ui.controller)
 
     api(libs.accompanist.insets)
     api(libs.accompanist.insetsui)

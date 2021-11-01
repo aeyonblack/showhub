@@ -71,6 +71,7 @@ compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding", versio
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose"}
 
 # ---------------------------------------ACCOMPANIST------------------------------------------------
+accompanist-system-ui-controller = {module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist"}
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
 accompanist-insets = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanist" }
 accompanist-insetsui = { module = "com.google.accompanist:accompanist-insets-ui", version.ref = "accompanist" }
