@@ -66,7 +66,7 @@ android {
 dependencies {
 
     implementation project(":libs:common-ui-compose")
-    api project(":libs:common-ui-resources") // should remove this later
+    api project(":libs:common-ui-resources") // TODO should remove this later
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
