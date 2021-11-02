@@ -4,6 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.tanya.showhub.extensions.addAboutTopLevel
+import com.tanya.showhub.extensions.addHomeTopLevel
+import com.tanya.showhub.extensions.addLibraryTopLevel
+import com.tanya.showhub.extensions.addSearchTopLevel
 
 /**
  * Top level destinations that can be accessed
@@ -20,7 +24,7 @@ sealed class Screen(val route: String) {
  * Destinations that can only be reached from a top level
  * destination or other leaf destinations
  */
-sealed class LeafScreen(val route: String) {
+sealed class LeafScreen(private val route: String) {
     fun createRoute(root: Screen) = "${root.route}/$route"
 
     object Home: LeafScreen("home")
@@ -43,7 +47,10 @@ internal fun AppNavigation(
         startDestination = Screen.Home.route,
         modifier = modifier
     ) {
-
+        addHomeTopLevel(navHostController)
+        addSearchTopLevel(navHostController)
+        addLibraryTopLevel(navHostController)
+        addAboutTopLevel(navHostController)
     }
 }
 

@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
 
 @Composable
-fun AppBar() {
+fun AppBar(
+    title: String
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -26,7 +28,7 @@ fun AppBar() {
             .statusBarsPadding()
     ) {
         Text(
-            text = "Hey there!",
+            text = title,
             style = MaterialTheme.typography.h5,
             modifier = Modifier.padding(16.dp)
         )

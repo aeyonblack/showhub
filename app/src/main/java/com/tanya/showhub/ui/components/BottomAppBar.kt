@@ -3,23 +3,23 @@ package com.tanya.showhub.ui.components
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
-import app.showhub.common.compose.theme.compositedOnBackground
-import app.showhub.common.compose.theme.pink500
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.google.accompanist.insets.navigationBarsPadding
 import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.NavigationItem
-import java.util.*
 
 
 @Composable
 internal fun BottomNavBar(
-    selectedNavigation: Screen
+    selectedNavigation: Screen,
+    onNavigationSelected: (Screen) -> Unit
 ) {
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.surface,
@@ -39,8 +39,9 @@ internal fun BottomNavBar(
                         )
                 },
                 selected = selected,
-                //unselectedContentColor = MaterialTheme.colors.onSurface,
-                onClick = {/*TODO*/},
+                onClick = {
+                    onNavigationSelected(it.screen)
+                },
                 modifier = Modifier.navigationBarsPadding()
             )
         }
@@ -69,4 +70,36 @@ private fun NavigationItemIcon(
             modifier = if (selected) Modifier.alpha(1f) else Modifier.alpha(0.8f)
         )
     }
+}
+
+@Stable
+@Composable
+fun NavController.currentScreenAsState(): State<Screen> {
+    val selectedItem = remember { mutableStateOf<Screen>(Screen.Home) }
+
+    DisposableEffect(this) {
+        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+            when {
+                destination.hierarchy.any { it.route == Screen.Home.route } -> {
+                    selectedItem.value = Screen.Home
+                }
+                destination.hierarchy.any { it.route == Screen.Search.route } -> {
+                    selectedItem.value = Screen.Search
+                }
+                destination.hierarchy.any { it.route == Screen.Library.route } -> {
+                    selectedItem.value = Screen.Library
+                }
+                destination.hierarchy.any { it.route == Screen.About.route } -> {
+                    selectedItem.value = Screen.About
+                }
+            }
+        }
+        addOnDestinationChangedListener(listener)
+
+        onDispose {
+            removeOnDestinationChangedListener(listener)
+        }
+    }
+
+    return selectedItem
 }
