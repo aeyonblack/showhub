@@ -9,7 +9,7 @@ import app.showhub.common.compose.components.AppBar
 @Composable
 internal fun Home() {
     Scaffold(
-        topBar = { AppBar("Hey, there!")},
+        topBar = { AppBar("What's new?")},
         modifier = Modifier.fillMaxSize()
     ) {
     }
