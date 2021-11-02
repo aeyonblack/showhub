@@ -8,9 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import app.showhub.common.compose.theme.compositedOnBackground
+import app.showhub.common.compose.theme.pink500
+import com.google.accompanist.insets.navigationBarsPadding
 import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.NavigationItem
+import java.util.*
 
 
 @Composable
@@ -18,7 +22,7 @@ internal fun BottomNavBar(
     selectedNavigation: Screen
 ) {
     BottomNavigation(
-        backgroundColor = MaterialTheme.colors.compositedOnBackground(alpha = 1f),
+        backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -28,9 +32,16 @@ internal fun BottomNavBar(
                 icon = {
                        NavigationItemIcon(item = it, selected = selected)
                 },
-                label = { Text(text = stringResource(id = it.labelResId))},
+                label = {
+                        Text(
+                            text = stringResource(id = it.labelResId),
+                            fontSize = 10.sp
+                        )
+                },
                 selected = selected,
-                onClick = {/*TODO*/}
+                //unselectedContentColor = MaterialTheme.colors.onSurface,
+                onClick = {/*TODO*/},
+                modifier = Modifier.navigationBarsPadding()
             )
         }
     }
@@ -48,14 +59,14 @@ private fun NavigationItemIcon(
             Icon(
                 painter = if (it) selectedPainter else painter,
                 contentDescription = null,
-                modifier = if (it) Modifier.alpha(1f) else Modifier.alpha(0.6f)
+                modifier = if (it) Modifier.alpha(1f) else Modifier.alpha(0.8f)
             )
         }
     } else {
         Icon(
             painter = painter,
             contentDescription = null,
-            modifier = if (selected) Modifier.alpha(1f) else Modifier.alpha(0.6f)
+            modifier = if (selected) Modifier.alpha(1f) else Modifier.alpha(0.8f)
         )
     }
 }

@@ -9,64 +9,66 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.tanya.common.ui.resources.R.font
 
-private val fonts = FontFamily(
-    Font(font.rubik_regular),
-    Font(font.rubik_medium, FontWeight.W500),
-    Font(font.rubik_bold, FontWeight.Bold)
+private val quickSand = FontFamily(
+    Font(font.quicksand_light, FontWeight.W300),
+    Font(font.quicksand_regular, FontWeight.W400),
+    Font(font.quicksand_medium, FontWeight.W500),
+    Font(font.quicksand_semibold, FontWeight.W600),
+    Font(font.quicksand_bold, FontWeight.W700),
 )
 
 val typography = typographyFromDefaults(
     h1 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Bold
     ),
     h2 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Bold
     ),
     h3 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Bold
     ),
     h4 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Bold,
         lineHeight = 40.sp
     ),
     h5 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Bold
     ),
     h6 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.W500,
         lineHeight = 28.sp
     ),
     subtitle1 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.W500,
         lineHeight = 22.sp
     ),
     subtitle2 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.W500
     ),
     body1 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Normal,
         lineHeight = 28.sp
     ),
     body2 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Normal,
         lineHeight = 16.sp
     ),
     button = TextStyle(
-        fontFamily = fonts,
+        fontFamily = quickSand,
         fontWeight = FontWeight.Bold
     ),
     caption = TextStyle(
-        fontFamily = fonts
+        fontFamily = quickSand
     ),
     overline = TextStyle(
         letterSpacing = 0.08.em
