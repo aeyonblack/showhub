@@ -37,7 +37,7 @@ val typography = typographyFromDefaults(
     ),
     h5 = TextStyle(
         fontFamily = quickSand,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.W700
     ),
     h6 = TextStyle(
         fontFamily = quickSand,

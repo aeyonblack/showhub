@@ -39,11 +39,6 @@ fun AppBar(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             IconButton(
-                /*modifier = Modifier.padding(
-                    top = 16.dp,
-                    bottom = 16.dp,
-                    end = 8.dp
-                ),*/
                 onClick = { /*TODO*/ }
             ) {
                 Icon(
