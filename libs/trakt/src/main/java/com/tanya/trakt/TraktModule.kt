@@ -1,29 +1,23 @@
-package com.tanya.tmdb
+package com.tanya.trakt
 
-import com.uwetrottmann.tmdb2.Tmdb
+import com.uwetrottmann.trakt5.TraktV2
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit.SECONDS
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.*
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object TmdbModule {
+object TraktModule {
 
-    @Provides
-    fun provideTmdbImageUrlProvider(tmdbManager: TmdbManager) =
-        tmdbManager.getLatestImageProvider()
-
-    @Singleton
-    @Provides
-    fun provideTmdb(
+    fun provideTrakt(
         client: OkHttpClient,
-        @Named("tmdb-api") apiKey: String
-    ) = object : Tmdb(apiKey) {
+        @Named("trakt-client-id") clientId: String,
+        @Named("trakt-client-secret") clientSecret: String
+    ) = object : TraktV2(clientId, clientSecret, "TODO") {
         override fun okHttpClient() =
             client.newBuilder().apply {
                 setOkHttpClientDefaults(this)

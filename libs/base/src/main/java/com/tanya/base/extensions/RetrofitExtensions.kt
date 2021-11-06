@@ -28,6 +28,7 @@ suspend inline fun <T> Call<T>.executeWithRetry(
         try {
             // Clone a new ready call if needed
             val call = if (isExecuted) clone() else this
+            @Suppress("BlockingMethodInNonBlockingContext")
             return call.execute()
         } catch (e: Exception) {
             // The response failed, so lets see if we should retry again

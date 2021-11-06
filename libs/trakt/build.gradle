@@ -1,0 +1,20 @@
+plugins {
+    id 'kotlin'
+    id 'kotlin-kapt'
+}
+
+dependencies {
+    api(libs.traktJava) {
+        exclude group: 'org.threeten', module: 'threetenbp'
+    }
+    api("org.threeten:threetenbp:${libs.versions.threetenbp.get()}:no-tzdb")
+
+    api project(":libs:base")
+
+    implementation(libs.okhttp.okhttp)
+    implementation(libs.retrofit.retrofit)
+    implementation(libs.retrofit.gsonConverter)
+
+    kapt(libs.hilt.compiler)
+}
+
