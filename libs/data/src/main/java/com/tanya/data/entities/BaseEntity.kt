@@ -1,6 +1,6 @@
 package com.tanya.data.entities
 
-interface ShowhubEntity {
+interface BaseEntity {
     val id: Long
 }
 
