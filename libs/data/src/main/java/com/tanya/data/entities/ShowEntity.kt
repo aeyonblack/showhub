@@ -1,17 +1,12 @@
 package com.tanya.data.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalTime
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 
-/**
- * Room database entity for saving shows
- */
+
 @Entity(
     tableName = "shows",
     indices = [
@@ -43,4 +38,12 @@ data class ShowEntity(
     @ColumnInfo(name = "airs_day") val airsDay: DayOfWeek? = null,
     @ColumnInfo(name = "airs_time") val airsTime: LocalTime? = null,
     @ColumnInfo(name = "airs_tz") val airsTimeZoneId: ZoneId? = null
-): BaseEntity, TraktIdEntity, TmdbIdEntity
+): BaseEntity, TraktIdEntity, TmdbIdEntity {
+
+    @Ignore
+    constructor() : this(0)
+
+    companion object {
+        val EMPTY_SHOW = ShowEntity()
+    }
+}
