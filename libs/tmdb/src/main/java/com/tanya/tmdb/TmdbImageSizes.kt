@@ -1,4 +1,4 @@
 package com.tanya.tmdb
 
-class MyClass {
+object TmdbImageSizes {
 }
