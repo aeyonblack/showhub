@@ -10,6 +10,12 @@ kapt {
     useBuildCache = true
 }
 
+/**
+ * Used to access hidden api keys
+ */
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdk buildConfig.compileSdk
 
@@ -24,6 +30,20 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField("String",
+                "TMDB_API_KEY",
+                localProperties['tmdb_api_key'])
+        buildConfigField(
+                "String",
+                "TRACKT_CLIENT_ID",
+                localProperties['trakt_client_id']
+        )
+        buildConfigField(
+                "String",
+                "TRACKT_CLIENT_SECRET",
+                localProperties['trakt_client_secret']
+        )
     }
 
     buildTypes {

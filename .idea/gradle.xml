@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/libs" />
             <option value="$PROJECT_DIR$/libs/common-ui-compose" />
             <option value="$PROJECT_DIR$/libs/common-ui-resources" />
+            <option value="$PROJECT_DIR$/libs/tmdb" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,0 +1,22 @@
+plugins {
+    id 'kotlin'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
+}
+
+dependencies {
+
+    api(libs.tmdbJava) {
+        exclude group: 'org.threeten', module: 'threetenbp'
+    }
+
+    api("org.threeten:threetenbp:${libs.versions.threetenbp.get()}:no-tzdb")
+
+    implementation(libs.okhttp.okhttp)
+
+    kapt(libs.hilt.compiler)
+}

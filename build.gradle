@@ -51,7 +51,10 @@ def isNonStable = { String version ->
     return !stableKeyword && !(version ==~ regex)
 }
 
-
+/**
+ * Configure the dependency updates task which is executed
+ * by the scheduled github actions workflow
+ */
 tasks.named("dependencyUpdates").configure {
     rejectVersionIf {
         /*Reject a dependency if it is less stable than the current one*/
