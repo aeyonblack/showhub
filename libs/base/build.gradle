@@ -1,0 +1,12 @@
+plugins {
+    id 'kotlin'
+}
+
+dependencies {
+    api(libs.kotlin.stdlib)
+    api(libs.kotlin.coroutines.core)
+    api(libs.hilt.library)
+    api(libs.retrofit.retrofit)
+    api(libs.okhttp.loggingInterceptor)
+}
+
