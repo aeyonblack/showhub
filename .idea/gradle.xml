@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/libs/base" />
             <option value="$PROJECT_DIR$/libs/common-ui-compose" />
             <option value="$PROJECT_DIR$/libs/common-ui-resources" />
+            <option value="$PROJECT_DIR$/libs/data" />
             <option value="$PROJECT_DIR$/libs/tmdb" />
             <option value="$PROJECT_DIR$/libs/trakt" />
           </set>
