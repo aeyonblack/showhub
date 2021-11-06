@@ -6,14 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.showhub.common.compose.components.AppBar
 
-@Composable
-internal fun Home() {
-    Scaffold(
-        topBar = { AppBar("What's new?")},
-        modifier = Modifier.fillMaxSize()
-    ) {
-    }
-}
 
 @Composable
 internal fun Search() {

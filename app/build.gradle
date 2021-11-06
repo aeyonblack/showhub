@@ -65,6 +65,8 @@ android {
 
 dependencies {
 
+    implementation project(":features:ui-home")
+    
     implementation project(":libs:common-ui-compose")
 
     implementation(libs.androidx.core)

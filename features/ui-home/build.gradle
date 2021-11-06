@@ -5,6 +5,11 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
+}
+
 android {
     compileSdk buildConfig.compileSdk
 
@@ -25,6 +30,8 @@ android {
 }
 
 dependencies {
+
+    implementation project(":libs:common-ui-compose")
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
