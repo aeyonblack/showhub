@@ -1,4 +1,10 @@
 package com.tanya.tmdb
 
-class TmdbManager {
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class TmdbManager @Inject constructor(
+) {
+
 }
