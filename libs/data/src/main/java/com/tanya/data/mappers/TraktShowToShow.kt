@@ -12,5 +12,14 @@ class TraktShowToShow @Inject constructor(
         traktId = from.ids?.trakt,
         tmdbId = from.ids?.tmdb,
         imdbId = from.ids?.imdb,
+        title = from.title,
+        summary = from.overview,
+        homepage = from.homepage,
+        traktRating = from.rating?.toFloat(),
+        traktVotes = from.votes,
+        certification = from.certification,
+        runtime = from.runtime,
+        network = from.network,
+        country = from.country,
     )
 }
