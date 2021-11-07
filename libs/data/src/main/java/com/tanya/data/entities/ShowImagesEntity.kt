@@ -23,7 +23,7 @@ import androidx.room.*
 data class ShowImagesEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") override val id: Long = 0,
-    @ColumnInfo(name = "showId") val showId: Long,
+    @ColumnInfo(name = "show_id") val showId: Long,
     @ColumnInfo(name = "path") override val path: String,
     @ColumnInfo(name = "type") override val type: ImageType,
     @ColumnInfo(name = "lang") override val language: String?,
