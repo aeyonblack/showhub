@@ -18,7 +18,7 @@ data class ShowEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
     @ColumnInfo(name = "trakt_id") override val traktId: Int? = null,
     @ColumnInfo(name = "tmdb_id") override val tmdbId: Int? = null,
-    @ColumnInfo(name = "imdb_id") val imdbId: Int? = null,
+    @ColumnInfo(name = "imdb_id") val imdbId: String? = null,
     @ColumnInfo(name = "title") val title: String? = null,
     @ColumnInfo(name = "original_title") val originalTitle: String? = null,
     @ColumnInfo(name = "overview") val summary: String? = null,
