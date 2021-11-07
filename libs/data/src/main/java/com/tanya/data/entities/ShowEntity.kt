@@ -15,8 +15,7 @@ import org.threeten.bp.ZoneId
     ]
 )
 data class ShowEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") override val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
     @ColumnInfo(name = "trakt_id") override val traktId: Int? = null,
     @ColumnInfo(name = "tmdb_id") override val tmdbId: Int? = null,
     @ColumnInfo(name = "imdb_id") val imdbId: Int? = null,
