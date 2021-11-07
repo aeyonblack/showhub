@@ -26,7 +26,7 @@ data class ShowImagesEntity(
     @ColumnInfo(name = "show_id") val showId: Long,
     @ColumnInfo(name = "path") override val path: String,
     @ColumnInfo(name = "type") override val type: ImageType,
-    @ColumnInfo(name = "lang") override val language: String?,
+    @ColumnInfo(name = "lang") override val language: String? = null,
     @ColumnInfo(name = "rating") override val rating: Float = 0f,
     @ColumnInfo(name = "is_primary") override val isPrimary: Boolean = false
 ): BaseEntity, TmdbImageEntity
