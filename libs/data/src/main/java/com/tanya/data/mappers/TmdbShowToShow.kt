@@ -5,6 +5,9 @@ import com.uwetrottmann.tmdb2.entities.TvShow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map a Tmdb [TvShow] from the Tmdb API to our local [ShowEntity]
+ */
 @Singleton
 class TmdbShowToShow @Inject constructor() : Mapper<TvShow, ShowEntity> {
     override suspend fun map(from: TvShow) = ShowEntity(

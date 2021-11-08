@@ -5,6 +5,9 @@ import com.uwetrottmann.trakt5.entities.Show
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Map A Trakt [Show] from the trakt5 API to our local [ShowEntity]
+ */
 @Singleton
 class TraktShowToShow @Inject constructor(
 ) : Mapper<Show, ShowEntity> {
