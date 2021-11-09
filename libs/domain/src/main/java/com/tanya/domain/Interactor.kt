@@ -30,3 +30,13 @@ abstract class Interactor<in P> {
 
     protected abstract suspend fun doWork(params: P)
 }
+
+abstract class ResultInteractor<in P, R> {
+    operator fun invoke(params: P) = flow {
+        emit(doWork(params))
+    }
+
+    suspend fun executeSync(params: P) = doWork(params)
+
+    protected abstract suspend fun doWork(params: P): R
+}
