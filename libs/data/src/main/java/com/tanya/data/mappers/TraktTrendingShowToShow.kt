@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Map a Trakt Trending [Show] from the Trakt library to our local [ShowEntity]
+ * Map a Trakt [TrendingShow] from the Trakt library to our local [ShowEntity]
  */
 @Singleton
 class TraktTrendingShowToShow @Inject constructor(
