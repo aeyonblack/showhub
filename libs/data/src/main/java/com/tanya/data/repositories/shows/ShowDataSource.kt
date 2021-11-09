@@ -1,5 +1,6 @@
 package com.tanya.data.repositories.shows
 
+import com.tanya.base.data.entities.Result
 import com.tanya.data.entities.ShowEntity
 
 interface ShowDataSource {

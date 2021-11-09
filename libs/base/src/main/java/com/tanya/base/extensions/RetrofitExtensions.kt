@@ -1,5 +1,8 @@
 package com.tanya.base.extensions
 
+import com.tanya.base.data.entities.ErrorResult
+import com.tanya.base.data.entities.Result
+import com.tanya.base.data.entities.Success
 import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.HttpException
@@ -63,3 +66,20 @@ suspend inline fun <T> Call<T>.fetchBodyWithRetry(
     maxAttempts: Int = 3,
     shouldRetry: (Exception) -> Boolean = ::defaultShouldRetry
 ) = executeWithRetry(firstDelay, maxAttempts, shouldRetry).bodyOrThrow()
+
+fun <T> Response<T>.toException() = HttpException(this)
+
+fun <T> Response<T>.isFromNetwork(): Boolean {
+    return raw().cacheResponse == null
+}
+
+@Suppress("REDUNDANT_INLINE_SUSPEND_FUNCTION_TYPE")
+suspend fun <T, E> Response<T>.toResult(mapper: suspend (T) -> E): Result<E> = try {
+    if (isSuccessful) {
+        Success(data = mapper(bodyOrThrow()), responseModified = isFromNetwork())
+    } else {
+        ErrorResult(toException())
+    }
+} catch (e: Exception) {
+    ErrorResult(e)
+}
