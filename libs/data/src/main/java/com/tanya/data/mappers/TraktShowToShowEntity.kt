@@ -9,7 +9,7 @@ import javax.inject.Singleton
  * Map A Trakt [Show] from the trakt5 API to our local [ShowEntity]
  */
 @Singleton
-class TraktShowToShow @Inject constructor(
+class TraktShowToShowEntity @Inject constructor(
 ) : Mapper<Show, ShowEntity> {
     override suspend fun map(from: Show) = ShowEntity(
         traktId = from.ids?.trakt,

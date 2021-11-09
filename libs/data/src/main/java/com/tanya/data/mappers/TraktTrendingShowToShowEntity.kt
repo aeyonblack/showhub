@@ -9,8 +9,8 @@ import javax.inject.Singleton
  * Map a Trakt [TrendingShow] from the Trakt library to our local [ShowEntity]
  */
 @Singleton
-class TraktTrendingShowToShow @Inject constructor(
-    private val showMapper: TraktShowToShow
+class TraktTrendingShowToShowEntity @Inject constructor(
+    private val showEntityMapper: TraktShowToShowEntity
 ) : Mapper<TrendingShow, ShowEntity> {
-    override suspend fun map(from: TrendingShow) = showMapper.map(from.show!!)
+    override suspend fun map(from: TrendingShow) = showEntityMapper.map(from.show!!)
 }
