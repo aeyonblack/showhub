@@ -4,11 +4,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.tanya.base.base.InvokeError
 import com.tanya.base.base.InvokeStarted
-import com.tanya.base.base.InvokeStatus
 import com.tanya.base.base.InvokeSuccess
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withTimeout
 import java.util.concurrent.TimeUnit
 
@@ -50,6 +49,30 @@ abstract class PagingInteractor<P : PagingInteractor.Parameters<T>, T : Any>
         }
 }
 
-abstract class SubjectInteractor<P : Any, T> {
+abstract class SuspendingWorkInteractor<P: Any, T> : SubjectInteractor<P,T>() {
+    override fun createObservable(params: P) = flow {
+        emit(doWork(params))
+    }
 
+    abstract suspend fun doWork(params: P): T
+}
+
+abstract class SubjectInteractor<P : Any, T> {
+    private val paramState = MutableSharedFlow<P>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    @ExperimentalCoroutinesApi
+    val flow = paramState
+        .distinctUntilChanged()
+        .flatMapLatest { createObservable(it) }
+        .distinctUntilChanged()
+
+    operator fun invoke(params: P) {
+        paramState.tryEmit(params)
+    }
+
+    protected abstract fun createObservable(params: P): Flow<T>
 }
