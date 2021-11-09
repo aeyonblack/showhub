@@ -1,5 +1,7 @@
 package com.tanya.domain
 
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.tanya.base.base.InvokeError
 import com.tanya.base.base.InvokeStarted
 import com.tanya.base.base.InvokeStatus
@@ -39,4 +41,15 @@ abstract class ResultInteractor<in P, R> {
     suspend fun executeSync(params: P) = doWork(params)
 
     protected abstract suspend fun doWork(params: P): R
+}
+
+abstract class PagingInteractor<P : PagingInteractor.Parameters<T>, T : Any>
+    : SubjectInteractor<P, PagingData<T>>() {
+        interface Parameters<T:Any> {
+            val pagingConfig: PagingConfig
+        }
+}
+
+abstract class SubjectInteractor<P : Any, T> {
+
 }
