@@ -48,7 +48,7 @@ class TmdbImagesToShowImages @Inject constructor() : Mapper<TvShow, List<ShowIma
             }
         }
 
-        /*return the result containing images*/
+        /*return a non empty result collection containing images*/
         return results
     }
 
