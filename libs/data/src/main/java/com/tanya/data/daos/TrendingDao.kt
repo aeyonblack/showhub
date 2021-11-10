@@ -17,7 +17,7 @@ abstract class TrendingDao : PaginatedEntryDao<TrendingShowEntity, TrendingEntry
 
     @Transaction
     @Query("SELECT * FROM trending_shows ORDER BY page ASC, watchers DESC, id ASC LIMIT :count OFFSET :offset")
-    abstract fun entriesObservable(count: Int, offset: Int): Flow<List<TrendingShowEntity>>
+    abstract fun entriesObservable(count: Int, offset: Int): Flow<List<TrendingEntryWithShow>>
 
     @Transaction
     @Query("SELECT * FROM trending_shows ORDER BY page ASC, watchers DESC, id ASC")
