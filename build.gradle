@@ -30,12 +30,16 @@ buildscript {
 }
 
 /**
- * Target Java 11 for compiling all modules
+ * Target Java 11 for compiling all modules and
+ * enable experimental kotlin coroutines
  */
 subprojects {
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         kotlinOptions {
             jvmTarget = "11"
+            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
+            freeCompilerArgs += "-Xopt-in=kotlin.Experimental"
         }
     }
 }
