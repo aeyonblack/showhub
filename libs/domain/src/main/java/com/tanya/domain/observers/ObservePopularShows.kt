@@ -14,6 +14,6 @@ class ObservePopularShows @Inject constructor(
         params: ObservePopularShows.Params
     ): Flow<List<PopularEntryWithShow>> =
         popularShowsRepository.entriesObservable(params.count, 0)
-
+    
     data class Params(val count: Int  = 20)
 }
