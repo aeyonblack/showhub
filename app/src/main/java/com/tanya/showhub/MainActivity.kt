@@ -15,7 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import app.showhub.common.compose.theme.ShowhubTheme
 import com.tanya.showhub.ui.components.BottomNavBar
 import com.tanya.showhub.ui.components.currentScreenAsState
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
