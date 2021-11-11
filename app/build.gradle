@@ -36,12 +36,12 @@ android {
                 localProperties['tmdb_api_key'])
         buildConfigField(
                 "String",
-                "TRACKT_CLIENT_ID",
+                "TRAKT_CLIENT_ID",
                 localProperties['trakt_client_id']
         )
         buildConfigField(
                 "String",
-                "TRACKT_CLIENT_SECRET",
+                "TRAKT_CLIENT_SECRET",
                 localProperties['trakt_client_secret']
         )
     }
@@ -85,9 +85,17 @@ android {
 
 dependencies {
 
-    implementation project(":features:ui-home")
-    
+    implementation project(":libs:base")
+    implementation project(":libs:base-android")
+    implementation project(":libs:data")
+    implementation project(":libs:data-android")
+    implementation project(":libs:domain")
+    implementation project(":libs:trakt")
+    implementation project(":libs:tmdb")
+    implementation project(":libs:common-ui-view")
     implementation project(":libs:common-ui-compose")
+
+    implementation project(":features:ui-home")
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)

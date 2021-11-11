@@ -15,6 +15,7 @@ coil = "1.4.0"
 retrofit = "2.9.0"
 okhttp = "4.9.2"
 threetenbp = "1.5.1"
+dagger = "2.39.1"
 
 [libraries]
 # ---------------------------------------ANDROIDX---------------------------------------------------
@@ -117,6 +118,10 @@ hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.re
 hilt-library = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
 hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt"}
 hilt-plugin-gradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt"}
+
+#-----------------------------------------DAGGER----------------------------------------------------
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 
 # ---------------------------------------utilities--------------------------------------------------
 gradle-dependency-updates = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleDependencyUpdates"}

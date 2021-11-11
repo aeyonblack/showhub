@@ -3,11 +3,8 @@ package com.tanya.trakt
 import com.uwetrottmann.trakt5.TraktV2
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
 object TraktServiceModule {
 
     @Provides

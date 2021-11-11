@@ -15,6 +15,6 @@ dependencies {
     implementation(libs.retrofit.retrofit)
     implementation(libs.retrofit.gsonConverter)
 
-    kapt(libs.hilt.compiler)
+    kapt(libs.dagger.compiler)
 }
 

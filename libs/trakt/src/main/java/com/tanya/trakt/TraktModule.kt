@@ -2,17 +2,17 @@ package com.tanya.trakt
 
 import com.uwetrottmann.trakt5.TraktV2
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.Provides
 import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Named
+import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Module(includes = [TraktServiceModule::class])
 object TraktModule {
 
+    @Singleton
+    @Provides
     fun provideTrakt(
         client: OkHttpClient,
         @Named("trakt-client-id") clientId: String,

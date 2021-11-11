@@ -20,5 +20,5 @@ dependencies {
 
     implementation(libs.okhttp.okhttp)
 
-    kapt(libs.hilt.compiler)
+    kapt(libs.dagger.compiler)
 }

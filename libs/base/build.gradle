@@ -1,11 +1,18 @@
 plugins {
+/*    id 'java-library'*/
     id 'kotlin'
+   /* id 'org.jetbrains.kotlin.jvm'*/
 }
+
+/*java {
+    sourceCompatibility(JavaVersion.VERSION_11)
+    targetCompatibility(JavaVersion.VERSION_11)
+}*/
 
 dependencies {
     api(libs.kotlin.stdlib)
     api(libs.kotlin.coroutines.core)
-    api(libs.hilt.library)
+    api(libs.dagger.dagger)
     api(libs.retrofit.retrofit)
     api(libs.okhttp.loggingInterceptor)
 }

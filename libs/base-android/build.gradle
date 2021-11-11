@@ -5,8 +5,8 @@ plugins {
 }
 
 kapt {
-    correctErrorTypes = true
     useBuildCache = true
+    correctErrorTypes = true
 }
 
 android {
@@ -23,13 +23,13 @@ android {
 }
 
 dependencies {
-    api project(":libs:base")
-    implementation project(":libs:base-android")
-    implementation project(":libs:data")
+    api project(':libs:base')
+    implementation project(':libs:data')
 
-    implementation(libs.androidx.core)
-    implementation(libs.threeTenAbp)
+    implementation libs.androidx.core
 
-    implementation(libs.hilt.library)
-    kapt(libs.hilt.compiler)
+    implementation libs.threeTenAbp
+
+    implementation libs.hilt.library
+    kapt libs.hilt.compiler
 }

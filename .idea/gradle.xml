@@ -16,12 +16,14 @@
             <option value="$PROJECT_DIR$/features/ui-home" />
             <option value="$PROJECT_DIR$/libs" />
             <option value="$PROJECT_DIR$/libs/base" />
+            <option value="$PROJECT_DIR$/libs/base-android" />
             <option value="$PROJECT_DIR$/libs/common-ui-compose" />
             <option value="$PROJECT_DIR$/libs/common-ui-resources" />
             <option value="$PROJECT_DIR$/libs/common-ui-view" />
             <option value="$PROJECT_DIR$/libs/data" />
             <option value="$PROJECT_DIR$/libs/data-android" />
             <option value="$PROJECT_DIR$/libs/domain" />
+            <option value="$PROJECT_DIR$/libs/lib" />
             <option value="$PROJECT_DIR$/libs/tmdb" />
             <option value="$PROJECT_DIR$/libs/trakt" />
           </set>

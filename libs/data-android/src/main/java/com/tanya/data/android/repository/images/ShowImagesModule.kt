@@ -21,6 +21,8 @@ import javax.inject.Singleton
 
 typealias ShowImagesStore = Store<Long, List<ShowImagesEntity>>
 
+@Module
+@InstallIn(SingletonComponent::class)
 internal abstract class ShowDataSourceBinds {
     @Binds
     @Tmdb

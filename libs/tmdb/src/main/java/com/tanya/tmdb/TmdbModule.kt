@@ -3,15 +3,12 @@ package com.tanya.tmdb
 import com.uwetrottmann.tmdb2.Tmdb
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 object TmdbModule {
 
     @Provides
