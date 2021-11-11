@@ -34,6 +34,7 @@ dependencies {
     implementation project(":libs:base")
     implementation project(":libs:domain")
     implementation project(":libs:common-ui-compose")
+    implementation project(":libs:common-ui-view")
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
@@ -42,4 +43,5 @@ dependencies {
     implementation(libs.androidx.hilt.compose)
     implementation(libs.hilt.library)
     kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
 }
