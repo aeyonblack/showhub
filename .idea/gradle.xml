@@ -23,7 +23,6 @@
             <option value="$PROJECT_DIR$/libs/data" />
             <option value="$PROJECT_DIR$/libs/data-android" />
             <option value="$PROJECT_DIR$/libs/domain" />
-            <option value="$PROJECT_DIR$/libs/lib" />
             <option value="$PROJECT_DIR$/libs/tmdb" />
             <option value="$PROJECT_DIR$/libs/trakt" />
           </set>

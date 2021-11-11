@@ -28,8 +28,12 @@ object AppModule {
     @Named("tmdb-api")
     fun provideTmdbApiKey(): String = BuildConfig.TMDB_API_KEY
 
-    /*@Provides
+    @Provides
     @Named("trakt-client-id")
-    fun provideTraktClientId(): String = BuildConfig.TRAKT_CLIENT_ID*/
+    fun provideTraktClientId(): String = BuildConfig.TRAKT_CLIENT_ID
+
+    @Provides
+    @Named("trakt-client-secret")
+    fun provideTraktClientSecret(): String = BuildConfig.TRAKT_CLIENT_SECRET
 
 }

@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.7">
-      <module name="Showhub.app" target="11" />
-      <module name="Showhub.buildSrc" target="11" />
-      <module name="Showhub.features.ui-home" target="11" />
-      <module name="Showhub.libs.base" target="11" />
-      <module name="Showhub.libs.base-android" target="11" />
-      <module name="Showhub.libs.common-ui-compose" target="11" />
-      <module name="Showhub.libs.common-ui-resources" target="11" />
-      <module name="Showhub.libs.common-ui-view" target="11" />
-      <module name="Showhub.libs.data" target="11" />
-      <module name="Showhub.libs.data-android" target="11" />
-      <module name="Showhub.libs.domain" target="11" />
-      <module name="Showhub.libs.tmdb" target="11" />
-      <module name="Showhub.libs.trakt" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>
