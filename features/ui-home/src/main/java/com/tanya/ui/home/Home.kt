@@ -2,6 +2,9 @@ package com.tanya.ui.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -46,7 +49,7 @@ internal fun Home(
             modifier = Modifier.fillMaxWidth()
         ) {
             item {
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
             /*trending items*/
             item {
@@ -99,5 +102,17 @@ private fun <T: EntryWithShow<*>> EntryShowCarousel(
     items: List<T>,
     modifier: Modifier = Modifier
 ) {
+    val listState = rememberLazyListState()
+    val contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+    
+    LazyRow(
+        state = listState,
+        modifier = modifier,
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        items(items) {
 
+        }
+    }
 }
