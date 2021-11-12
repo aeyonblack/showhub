@@ -27,9 +27,33 @@ dependencies {
     implementation project(":libs:base-android")
     implementation project(":libs:data")
 
-    implementation(libs.androidx.core)
-    implementation(libs.threeTenAbp)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    kapt(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.paging.runtime)
 
     implementation(libs.hilt.library)
     kapt(libs.hilt.compiler)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockK)
+    testImplementation(libs.assertj)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+
+    testImplementation(libs.androidx.archCoreTesting)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.hilt.testing)
+
+    kaptTest(libs.androidx.room.compiler)
+    kaptTest(libs.hilt.compiler)
+
+    testImplementation("org.threeten:threetenbp:${libs.versions.threetenbp.get()}")
+    testImplementation(libs.kotlin.coroutines.android)
 }

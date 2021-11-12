@@ -14,8 +14,9 @@ androidx_test = "1.4.0"
 coil = "1.4.0"
 retrofit = "2.9.0"
 okhttp = "4.9.2"
-threetenbp = "1.5.1"
+threetenbp = "1.5.2"
 dagger = "2.39.1"
+assertj = "3.20.2"
 
 [libraries]
 # ---------------------------------------ANDROIDX---------------------------------------------------
@@ -129,6 +130,8 @@ gradle-dependency-updates = { module = "com.github.ben-manes:gradle-versions-plu
 leakCanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
 mockK = "io.mockk:mockk:1.12.0"
+
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj"}
 
 robolectric = "org.robolectric:robolectric:4.6.1"
 
