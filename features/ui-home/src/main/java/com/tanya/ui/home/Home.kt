@@ -8,14 +8,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.AppBar
+import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.tanya.data.results.EntryWithShow
 
@@ -53,11 +56,17 @@ internal fun Home(
             }
             /*trending items*/
             item {
-
+                CarouselWithHeader(
+                    items = state.trendingItems,
+                    title = "People are watching"
+                )
             }
             /*popular items*/
             item {
-
+                CarouselWithHeader(
+                    items = state.popularItems,
+                    title = "Popular"
+                )
             }
         }
     }
@@ -70,7 +79,31 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
+        if (items.isNotEmpty()) {
+            Header(
+                title = title,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.alignBy(FirstBaseline)
+                ) {
+                    Text(text = "More")
+                }
+            }
 
+            EntryShowCarousel(
+                items = items,
+                modifier = Modifier
+                    .height(192.dp)
+                    .fillMaxWidth()
+            )
+        }
+        else {
+            Header(
+                title = "Nothing to show!"
+            )
+        }
     }
 }
 
@@ -112,7 +145,13 @@ private fun <T: EntryWithShow<*>> EntryShowCarousel(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         items(items) {
-
+            PosterCard(
+                show = it.show,
+                poster = it.poster,
+                modifier = Modifier
+                    .fillParentMaxHeight()
+                    .aspectRatio(2 / 3f)
+            )
         }
     }
 }

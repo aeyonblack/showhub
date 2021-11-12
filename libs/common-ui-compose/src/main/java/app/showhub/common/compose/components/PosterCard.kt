@@ -21,8 +21,12 @@ fun PosterCard(
     modifier: Modifier = Modifier,
     poster: TmdbImageEntity? = null
 ) {
-    Card(modifier = Modifier) {
-        Box() {
+    Card(modifier = modifier,
+    backgroundColor = MaterialTheme.colors.surface,
+    contentColor = MaterialTheme.colors.onSurface) {
+        Box(
+            modifier = Modifier
+        ) {
             Text(
                 text = show.title ?: "No title",
                 style = MaterialTheme.typography.caption,

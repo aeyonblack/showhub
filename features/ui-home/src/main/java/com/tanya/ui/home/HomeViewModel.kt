@@ -41,5 +41,19 @@ internal class HomeViewModel @Inject constructor(
     init {
         observeTrendingShows(ObserveTrendingShows.Params(10))
         observePopularShows(ObservePopularShows.Params(10))
+
+        viewModelScope.launch {
+            /*update trending shows*/
+            /*update popular shows*/
+            /*pendingActions.collect {
+                when (it) {
+                    HomeAction.RefreshAction -> refresh(true)
+                }
+            }*/
+        }
+    }
+
+    private fun refresh(b: Boolean) {
+
     }
 }
