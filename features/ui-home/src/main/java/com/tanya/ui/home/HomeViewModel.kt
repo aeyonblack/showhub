@@ -41,9 +41,5 @@ internal class HomeViewModel @Inject constructor(
     init {
         observeTrendingShows(ObserveTrendingShows.Params(10))
         observePopularShows(ObservePopularShows.Params(10))
-
-        viewModelScope.launch {
-            TODO("Add refresh functionality")
-        }
     }
 }

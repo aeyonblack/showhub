@@ -1,6 +1,6 @@
 package com.tanya.data.entities
 
-enum class ShowStatus(val status: String) {
+enum class ShowStatus(val storageKey: String) {
     ENDED("ended"),
     RETURNING("returning"),
     CANCELED("canceled"),

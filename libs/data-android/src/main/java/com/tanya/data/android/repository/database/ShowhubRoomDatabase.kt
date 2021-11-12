@@ -18,6 +18,5 @@ import com.tanya.data.entities.TrendingShowEntity
     ],
     version = 1
 )
-@TypeConverters(TypeConverters::class)
-abstract class ShowhubRoomDatabase: RoomDatabase(), ShowhubDatabase {
-}
+@TypeConverters(ShowhubTypeConverters::class)
+abstract class ShowhubRoomDatabase: RoomDatabase(), ShowhubDatabase

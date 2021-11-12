@@ -42,7 +42,7 @@ fun AppBar(
                 onClick = { /*TODO*/ }
             ) {
                 Icon(
-                    painter = painterResource(id = drawable.ic_user),
+                    painter = painterResource(id = drawable.ic_refresh),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(8.dp)
@@ -53,7 +53,7 @@ fun AppBar(
                 onClick = { /*TODO*/ }
             ) {
                 Icon(
-                    painter = painterResource(id = drawable.ic_refresh),
+                    painter = painterResource(id = drawable.ic_user),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(8.dp)
@@ -67,7 +67,7 @@ fun AppBar(
                 onClick = { /*TODO*/ }
             ) {
                 Icon(
-                    painter = painterResource(id = drawable.ic_settings),
+                    painter = painterResource(id = drawable.ic_settings_alt),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(8.dp)

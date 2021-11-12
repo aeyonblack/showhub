@@ -15,7 +15,7 @@ abstract class ShowImagesDao : EntityDao<ShowImagesEntity>(){
     @Query("SELECT COUNT(*) FROM show_images WHERE show_id = :showId")
     abstract suspend fun imageCountForShowId(showId: Long): Int
 
-    @Query("SELECT * FROM show_images WHERE show_id = show_id")
+    @Query("SELECT * FROM show_images WHERE show_id = :showId")
     abstract fun getImagesForShowId(showId: Long): Flow<List<ShowImagesEntity>>
 
     @Query("DELETE FROM show_images")
