@@ -2,19 +2,19 @@ package com.tanya.domain.interactors
 
 import android.util.Log
 import com.tanya.data.android.repository.images.ShowImagesStore
-import com.tanya.data.android.repository.popular.PopularShowsStore
 import com.tanya.data.android.repository.shows.ShowsStore
-import com.tanya.data.daos.PopularDao
+import com.tanya.data.android.repository.trending.TrendingShowsStore
+import com.tanya.data.daos.TrendingDao
 import com.tanya.data.extensions.fetch
 import com.tanya.domain.Interactor
-import com.tanya.domain.interactors.UpdatePopularShows.*
+import com.tanya.domain.interactors.UpdateTrendingShows.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class UpdatePopularShows @Inject constructor(
-    private val popularShowsStore: PopularShowsStore,
-    private val popularDao: PopularDao,
+class UpdateTrendingShows @Inject constructor(
+    private val trendingShowsStore: TrendingShowsStore,
+    private val trendingDao: TrendingDao,
     private val showsStore: ShowsStore,
     private val showImagesStore: ShowImagesStore,
 ): Interactor<Params>() {
@@ -23,20 +23,19 @@ class UpdatePopularShows @Inject constructor(
         withContext(Dispatchers.IO) {
             val page = when {
                 params.page >= 0 -> params.page
-                params.page == Page.NEXT_PAGE -> {
-                    val lastPage = popularDao.getLastPage()
+                params.page == Page.NEXT -> {
+                    val lastPage = trendingDao.getLastPage()
                     if (lastPage != null) lastPage + 1 else 0
                 }
                 else -> 0
             }
 
-            popularShowsStore.fetch(page, forceFresh = params.forceRefresh).forEach {
+            trendingShowsStore.fetch(page, params.forceRefresh).forEach {
                 showsStore.fetch(it.showId)
                 try {
                     showImagesStore.fetch(it.showId)
                 } catch (t: Throwable) {
-                    Log.d("updatePopularShows",
-                        "Error while fetching images for show ${it.showId}")
+                    Log.d("updateTrendingShows", "Error while fetching images for show")
                 }
             }
         }
@@ -45,7 +44,7 @@ class UpdatePopularShows @Inject constructor(
     data class Params(val page: Int, val forceRefresh: Boolean = false)
 
     object Page {
-        const val NEXT_PAGE = -1
+        const val NEXT = -1
         const val REFRESH = -2
     }
 }
