@@ -19,7 +19,7 @@ abstract class Interactor<in P> {
         withTimeout(timeOutMs) {
             emit(InvokeStarted)
             doWork(params)
-            emit(InvokeSuccess)
+            emit(InvokeSuccess) // do we ever reach this point?
         }
     }.catch { emit(InvokeError(it)) }
 
@@ -64,7 +64,6 @@ abstract class SubjectInteractor<P : Any, T> {
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    @ExperimentalCoroutinesApi
     val flow = paramState
         .distinctUntilChanged()
         .flatMapLatest { createObservable(it) }

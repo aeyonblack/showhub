@@ -23,14 +23,15 @@ class UpdatePopularShows @Inject constructor(
         withContext(Dispatchers.IO) {
             val page = when {
                 params.page >= 0 -> params.page
-                params.page == Page.NEXT_PAGE -> {
+                params.page == Page.NEXT -> {
                     val lastPage = popularDao.getLastPage()
                     if (lastPage != null) lastPage + 1 else 0
                 }
                 else -> 0
             }
-
+            Log.d("updatePopularShows", "popularShowStore.fetch() START")
             popularShowsStore.fetch(page, forceFresh = params.forceRefresh).forEach {
+                Log.d("updatePopularShows", "showId ${it.showId}")
                 showsStore.fetch(it.showId)
                 try {
                     showImagesStore.fetch(it.showId)
@@ -39,13 +40,14 @@ class UpdatePopularShows @Inject constructor(
                         "Error while fetching images for show ${it.showId}")
                 }
             }
+            Log.d("updatePopularShows", "popularShowStore.fetch() END")
         }
     }
 
     data class Params(val page: Int, val forceRefresh: Boolean = false)
 
     object Page {
-        const val NEXT_PAGE = -1
+        const val NEXT = -1
         const val REFRESH = -2
     }
 }

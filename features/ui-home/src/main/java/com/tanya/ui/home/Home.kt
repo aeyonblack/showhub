@@ -58,14 +58,16 @@ internal fun Home(
             item {
                 CarouselWithHeader(
                     items = state.trendingItems,
-                    title = "People are watching"
+                    title = "People are watching",
+                    refreshing = state.trendingRefreshing
                 )
             }
             /*popular items*/
             item {
                 CarouselWithHeader(
                     items = state.popularItems,
-                    title = "Popular"
+                    title = "Popular",
+                    refreshing = state.popularRefreshing
                 )
             }
         }
@@ -76,10 +78,11 @@ internal fun Home(
 private fun <T: EntryWithShow<*>> CarouselWithHeader(
     items: List<T>,
     title: String,
+    refreshing: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
-        if (items.isNotEmpty()) {
+        if (refreshing || items.isNotEmpty()) {
             Header(
                 title = title,
                 modifier = Modifier.fillMaxWidth()
@@ -92,6 +95,8 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
                 }
             }
 
+        }
+        if (items.isNotEmpty()) {
             EntryShowCarousel(
                 items = items,
                 modifier = Modifier

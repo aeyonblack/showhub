@@ -71,8 +71,6 @@ abstract class ShowDao : EntityDao<ShowEntity>() {
             return idForTmdbId
         }
 
-        // TODO add fuzzy search on name or slug
-
         return insert(show)
     }
 }

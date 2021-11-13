@@ -49,7 +49,7 @@ object ShowImagesStoreModule {
                 it.copy(showId)
             }
         },
-        sourceOfTruth = SourceOfTruth.Companion.of(
+        sourceOfTruth = SourceOfTruth.of(
             reader = { showId ->
                 showImagesDao.getImagesForShowId(showId).map {
                     when {

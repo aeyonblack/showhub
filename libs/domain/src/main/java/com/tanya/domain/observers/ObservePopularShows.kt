@@ -11,7 +11,7 @@ class ObservePopularShows @Inject constructor(
 ) : SubjectInteractor<ObservePopularShows.Params, List<PopularEntryWithShow>>() {
 
     override fun createObservable(
-        params: ObservePopularShows.Params
+        params: Params
     ): Flow<List<PopularEntryWithShow>> =
         popularShowsRepository.entriesObservable(params.count, 0)
     

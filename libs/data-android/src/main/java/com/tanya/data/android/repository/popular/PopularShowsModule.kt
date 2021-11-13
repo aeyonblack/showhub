@@ -1,5 +1,6 @@
 package com.tanya.data.android.repository.popular
 
+import android.util.Log
 import com.dropbox.android.external.store4.Fetcher
 import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
@@ -35,16 +36,22 @@ internal object PopularShowsModule {
                 pageSize = 20
             ).also {
                 if (page == 0 && it is Success) {
-                    TODO("Last request store")
+                    Log.d("popularShowsModule", "traktPopularShowsDataSource Success")
                 }
             }.getOrThrow()
         },
-        sourceOfTruth = SourceOfTruth.Companion.of(
+        sourceOfTruth = SourceOfTruth.of(
             reader = { page ->
                 popularShowsDao.entriesObservable(page).map {
                     when {
-                        it.isEmpty() -> null
-                        else -> it
+                        it.isEmpty() -> {
+                            Log.d("popularShowsModule", "Empty entry")
+                            null
+                        }
+                        else -> {
+                            Log.d("popularShowsModule", "Entry ${it.size}")
+                            it
+                        }
                     }
                 }
             },
@@ -56,6 +63,7 @@ internal object PopularShowsModule {
                             page = page
                         )
                     }
+                    Log.d("popularShowsModule", "Entries size = ${entries.size}")
                     if (page == 0) {
                         popularShowsDao.deleteAll()
                         popularShowsDao.insertAll(entries)

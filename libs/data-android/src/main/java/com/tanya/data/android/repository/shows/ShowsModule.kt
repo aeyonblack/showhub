@@ -1,5 +1,6 @@
 package com.tanya.data.android.repository.shows
 
+import android.util.Log
 import com.dropbox.android.external.store4.Fetcher
 import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
@@ -10,15 +11,20 @@ import com.tanya.data.entities.ShowEntity
 import com.tanya.data.repositories.shows.TraktShowDataSource
 import com.tanya.data.repositories.shows.mergeShows
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.map
+import javax.inject.Singleton
 
 typealias ShowsStore = Store<Long, ShowEntity>
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ShowStoreModule {
+
+    @Singleton
+    @Provides
     fun provideShowStore(
         showDao: ShowDao,
         traktShowDataSource: TraktShowDataSource
@@ -27,7 +33,7 @@ object ShowStoreModule {
             traktShowDataSource.getShow(showDao.getShowWithIdOrThrow(id))
                 .also {
                     if (it is Success) {
-                        TODO("Last request store")
+                        Log.d("showsModule", "traktShowDataSource Successful")
                     }
                 }.getOrThrow()
         },

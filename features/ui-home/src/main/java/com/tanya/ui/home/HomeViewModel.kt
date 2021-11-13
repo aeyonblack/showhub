@@ -1,8 +1,12 @@
 package com.tanya.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
+import com.tanya.common.ui.view.util.collectInto
+import com.tanya.domain.interactors.UpdatePopularShows
+import com.tanya.domain.interactors.UpdateTrendingShows
 import com.tanya.domain.observers.ObservePopularShows
 import com.tanya.domain.observers.ObserveTrendingShows
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
+    private val updatePopularShows: UpdatePopularShows,
     observePopularShows: ObservePopularShows,
+    private val updateTrendingShows: UpdateTrendingShows,
     observeTrendingShows: ObserveTrendingShows
 ): ViewModel() {
     private val trendingLoadingState = ObservableLoadingCounter()
@@ -26,6 +32,8 @@ internal class HomeViewModel @Inject constructor(
         observePopularShows.flow,
         observeTrendingShows.flow
     ) { trendingLoad, popularLoad, popular,trending ->
+        Log.d("homeViewModel", "Trending shows ${trending.size}")
+        Log.d("homeViewModel", "Popular shows ${popular.size}")
         HomeViewState(
             trendingItems = trending,
             trendingRefreshing = trendingLoad,
@@ -43,17 +51,18 @@ internal class HomeViewModel @Inject constructor(
         observePopularShows(ObservePopularShows.Params(10))
 
         viewModelScope.launch {
-            /*update trending shows*/
-            /*update popular shows*/
-            /*pendingActions.collect {
-                when (it) {
-                    HomeAction.RefreshAction -> refresh(true)
-                }
-            }*/
+            refresh(true)
         }
     }
 
     private fun refresh(b: Boolean) {
-
+        viewModelScope.launch {
+            updatePopularShows(UpdatePopularShows.Params(UpdatePopularShows.Page.REFRESH, b))
+                .collectInto(popularLoadingState)
+        }
+        viewModelScope.launch {
+            updateTrendingShows(UpdateTrendingShows.Params(UpdateTrendingShows.Page.REFRESH, b))
+                .collectInto(trendingLoadingState)
+        }
     }
 }

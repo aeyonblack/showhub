@@ -1,5 +1,6 @@
 package com.tanya.data.android.repository.trending
 
+import android.util.Log
 import com.dropbox.android.external.store4.Fetcher
 import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
@@ -34,7 +35,7 @@ object TrendingShowsModule {
                 pageSize = 20
             ).also {
                 if (page == 0 && it is Success) {
-                    TODO("Last request store")
+                    Log.d("trendingShowsModule", "TraktTrendingShowsDataSource Success")
                 }
             }.getOrThrow()
         },
