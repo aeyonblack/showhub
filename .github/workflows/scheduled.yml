@@ -25,9 +25,6 @@ jobs:
       - name: Copy ci-gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Copy local.properties
-        run: cp .github/ci-local.properties ~/local.properties
-
       - name: Check dependency updates
         run: ./gradlew dependencyUpdates
 

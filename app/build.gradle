@@ -14,7 +14,10 @@ kapt {
  * Used to access hidden api keys
  */
 def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+def onLocalMachine = rootProject.file("local.properties").exists()
+if (onLocalMachine) {
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+}
 
 android {
     compileSdk buildConfig.compileSdk
@@ -31,19 +34,26 @@ android {
             useSupportLibrary true
         }
 
-        buildConfigField("String",
-                "TMDB_API_KEY",
-                localProperties['tmdb_api_key'])
-        buildConfigField(
-                "String",
-                "TRAKT_CLIENT_ID",
-                localProperties['trakt_client_id']
-        )
-        buildConfigField(
-                "String",
-                "TRAKT_CLIENT_SECRET",
-                localProperties['trakt_client_secret']
-        )
+        if (onLocalMachine) {
+            buildConfigField("String",
+                    "TMDB_API_KEY",
+                    localProperties['tmdb_api_key']
+            )
+            buildConfigField(
+                    "String",
+                    "TRAKT_CLIENT_ID",
+                    localProperties['trakt_client_id']
+            )
+            buildConfigField(
+                    "String",
+                    "TRAKT_CLIENT_SECRET",
+                    localProperties['trakt_client_secret']
+            )
+        } else {
+            buildConfigField("String", "TMDB_API_KEY", "")
+            buildConfigField("String", "TRAKT_CLIENT_ID", "")
+            buildConfigField("String", "TRAKT_CLIENT_SECRET", "")
+        }
     }
 
     buildTypes {
