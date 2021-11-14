@@ -29,18 +29,18 @@ class UpdatePopularShows @Inject constructor(
                 }
                 else -> 0
             }
-            Log.d("updatePopularShows", "popularShowStore.fetch() START")
             popularShowsStore.fetch(page, forceFresh = params.forceRefresh).forEach {
-                Log.d("updatePopularShows", "showId ${it.showId}")
+                Log.d("updatePopularShows","fetching show with id = ${it.showId}")
                 showsStore.fetch(it.showId)
                 try {
+                    Log.d("updatePopularShows","fetching images for showId = ${it.showId}")
                     showImagesStore.fetch(it.showId)
+                    Log.d("updatePopularShows","last fetched for show with id = ${it.showId}")
                 } catch (t: Throwable) {
-                    Log.d("updatePopularShows",
-                        "Error while fetching images for show ${it.showId}")
+                    Log.e("updatePopularShows",
+                        "Error while fetching images for show ${it.showId} -> ${t.message}", t)
                 }
             }
-            Log.d("updatePopularShows", "popularShowStore.fetch() END")
         }
     }
 

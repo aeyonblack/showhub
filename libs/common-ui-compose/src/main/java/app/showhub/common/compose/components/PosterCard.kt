@@ -1,5 +1,6 @@
 package app.showhub.common.compose.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -9,9 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.TmdbImageEntity
 
@@ -21,9 +23,12 @@ fun PosterCard(
     modifier: Modifier = Modifier,
     poster: TmdbImageEntity? = null
 ) {
-    Card(modifier = modifier,
-    backgroundColor = MaterialTheme.colors.surface,
-    contentColor = MaterialTheme.colors.onSurface) {
+    Card(
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier,
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onSurface
+    ) {
         Box(
             modifier = Modifier
         ) {
@@ -33,28 +38,21 @@ fun PosterCard(
                 modifier = Modifier
                     .padding(4.dp)
                     .align(Alignment.CenterStart)
+                    .alpha(0.7f)
             )
             if (poster != null) {
-                Image(
-                    painter = rememberImagePainter(data = poster) {
-                        crossfade(true)
-                    },
-                    contentDescription = null,
-                    modifier = Modifier.matchParentSize(),
-                    contentScale = ContentScale.Crop
-                )
+                val image = loadPicture(poster.path).value
+                image?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                        modifier = Modifier.matchParentSize()
+                    )
+                }
+            } else {
+                Log.d("posterCard", "poster is null")
             }
-        }
-    }
-}
-
-@Composable
-fun PlaceholderPosterCard(
-    modifier: Modifier = Modifier
-) {
-    Card(modifier = modifier) {
-        Box {
-            // TODO: display something better
         }
     }
 }

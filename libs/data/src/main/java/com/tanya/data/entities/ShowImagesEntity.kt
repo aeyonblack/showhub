@@ -16,13 +16,12 @@ import androidx.room.*
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("show_id"),
             onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
         )
     ]
 )
 data class ShowImagesEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") override val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     @ColumnInfo(name = "show_id") val showId: Long,
     @ColumnInfo(name = "path") override val path: String,
     @ColumnInfo(name = "type") override val type: ImageType,

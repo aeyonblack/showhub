@@ -66,7 +66,7 @@ internal fun Home(
             item {
                 CarouselWithHeader(
                     items = state.popularItems,
-                    title = "Popular",
+                    title = "Top rated",
                     refreshing = state.popularRefreshing
                 )
             }
@@ -89,9 +89,9 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
             ) {
                 TextButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.alignBy(FirstBaseline)
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
-                    Text(text = "More")
+                    Text(text = "All")
                 }
             }
 
@@ -119,11 +119,11 @@ private fun Header(
     content: @Composable RowScope.() -> Unit = {}
 ) {
     Row(modifier) {
-        Spacer(modifier = Modifier.width(32.dp))
+        Spacer(modifier = Modifier.width(16.dp))
         
         Text(
             text = title,
-            style = MaterialTheme.typography.h4,
+            style = MaterialTheme.typography.h5,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(8.dp)
@@ -141,7 +141,7 @@ private fun <T: EntryWithShow<*>> EntryShowCarousel(
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-    val contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+    val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     
     LazyRow(
         state = listState,

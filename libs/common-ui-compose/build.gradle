@@ -35,6 +35,9 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.kotlin.stdlib)
 
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+
     implementation(libs.bundles.compose)
     implementation(libs.androidx.paging.compose)
     implementation(libs.coil.compose)

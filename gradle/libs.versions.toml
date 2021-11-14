@@ -17,6 +17,7 @@ okhttp = "4.9.2"
 threetenbp = "1.5.2"
 dagger = "2.39.1"
 assertj = "3.20.2"
+glide = "4.12.0"
 
 [libraries]
 # ---------------------------------------ANDROIDX---------------------------------------------------
@@ -132,6 +133,9 @@ leakCanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 mockK = "io.mockk:mockk:1.12.0"
 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj"}
+
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide"}
+glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide"}
 
 robolectric = "org.robolectric:robolectric:4.6.1"
 

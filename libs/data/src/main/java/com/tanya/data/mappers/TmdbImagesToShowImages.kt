@@ -3,6 +3,7 @@ package com.tanya.data.mappers
 import com.tanya.data.entities.ImageType
 import com.tanya.data.entities.ImageType.*
 import com.tanya.data.entities.ShowImagesEntity
+import com.tanya.tmdb.TmdbImageUrlProvider
 import com.uwetrottmann.tmdb2.entities.Image
 import com.uwetrottmann.tmdb2.entities.TvShow
 import javax.inject.Inject
@@ -12,7 +13,9 @@ import javax.inject.Singleton
  * Map images from the [TvShow] API to our local [ShowImagesEntity]
  */
 @Singleton
-class TmdbImagesToShowImages @Inject constructor() : Mapper<TvShow, List<ShowImagesEntity>> {
+class TmdbImagesToShowImages @Inject constructor(
+    private val tmdbImageUrlProvider: TmdbImageUrlProvider
+) : Mapper<TvShow, List<ShowImagesEntity>> {
 
     override suspend fun map(from: TvShow): List<ShowImagesEntity> {
 
@@ -34,7 +37,7 @@ class TmdbImagesToShowImages @Inject constructor() : Mapper<TvShow, List<ShowIma
                 results += ShowImagesEntity(
                     showId = 0,
                     type = POSTER,
-                    path = it,
+                    path = tmdbImageUrlProvider.getPosterUrl(it, 780),
                     isPrimary = true
                 )
             }
@@ -42,7 +45,7 @@ class TmdbImagesToShowImages @Inject constructor() : Mapper<TvShow, List<ShowIma
                 results += ShowImagesEntity(
                     showId = 0,
                     type = BACKDROP,
-                    path = it,
+                    path = tmdbImageUrlProvider.getBackdropUrl(it, 1280),
                     isPrimary = true
                 )
             }

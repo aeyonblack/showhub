@@ -44,14 +44,8 @@ internal object PopularShowsModule {
             reader = { page ->
                 popularShowsDao.entriesObservable(page).map {
                     when {
-                        it.isEmpty() -> {
-                            Log.d("popularShowsModule", "Empty entry")
-                            null
-                        }
-                        else -> {
-                            Log.d("popularShowsModule", "Entry ${it.size}")
-                            it
-                        }
+                        it.isEmpty() -> null
+                        else -> it
                     }
                 }
             },
@@ -63,7 +57,6 @@ internal object PopularShowsModule {
                             page = page
                         )
                     }
-                    Log.d("popularShowsModule", "Entries size = ${entries.size}")
                     if (page == 0) {
                         popularShowsDao.deleteAll()
                         popularShowsDao.insertAll(entries)
