@@ -15,10 +15,7 @@ kapt {
  * and for workflow management
  */
 def localProperties = new Properties()
-def onLocalMachine = true //rootProject.file("local.properties").exists()
-if (onLocalMachine) {
-    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
-}
+localProperties.load(new FileInputStream(rootProject.file("./local.properties")))
 
 android {
     compileSdk buildConfig.compileSdk
@@ -35,26 +32,9 @@ android {
             useSupportLibrary true
         }
 
-        if (onLocalMachine) {
-            buildConfigField("String",
-                    "TMDB_API_KEY",
-                    localProperties['tmdb_api_key']
-            )
-            buildConfigField(
-                    "String",
-                    "TRAKT_CLIENT_ID",
-                    localProperties['trakt_client_id']
-            )
-            buildConfigField(
-                    "String",
-                    "TRAKT_CLIENT_SECRET",
-                    localProperties['trakt_client_secret']
-            )
-        }/* else {
-            buildConfigField("String", "TMDB_API_KEY", "")
-            buildConfigField("String", "TRAKT_CLIENT_ID", "")
-            buildConfigField("String", "TRAKT_CLIENT_SECRET", "")
-        }*/
+        buildConfigField("String", "TMDB_API_KEY", localProperties['TMDB_API_KEY'])
+        buildConfigField("String", "TRAKT_CLIENT_ID", localProperties['TRAKT_CLIENT_ID'])
+        buildConfigField("String", "TRAKT_CLIENT_SECRET", localProperties['TRAKT_CLIENT_SECRET'])
     }
 
     buildTypes {

@@ -28,17 +28,17 @@ jobs:
       - name: access TMDB_API_KEY
         env:
           TMDB_API_KEY: ${{secrets.TMDB_API_KEY}}
-        run: echo tmdb_api_key=\"$TMDB_API_KEY\" > ./local.properties
+        run: echo TMDB_API_KEY=\"$TMDB_API_KEY\" > ./local.properties
 
       - name: access TRAKT_CLIENT_ID
         env:
           TRAKT_CLIENT_ID: ${{secrets.TRAKT_CLIENT_ID}}
-        run: echo trakt_client_id=\"$TRAKT_CLIENT_ID\" > ./local.properties
+        run: echo TRAKT_CLIENT_ID=\"$TRAKT_CLIENT_ID\" > ./local.properties
 
       - name: access TRAKT_CLIENT_SECRET
         env:
           TRAKT_CLIENT_SECRET: ${{secrets.TRAKT_CLIENT_SECRET}}
-        run: echo trakt_client_secret=\"$TRAKT_CLIENT_SECRET\" > ./local.properties
+        run: echo TRAKT_CLIENT_SECRET=\"$TRAKT_CLIENT_SECRET\" > ./local.properties
 
       - name: Check dependency updates
         run: ./gradlew dependencyUpdates
