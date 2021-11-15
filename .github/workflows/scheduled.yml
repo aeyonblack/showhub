@@ -1,8 +1,10 @@
 name: Dependency Updates
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -22,6 +24,11 @@ jobs:
 
       - name: Copy ci-gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: access TMDB_API_KEY
+        env:
+          TMDB_API_KEY: ${{secrets.TMDB_API_KEY}}
+        run: echo TMDB_API_KEY=\"$TMDB_API_KEY\" > ./local.properties
 
       - name: Check dependency updates
         run: ./gradlew dependencyUpdates

@@ -12,9 +12,10 @@ kapt {
 
 /**
  * Used to access hidden api keys
+ * and for workflow management
  */
 def localProperties = new Properties()
-def onLocalMachine = rootProject.file("local.properties").exists()
+def onLocalMachine = true //rootProject.file("local.properties").exists()
 if (onLocalMachine) {
     localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 }
@@ -49,11 +50,11 @@ android {
                     "TRAKT_CLIENT_SECRET",
                     localProperties['trakt_client_secret']
             )
-        } else {
+        }/* else {
             buildConfigField("String", "TMDB_API_KEY", "")
             buildConfigField("String", "TRAKT_CLIENT_ID", "")
             buildConfigField("String", "TRAKT_CLIENT_SECRET", "")
-        }
+        }*/
     }
 
     buildTypes {
