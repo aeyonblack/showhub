@@ -14,6 +14,7 @@ jobs:
     env:
       TERM: dumb
 
+
     steps:
       - uses: actions/checkout@v2
 
@@ -25,18 +26,10 @@ jobs:
       - name: Copy ci-gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: access TMDB_API_KEY
+      - name: access app secrets
         env:
           TMDB_API_KEY: ${{secrets.TMDB_API_KEY}}
-        #run: echo TMDB_API_KEY=\"$TMDB_API_KEY\" > ./local.properties
-
-      - name: access TRAKT_CLIENT_ID
-        env:
           TRAKT_CLIENT_ID: ${{secrets.TRAKT_CLIENT_ID}}
-        #run: echo TRAKT_CLIENT_ID=\"$TRAKT_CLIENT_ID\" > ./local.properties
-
-      - name: access TRAKT_CLIENT_SECRET
-        env:
           TRAKT_CLIENT_SECRET: ${{secrets.TRAKT_CLIENT_SECRET}}
         run: |
           echo TRAKT_CLIENT_ID=\"$TRAKT_CLIENT_ID\" > ./local.properties
