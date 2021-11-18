@@ -31,8 +31,8 @@ dependencies {
     implementation project(":libs:data")
     implementation project(":libs:base-android")
 
-    api(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.core)
+    api(libs.androidx.lifecycle.runtime)
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.glide)

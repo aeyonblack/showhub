@@ -63,11 +63,11 @@ abstract class ShowDao : EntityDao<ShowEntity>() {
         }
 
         if (idForTraktId != null) {
-            // If we get here, we only have a entity with the trakt id
+            // If we get here, we only have an entity with the trakt id
             return idForTraktId
         }
         if (idForTmdbId != null) {
-            // If we get here, we only have a entity with the tmdb id
+            // If we get here, we only have an entity with the tmdb id
             return idForTmdbId
         }
 

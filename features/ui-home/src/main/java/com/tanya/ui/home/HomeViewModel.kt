@@ -32,8 +32,6 @@ internal class HomeViewModel @Inject constructor(
         observePopularShows.flow,
         observeTrendingShows.flow
     ) { trendingLoad, popularLoad, popular,trending ->
-        Log.d("homeViewModel", "Trending shows ${trending.size}")
-        Log.d("homeViewModel", "Popular shows ${popular.size}")
         HomeViewState(
             trendingItems = trending,
             trendingRefreshing = trendingLoad,

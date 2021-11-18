@@ -1,6 +1,5 @@
 package com.tanya.data.android.repository.images
 
-import android.util.Log
 import com.dropbox.android.external.store4.Fetcher
 import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
