@@ -68,7 +68,11 @@ fun NavGraphBuilder.addHome(
     root: Screen
 ) {
     composable(LeafScreen.Home.createRoute(Screen.Home)) {
-        Home()
+        Home(
+            openShowDetails = { showId, seasonId, episodeId ->
+                navController.navigate(LeafScreen.ShowDetails.createRoute(root, showId))
+            }
+        )
     }
 }
 
