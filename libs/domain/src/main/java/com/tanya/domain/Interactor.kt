@@ -19,7 +19,7 @@ abstract class Interactor<in P> {
         withTimeout(timeOutMs) {
             emit(InvokeStarted)
             doWork(params)
-            emit(InvokeSuccess) // do we ever reach this point?
+            emit(InvokeSuccess)
         }
     }.catch { emit(InvokeError(it)) }
 

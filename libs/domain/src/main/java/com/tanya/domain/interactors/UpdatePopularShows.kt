@@ -7,7 +7,7 @@ import com.tanya.data.android.repository.shows.ShowsStore
 import com.tanya.data.daos.PopularDao
 import com.tanya.data.extensions.fetch
 import com.tanya.domain.Interactor
-import com.tanya.domain.interactors.UpdatePopularShows.*
+import com.tanya.domain.interactors.UpdatePopularShows.Params
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -30,12 +30,9 @@ class UpdatePopularShows @Inject constructor(
                 else -> 0
             }
             popularShowsStore.fetch(page, forceFresh = params.forceRefresh).forEach {
-                Log.d("updatePopularShows","fetching show with id = ${it.showId}")
                 showsStore.fetch(it.showId)
                 try {
-                    Log.d("updatePopularShows","fetching images for showId = ${it.showId}")
                     showImagesStore.fetch(it.showId)
-                    Log.d("updatePopularShows","last fetched for show with id = ${it.showId}")
                 } catch (t: Throwable) {
                     Log.e("updatePopularShows",
                         "Error while fetching images for show ${it.showId} -> ${t.message}", t)

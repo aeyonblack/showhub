@@ -19,6 +19,9 @@ class UpdateTrendingShows @Inject constructor(
     private val showImagesStore: ShowImagesStore,
 ): Interactor<Params>() {
 
+    /**
+     * Also try to make sense of why all this stuff works
+     */
     override suspend fun doWork(params: Params) {
         withContext(Dispatchers.IO) {
             val page = when {
