@@ -12,6 +12,7 @@ import com.tanya.showhub.ui.home.About
 import com.tanya.showhub.ui.home.Library
 import com.tanya.showhub.ui.home.Search
 import com.tanya.ui.home.Home
+import com.tanya.ui.showdetails.ShowDetails
 
 /*These extension functions are for adding top level
 * destinations and all destinations that can be reached from them
@@ -110,6 +111,6 @@ fun NavGraphBuilder.addShowDetails(
             }
         )
     ) {
-
+        ShowDetails()
     }
 }

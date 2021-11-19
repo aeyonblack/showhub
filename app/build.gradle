@@ -87,6 +87,7 @@ dependencies {
     implementation project(":libs:common-ui-compose")
 
     implementation project(":features:ui-home")
+    implementation project(":features:ui-showdetails")
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
