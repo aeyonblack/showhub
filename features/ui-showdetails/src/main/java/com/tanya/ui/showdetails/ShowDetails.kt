@@ -13,3 +13,11 @@ fun ShowDetails() {
         Text(text = "ShowDetails")
     }
 }
+
+@Composable
+internal fun ShowDetails(
+    viewModel: ShowDetailsViewModel
+) {
+
+}
+
