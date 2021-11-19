@@ -2,7 +2,9 @@ package com.tanya.showhub.extensions
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.navigation
 import com.tanya.showhub.LeafScreen
 import com.tanya.showhub.Screen
@@ -23,6 +25,7 @@ fun NavGraphBuilder.addHomeTopLevel(
         startDestination = LeafScreen.Home.createRoute(Screen.Home)
     ) {
         addHome(navController, Screen.Home)
+        addShowDetails(navController, Screen.Home)
     }
 }
 
@@ -92,5 +95,21 @@ fun NavGraphBuilder.addAbout(
 ) {
     composable(LeafScreen.About.createRoute(Screen.About)) {
         About()
+    }
+}
+
+fun NavGraphBuilder.addShowDetails(
+    navController: NavController,
+    root: Screen
+) {
+    composable(
+        route = LeafScreen.ShowDetails.createRoute(root),
+        arguments = listOf(
+            navArgument("showId") {
+                type = NavType.LongType
+            }
+        )
+    ) {
+
     }
 }

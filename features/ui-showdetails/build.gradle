@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdk buildConfig.compileSdk
+
+    defaultConfig {
+        minSdk buildConfig.minSdk
+        targetSdk buildConfig.targetSdk
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion libs.versions.compose.get()
+    }
+}
+
+dependencies {
+    implementation project(":libs:base")
+    implementation project(":libs:base-android")
+    implementation project(":libs:data")
+    implementation project(":libs:domain")
+    implementation project(":libs:common-ui-view")
+    implementation project(":libs:common-ui-compose")
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.bundles.compose)
+    implementation(libs.coil.compose)
+
+    implementation libs.androidx.hilt.compose
+    implementation libs.hilt.library
+    kapt libs.hilt.compiler
+}
