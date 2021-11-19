@@ -2,6 +2,7 @@ package app.showhub.common.compose.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
@@ -21,7 +22,8 @@ import com.tanya.data.entities.TmdbImageEntity
 fun PosterCard(
     show: ShowEntity,
     modifier: Modifier = Modifier,
-    poster: TmdbImageEntity? = null
+    poster: TmdbImageEntity? = null,
+    onClick: (() -> Unit)? = null
 ) {
     Card(
         shape = MaterialTheme.shapes.medium,
@@ -30,7 +32,7 @@ fun PosterCard(
         contentColor = MaterialTheme.colors.onSurface
     ) {
         Box(
-            modifier = Modifier
+            modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
         ) {
             Text(
                 text = show.title ?: "No title",
