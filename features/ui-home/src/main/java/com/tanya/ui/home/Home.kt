@@ -19,29 +19,36 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.AppBar
 import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
+import com.tanya.data.entities.ShowEntity
 import com.tanya.data.results.EntryWithShow
 
 @Composable
-fun Home() {
+fun Home(
+    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
+) {
     Home(
-        viewModel = hiltViewModel()
+        viewModel = hiltViewModel(),
+        openShowDetails = openShowDetails
     )
 }
 
 @Composable
 internal fun Home(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
         .collectAsState(initial = HomeViewState.EMPTY)
     Home(
-        state = viewState
+        state = viewState,
+        openShowDetails = openShowDetails
     )
 }
 
 @Composable
 internal fun Home(
-    state: HomeViewState
+    state: HomeViewState,
+    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
 ) {
     Scaffold(
         topBar = { AppBar("Hello!")},
@@ -58,7 +65,10 @@ internal fun Home(
                 CarouselWithHeader(
                     items = state.trendingItems,
                     title = "People are watching",
-                    refreshing = state.trendingRefreshing
+                    refreshing = state.trendingRefreshing,
+                    onItemClick = {
+                        openShowDetails(it.id, null, null)
+                    }
                 )
             }
             /*popular items*/
@@ -66,7 +76,10 @@ internal fun Home(
                 CarouselWithHeader(
                     items = state.popularItems,
                     title = "Top rated",
-                    refreshing = state.popularRefreshing
+                    refreshing = state.popularRefreshing,
+                    onItemClick = {
+                        openShowDetails(it.id, null, null)
+                    }
                 )
             }
         }
@@ -78,6 +91,7 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
     items: List<T>,
     title: String,
     refreshing: Boolean,
+    onItemClick: (ShowEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -98,14 +112,10 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
         if (items.isNotEmpty()) {
             EntryShowCarousel(
                 items = items,
+                onItemClick = onItemClick,
                 modifier = Modifier
                     .height(192.dp)
                     .fillMaxWidth()
-            )
-        }
-        else {
-            Header(
-                title = "Nothing to show!"
             )
         }
     }
@@ -137,6 +147,7 @@ private fun Header(
 @Composable
 private fun <T: EntryWithShow<*>> EntryShowCarousel(
     items: List<T>,
+    onItemClick: (ShowEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -152,6 +163,7 @@ private fun <T: EntryWithShow<*>> EntryShowCarousel(
             PosterCard(
                 show = it.show,
                 poster = it.poster,
+                onClick = { onItemClick(it.show) },
                 modifier = Modifier
                     .fillParentMaxHeight()
                     .aspectRatio(2 / 3f)
