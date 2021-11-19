@@ -31,6 +31,10 @@ sealed class LeafScreen(private val route: String) {
     object Search: LeafScreen("search")
     object Library: LeafScreen("library")
     object About: LeafScreen("about")
+
+    object ShowDetails: LeafScreen("show/{showId}") {
+        fun createRoute(root: Screen, showId: Long) = "${root.route}/show/$showId"
+    }
 }
 
 /**

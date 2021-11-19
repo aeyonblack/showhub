@@ -15,7 +15,7 @@ import com.bumptech.glide.request.transition.Transition
 fun loadPicture(url: String): MutableState<Bitmap?> {
     val bitmapState: MutableState<Bitmap?> = remember { mutableStateOf(null) }
 
-    // download actual image using provided url
+    // download image using provided url
     Glide
         .with(LocalContext.current)
         .asBitmap()
