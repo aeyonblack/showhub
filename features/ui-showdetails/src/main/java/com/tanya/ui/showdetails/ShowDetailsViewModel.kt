@@ -3,22 +3,22 @@ package com.tanya.ui.showdetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tanya.base.base.InvokeError
+import com.tanya.base.base.InvokeStarted
+import com.tanya.base.base.InvokeStatus
+import com.tanya.base.base.InvokeSuccess
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
 import com.tanya.domain.interactors.UpdateShowDetails
 import com.tanya.domain.interactors.UpdateShowImages
 import com.tanya.domain.observers.ObserveShowDetails
 import com.tanya.domain.observers.ObserveShowImages
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ShowDetailsViewModel
-@Inject
-constructor(
+internal class ShowDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val updateShowDetails: UpdateShowDetails,
     observeShowDetails: ObserveShowDetails,
@@ -48,11 +48,23 @@ constructor(
         observeShowDetails(ObserveShowDetails.Params(showId))
         observeShowImages(ObserveShowImages.Params(showId))
 
-        refresh(false)
+        refresh(true)
     }
 
     private fun refresh(forceLoad: Boolean) {
-        updateShowDetails(UpdateShowDetails.Params(showId, forceLoad))
-        updateShowImages(UpdateShowImages.Params(showId, forceLoad))
+        updateShowDetails(UpdateShowDetails.Params(showId, forceLoad)).watchStatus()
+        updateShowImages(UpdateShowImages.Params(showId, forceLoad)).watchStatus()
+    }
+
+    private fun Flow<InvokeStatus>.watchStatus() = viewModelScope.launch { collectStatus() }
+
+    private suspend fun Flow<InvokeStatus>.collectStatus() = collect {
+        when(it) {
+            InvokeStarted -> loadingState.addLoader()
+            InvokeSuccess -> loadingState.removeLoader()
+            is InvokeError -> {
+                loadingState.removeLoader()
+            }
+        }
     }
 }
