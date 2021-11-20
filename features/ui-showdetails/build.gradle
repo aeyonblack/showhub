@@ -39,6 +39,8 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
+    implementation(libs.androidx.constraint.compose)
+
     implementation(libs.bundles.compose)
     implementation(libs.coil.compose)
 
