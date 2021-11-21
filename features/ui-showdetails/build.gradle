@@ -44,6 +44,9 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.coil.compose)
 
+    api(libs.accompanist.insets)
+    api(libs.accompanist.insetsui)
+
     implementation libs.androidx.hilt.compose
     implementation libs.hilt.library
     kapt libs.hilt.compiler

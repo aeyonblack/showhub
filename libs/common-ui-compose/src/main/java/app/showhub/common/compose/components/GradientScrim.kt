@@ -23,10 +23,10 @@ import kotlin.math.pow
 @SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.drawForegroundGradientScrim(
     color: Color,
-    decay: Float = 3.0f,
+    decay: Float = 1f,
     numStops: Int = 16,
     @FloatRange(from = 0.0, to = 1.0) startY: Float = 0f,
-    @FloatRange(from = 0.0, to = 1.0) endY: Float = 1f,
+    @FloatRange(from = 0.0, to = 500.0) endY: Float = 500f,
 ): Modifier = composed {
     val colors = remember(color, numStops) {
         val baseAlpha = color.alpha

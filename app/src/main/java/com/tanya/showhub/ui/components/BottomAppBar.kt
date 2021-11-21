@@ -14,6 +14,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.google.accompanist.insets.navigationBarsPadding
 import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.NavigationItem
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.BottomNavigation
 
 
 @Composable
@@ -24,6 +27,9 @@ internal fun BottomNavBar(
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
+        contentPadding = rememberInsetsPaddingValues(
+            insets = LocalWindowInsets.current.navigationBars
+        ),
         modifier = Modifier.fillMaxWidth(),
     ) {
         navigationItems.forEach {
