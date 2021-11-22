@@ -5,6 +5,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -131,11 +132,13 @@ internal fun ShowDetailsContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+
         item {
             Spacer(modifier = Modifier.height(16.dp))
         }
+
         item {
-            Text(text = "Overview")
+            Header(title = "Overview")
         }
         item {
             show.summary?.let {
@@ -145,6 +148,46 @@ internal fun ShowDetailsContent(
                     .padding(16.dp))
             }
         }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            Header(title = "Certificate")
+        }
+        item {
+            Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                show.certification?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colors.onBackground,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .padding(
+                                horizontal = 16.dp,
+                                vertical = 8.dp
+                            )
+                    )
+                }
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            Header(title = "Genre")
+        }
+        item {
+
+        }
+
         repeat(50) {
             item {
                 Text(
@@ -163,7 +206,10 @@ private fun Header(
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-
+        Text(
+            text = title,
+            style = MaterialTheme.typography.subtitle1
+        )
     }
 }
 
@@ -230,6 +276,14 @@ private fun FollowShowButton(
         }
     }
 }
+
+@Composable
+private fun GenresPanel(
+    genres
+) {
+
+}
+
 
 @Composable
 private fun ShowDetailsAppBar(
