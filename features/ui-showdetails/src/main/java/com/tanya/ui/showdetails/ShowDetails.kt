@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.showhub.common.compose.components.ExpandingText
 import app.showhub.common.compose.components.drawForegroundGradientScrim
 import app.showhub.common.compose.components.loadPicture
 import app.showhub.common.compose.extensions.copy
@@ -131,7 +132,18 @@ internal fun ShowDetailsContent(
             )
         }
         item {
-
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            Text(text = "Overview")
+        }
+        item {
+            show.summary?.let {
+                ExpandingText(text = it,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp))
+            }
         }
         repeat(50) {
             item {
@@ -140,6 +152,18 @@ internal fun ShowDetailsContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun Header(
+    title: String
+) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+
     }
 }
 
