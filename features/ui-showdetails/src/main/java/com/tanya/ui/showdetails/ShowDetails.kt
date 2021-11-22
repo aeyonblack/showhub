@@ -1,14 +1,15 @@
 package com.tanya.ui.showdetails
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,7 +21,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.drawForegroundGradientScrim
@@ -113,14 +116,22 @@ internal fun ShowDetailsContent(
     ) {
         item {
             BackdropImage(
+                show = show,
                 backdrop = backdrop,
-                showTitle = show.title ?: "",
                 listState = listState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 10)
                     .clipToBounds()
             )
+        }
+        item {
+            FollowShowButton(
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        item {
+
         }
         repeat(50) {
             item {
@@ -134,8 +145,8 @@ internal fun ShowDetailsContent(
 
 @Composable
 private fun BackdropImage(
+    show: ShowEntity,
     backdrop: ShowImagesEntity?,
-    showTitle: String,
     listState: LazyListState,
     modifier: Modifier = Modifier
 ) {
@@ -159,19 +170,38 @@ private fun BackdropImage(
                     )
                 }
             }
+            BackdropContent(
+                showTitle = show.title ?: "",
+                rating = show.traktRating ?: 0f,
+                votes = show.traktVotes ?: 0,
+                decay = decay,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+    }
+}
 
-            val textStyle = MaterialTheme.typography.h4
-
+@Composable
+private fun FollowShowButton(
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        OutlinedButton(
+            onClick = { /*TODO*/ },
+            border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
+            shape = RoundedCornerShape(4.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally)
+        ) {
             Text(
-                text = showTitle,
-                style = textStyle.copy(
-                    color = Color.White,
-                ),
-                fontWeight = FontWeight.Bold,
+                text = "Follow",
+                color = MaterialTheme.colors.onBackground,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp)
-                    .alpha(minOf(1f, decay))
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = 4.dp
+                    )
             )
         }
     }
@@ -188,14 +218,14 @@ private fun ShowDetailsAppBar(
             showBackground -> Color.Black
             else -> Color.Transparent
         },
-        animationSpec = tween(500)
+        animationSpec = tween()
     )
     
     TopAppBar(
         title = {
             Crossfade(
                 targetState = showBackground && title != null,
-                animationSpec = tween(500)
+                animationSpec = tween(1000)
             ) {
                 if (it) Text(text = title!!)
             }
@@ -232,4 +262,56 @@ private fun ShowDetailsAppBar(
         elevation = 0.dp,
         modifier = modifier
     )
+}
+
+@Composable
+private fun BackdropContent(
+    showTitle: String,
+    rating: Float,
+    votes: Int,
+    decay: Float,
+    modifier: Modifier = Modifier,
+) {
+    val titleStyle = MaterialTheme.typography.h4
+    Column(modifier) {
+        Text(
+            text = showTitle,
+            style = titleStyle.copy(
+                color = Color.White,
+            ),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .alpha(minOf(1f, decay))
+                .align(Alignment.CenterHorizontally)
+        )
+        Text(
+            text = stringResource(R.string.trakt_rating_text, rating*10f, votes/1000f),
+            style = MaterialTheme.typography.subtitle1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .alpha(minOf(1f, decay))
+                .align(Alignment.CenterHorizontally)
+        )
+        /*Text(
+            text = show.certification ?: "",
+            style = MaterialTheme.typography.body2,
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.onSurface,
+                    shape = RoundedCornerShape(4.dp),
+                )
+                .alpha(minOf(1f,decay))
+                .padding(
+                    horizontal = 16.dp,
+                    vertical = 8.dp
+                )
+                .align(Alignment.CenterHorizontally)
+                .alpha(minOf(1f,decay))
+        )*/
+    }
 }

@@ -6,4 +6,6 @@
     <string name="search_title">Search</string>
     <string name="library_title">Library</string>
     <string name="about_title">About</string>
+    <string name="trakt_rating_text">Rated %1$.0f%% by %1$.1fk viewers</string>
+    <string name="trakt_rating_votes"></string>
 </resources>
