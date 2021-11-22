@@ -47,8 +47,7 @@ internal fun BottomNavBar(
                 selected = selected,
                 onClick = {
                     onNavigationSelected(it.screen)
-                },
-                modifier = Modifier.navigationBarsPadding()
+                }
             )
         }
     }

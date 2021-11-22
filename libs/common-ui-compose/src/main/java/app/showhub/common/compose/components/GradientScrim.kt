@@ -1,6 +1,7 @@
 package app.showhub.common.compose.components
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.FloatRange
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,11 +25,12 @@ import kotlin.math.pow
 fun Modifier.drawForegroundGradientScrim(
     color: Color,
     decay: Float = 1f,
-    numStops: Int = 16,
+    numStops: Int = 32,
     @FloatRange(from = 0.0, to = 1.0) startY: Float = 0f,
     @FloatRange(from = 0.0, to = 500.0) endY: Float = 500f,
 ): Modifier = composed {
-    val colors = remember(color, numStops) {
+    Log.d("gradientScrim", "decay = $decay")
+    val colors = remember(color, numStops, decay) {
         val baseAlpha = color.alpha
         List(numStops) { i ->
             val x = i * 1f / (numStops - 1)

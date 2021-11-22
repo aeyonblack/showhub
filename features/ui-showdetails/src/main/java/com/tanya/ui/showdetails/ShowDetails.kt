@@ -1,5 +1,6 @@
 package com.tanya.ui.showdetails
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -8,19 +9,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.drawForegroundGradientScrim
@@ -31,6 +31,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
+import com.tanya.common.ui.resources.R
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
 
@@ -69,10 +70,7 @@ internal fun ShowDetails(
                         else -> {
                             val firstVisibleItem = visibleItemsInfo[0]
                             when {
-                                // If the first visible item is > 0, we want to show the app bar background
                                 firstVisibleItem.index > 0 -> true
-                                // If the first item is visible, only show the app bar background once the only
-                                // remaining part of the item is <= the app bar
                                 else -> firstVisibleItem.size + firstVisibleItem.offset <= appBarHeight
                             }
                         }
@@ -141,19 +139,22 @@ private fun BackdropImage(
     listState: LazyListState,
     modifier: Modifier = Modifier
 ) {
+    var decay by remember { mutableStateOf(1f)}
+    decay = 1/(listState.firstVisibleItemScrollOffset/80f)
     Surface(modifier = modifier) {
         Box {
             if (backdrop != null) {
                 val image = loadPicture(url = backdrop.path).value
-                image?.let {
+                image?.let { img ->
                     Image(
-                        bitmap = it.asImageBitmap(),
+                        bitmap = img.asImageBitmap(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
                             .drawForegroundGradientScrim(
                                 color = Color.Black.copy(1f),
+                                decay = minOf(1f, decay)
                             )
                     )
                 }
@@ -170,6 +171,7 @@ private fun BackdropImage(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
+                    .alpha(minOf(1f, decay))
             )
         }
     }
@@ -186,14 +188,14 @@ private fun ShowDetailsAppBar(
             showBackground -> Color.Black
             else -> Color.Transparent
         },
-        animationSpec = tween(1000)
+        animationSpec = tween(500)
     )
     
     TopAppBar(
         title = {
             Crossfade(
                 targetState = showBackground && title != null,
-                animationSpec = tween(1000)
+                animationSpec = tween(500)
             ) {
                 if (it) Text(text = title!!)
             }
@@ -202,6 +204,30 @@ private fun ShowDetailsAppBar(
             insets = LocalWindowInsets.current.systemBars,
             applyBottom = false
         ),
+        navigationIcon = {
+            IconButton(
+                onClick = { /*TODO*/ },
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = { /*TODO*/ },
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_refresh),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        },
         backgroundColor = backgroundColor,
         elevation = 0.dp,
         modifier = modifier
