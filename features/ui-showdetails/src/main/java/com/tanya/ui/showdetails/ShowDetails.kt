@@ -3,14 +3,11 @@ package com.tanya.ui.showdetails
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -30,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.ExpandingText
+import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.drawForegroundGradientScrim
 import app.showhub.common.compose.components.loadPicture
 import app.showhub.common.compose.extensions.actionButtonBackground
@@ -43,6 +41,7 @@ import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
+import com.tanya.data.results.RelatedShowEntryWithShow
 
 @Composable
 fun ShowDetails() {
@@ -98,6 +97,7 @@ internal fun ShowDetails(
         Surface {
             ShowDetailsContent(
                 show = state.show,
+                relatedShows = state.relatedShows,
                 listState = listState,
                 backdrop = state.backdropImage,
                 contentPadding = contentPadding,
@@ -110,6 +110,7 @@ internal fun ShowDetails(
 @Composable
 internal fun ShowDetailsContent(
     show: ShowEntity,
+    relatedShows: List<RelatedShowEntryWithShow>,
     listState: LazyListState,
     backdrop: ShowImagesEntity?,
     contentPadding: PaddingValues,
@@ -140,7 +141,9 @@ internal fun ShowDetailsContent(
             Header(title = "Overview")
         }
         item {
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)) {
                 show.certification?.let {
                     Text(
                         text = it,
@@ -169,23 +172,31 @@ internal fun ShowDetailsContent(
             }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        if (relatedShows.isNotEmpty()) {
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-        item {
-            Header(title = "People also watch")
+            item {
+                Header(title = "People also watch")
+            }
+            item {
+                RelatedShows(
+                    relatedShows = relatedShows,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
 
         /*TODO - Remove this list item, add the recommended list of movies here*/
-        repeat(50) {
+        /*repeat(50) {
             item {
                 Text(
                     text = "List Content",
                     modifier = Modifier.padding(16.dp)
                 )
             }
-        }
+        }*/
     }
 }
 
@@ -243,44 +254,30 @@ private fun BackdropImage(
 }
 
 @Composable
-private fun FollowShowButton(
-    modifier: Modifier = Modifier
+private fun RelatedShows(
+    relatedShows: List<RelatedShowEntryWithShow>,
+    modifier:Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        OutlinedButton(
-            onClick = { /*TODO*/ },
-            border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-            shape = MaterialTheme.shapes.medium,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Text(
-                text = "Follow",
-                color = MaterialTheme.colors.onBackground,
+    val listState = rememberLazyListState()
+    val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+
+    LazyRow(
+        state = listState,
+        modifier = modifier,
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        items(relatedShows) {
+            PosterCard(
+                show = it.show,
+                poster = it.poster,
                 modifier = Modifier
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = 4.dp
-                    )
+                    .fillParentMaxWidth(0.2f)
+                    .aspectRatio(2 / 3f)
             )
         }
     }
 }
-
-@Composable
-private fun GenresPanel(
-    genres: String,
-    modifier: Modifier = Modifier
-) {
-    Box(modifier) {
-        Text(
-            text = genres,
-            style = MaterialTheme.typography.body2
-        )
-    }
-}
-
 
 @Composable
 private fun ShowDetailsAppBar(
