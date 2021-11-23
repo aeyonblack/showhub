@@ -42,6 +42,11 @@ data class ShowEntity(
     @Ignore
     constructor() : this(0)
 
+    @delegate:Ignore
+    val genres by lazy(LazyThreadSafetyMode.NONE) {
+        _genres?.split(",")?.mapNotNull { Genre.fromTraktValue(it.trim()) } ?: emptyList()
+    }
+
     companion object {
         val EMPTY_SHOW = ShowEntity()
     }

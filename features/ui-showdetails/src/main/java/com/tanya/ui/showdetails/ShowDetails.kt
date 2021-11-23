@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,11 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.ExpandingText
 import app.showhub.common.compose.components.drawForegroundGradientScrim
 import app.showhub.common.compose.components.loadPicture
+import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
+import app.showhub.common.compose.theme.yellow400
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -127,51 +131,39 @@ internal fun ShowDetailsContent(
                     .clipToBounds()
             )
         }
-        item {
-            FollowShowButton(
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
 
         item {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         }
 
         item {
             Header(title = "Overview")
         }
         item {
-            show.summary?.let {
-                ExpandingText(text = it,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp))
-            }
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        item {
-            Header(title = "Certificate")
-        }
-        item {
-            Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 show.certification?.let {
                     Text(
                         text = it,
                         style = MaterialTheme.typography.body2,
+                        color = yellow400,
                         modifier = Modifier
                             .border(
                                 width = 1.dp,
-                                color = MaterialTheme.colors.onBackground,
-                                shape = RoundedCornerShape(4.dp)
+                                color = yellow400,
+                                shape = RoundedCornerShape(8.dp)
                             )
                             .padding(
-                                horizontal = 16.dp,
-                                vertical = 8.dp
+                                horizontal = 8.dp,
+                                vertical = 4.dp
                             )
+                    )
+                }
+                show.summary?.let {
+                    ExpandingText(
+                        text = it,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
                     )
                 }
             }
@@ -182,16 +174,15 @@ internal fun ShowDetailsContent(
         }
 
         item {
-            Header(title = "Genre")
-        }
-        item {
-
+            Header(title = "People also watch")
         }
 
+        /*TODO - Remove this list item, add the recommended list of movies here*/
         repeat(50) {
             item {
                 Text(
                     text = "List Content",
+                    modifier = Modifier.padding(16.dp)
                 )
             }
         }
@@ -259,7 +250,7 @@ private fun FollowShowButton(
         OutlinedButton(
             onClick = { /*TODO*/ },
             border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-            shape = RoundedCornerShape(4.dp),
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
@@ -279,9 +270,15 @@ private fun FollowShowButton(
 
 @Composable
 private fun GenresPanel(
-    genres
+    genres: String,
+    modifier: Modifier = Modifier
 ) {
-
+    Box(modifier) {
+        Text(
+            text = genres,
+            style = MaterialTheme.typography.body2
+        )
+    }
 }
 
 
@@ -298,6 +295,8 @@ private fun ShowDetailsAppBar(
         },
         animationSpec = tween()
     )
+
+    var enabled by remember { mutableStateOf(true) }
     
     TopAppBar(
         title = {
@@ -325,6 +324,21 @@ private fun ShowDetailsAppBar(
             }
         },
         actions = {
+            Text(
+                text = "Follow",
+                style = MaterialTheme.typography.h5,
+                textAlign = TextAlign.Center,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .clickable {
+                        enabled = !enabled
+                    }
+                    .actionButtonBackground(
+                        enabled = enabled
+                    )
+                    .align(Alignment.CenterVertically)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            )
             IconButton(
                 onClick = { /*TODO*/ },
             ) {
@@ -374,22 +388,5 @@ private fun BackdropContent(
                 .alpha(minOf(1f, decay))
                 .align(Alignment.CenterHorizontally)
         )
-        /*Text(
-            text = show.certification ?: "",
-            style = MaterialTheme.typography.body2,
-            modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colors.onSurface,
-                    shape = RoundedCornerShape(4.dp),
-                )
-                .alpha(minOf(1f,decay))
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 8.dp
-                )
-                .align(Alignment.CenterHorizontally)
-                .alpha(minOf(1f,decay))
-        )*/
     }
 }
