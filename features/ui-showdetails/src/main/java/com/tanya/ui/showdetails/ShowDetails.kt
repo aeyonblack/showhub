@@ -44,26 +44,33 @@ import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.results.RelatedShowEntryWithShow
 
 @Composable
-fun ShowDetails() {
+fun ShowDetails(
+    openShowDetails: (showId: Long) -> Unit
+) {
     ShowDetails(
-        viewModel = hiltViewModel()
+        viewModel = hiltViewModel(),
+        openShowDetails = openShowDetails
     )
 }
 
 @Composable
 internal fun ShowDetails(
-    viewModel: ShowDetailsViewModel
+    viewModel: ShowDetailsViewModel,
+    openShowDetails: (showId: Long) -> Unit
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
         .collectAsState(initial = ShowDetailsViewState.EMPTY)
-    ShowDetails(
-        state = viewState
-    )
+    ShowDetails(state = viewState) {
+        when (it) {
+            is ShowDetailsAction.OpenShowDetails -> openShowDetails(it.showId)
+        }
+    }
 }
 
 @Composable
 internal fun ShowDetails(
-    state: ShowDetailsViewState
+    state: ShowDetailsViewState,
+    dispatcher: (ShowDetailsAction) -> Unit
 ) {
     val listState = rememberLazyListState()
     Scaffold(
@@ -100,6 +107,7 @@ internal fun ShowDetails(
                 relatedShows = state.relatedShows,
                 listState = listState,
                 backdrop = state.backdropImage,
+                dispatcher = dispatcher,
                 contentPadding = contentPadding,
                 modifier = Modifier.fillMaxSize()
             )
@@ -113,6 +121,7 @@ internal fun ShowDetailsContent(
     relatedShows: List<RelatedShowEntryWithShow>,
     listState: LazyListState,
     backdrop: ShowImagesEntity?,
+    dispatcher: (ShowDetailsAction) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -183,6 +192,7 @@ internal fun ShowDetailsContent(
             item {
                 RelatedShows(
                     relatedShows = relatedShows,
+                    dispatcher = dispatcher,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -247,6 +257,7 @@ private fun BackdropImage(
 @Composable
 private fun RelatedShows(
     relatedShows: List<RelatedShowEntryWithShow>,
+    dispatcher: (ShowDetailsAction) -> Unit,
     modifier:Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -265,7 +276,9 @@ private fun RelatedShows(
                 modifier = Modifier
                     .fillParentMaxWidth(0.2f)
                     .aspectRatio(2 / 3f)
-            )
+            ) {
+                dispatcher(ShowDetailsAction.OpenShowDetails(it.show.id))
+            }
         }
     }
 }
@@ -301,7 +314,7 @@ private fun ShowDetailsAppBar(
         ),
         navigationIcon = {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = {  },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),

@@ -115,6 +115,10 @@ fun NavGraphBuilder.addShowDetails(
             }
         )
     ) {
-        ShowDetails()
+        ShowDetails(
+            openShowDetails = {
+                navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
+            }
+        )
     }
 }
