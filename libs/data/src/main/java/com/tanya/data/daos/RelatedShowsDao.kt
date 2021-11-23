@@ -24,7 +24,7 @@ abstract class RelatedShowsDao : PairEntryDao<RelatedShowEntity, RelatedShowEntr
 
     @Transaction
     @Query("SELECT * FROM related_shows WHERE show_id = :showId ORDER BY order_index")
-    abstract suspend fun entriesObservable(showId: Long): Flow<List<RelatedShowEntity>>
+    abstract fun entriesObservable(showId: Long): Flow<List<RelatedShowEntity>>
 
     @Query("DELETE FROM related_shows WHERE show_id = :showId")
     abstract override suspend fun deleteWithShowId(showId: Long)
