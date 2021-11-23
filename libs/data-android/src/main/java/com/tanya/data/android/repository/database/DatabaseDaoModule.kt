@@ -22,4 +22,7 @@ object DatabaseDaoModule {
     @Provides
     fun provideTrendingDao(db: ShowhubDatabase) = db.trendingDao()
 
+    @Provides
+    fun provideRelatedShowsDao(db: ShowhubDatabase) = db.relatedShowsDao()
+
 }
