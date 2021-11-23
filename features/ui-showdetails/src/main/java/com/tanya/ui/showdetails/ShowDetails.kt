@@ -45,10 +45,12 @@ import com.tanya.data.results.RelatedShowEntryWithShow
 
 @Composable
 fun ShowDetails(
+    navigateUp: () -> Unit,
     openShowDetails: (showId: Long) -> Unit
 ) {
     ShowDetails(
         viewModel = hiltViewModel(),
+        navigateUp = navigateUp,
         openShowDetails = openShowDetails
     )
 }
@@ -56,12 +58,14 @@ fun ShowDetails(
 @Composable
 internal fun ShowDetails(
     viewModel: ShowDetailsViewModel,
+    navigateUp: () -> Unit,
     openShowDetails: (showId: Long) -> Unit
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
         .collectAsState(initial = ShowDetailsViewState.EMPTY)
     ShowDetails(state = viewState) {
         when (it) {
+            is ShowDetailsAction.NavigateUp -> navigateUp()
             is ShowDetailsAction.OpenShowDetails -> openShowDetails(it.showId)
         }
     }
@@ -95,6 +99,7 @@ internal fun ShowDetails(
             ShowDetailsAppBar(
                 title = state.show.title,
                 showBackground = showAppBarBackground,
+                dispatcher = dispatcher,
                 modifier = Modifier
                     .fillMaxWidth()
                     .onSizeChanged { appBarHeight = it.height }
@@ -287,6 +292,7 @@ private fun RelatedShows(
 private fun ShowDetailsAppBar(
     title: String?,
     showBackground: Boolean,
+    dispatcher: (ShowDetailsAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor by animateColorAsState(
@@ -314,7 +320,7 @@ private fun ShowDetailsAppBar(
         ),
         navigationIcon = {
             IconButton(
-                onClick = {  },
+                onClick = { dispatcher(ShowDetailsAction.NavigateUp) },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
