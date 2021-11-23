@@ -8,8 +8,10 @@ import com.tanya.base.base.InvokeStarted
 import com.tanya.base.base.InvokeStatus
 import com.tanya.base.base.InvokeSuccess
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
+import com.tanya.domain.interactors.UpdateRelatedShows
 import com.tanya.domain.interactors.UpdateShowDetails
 import com.tanya.domain.interactors.UpdateShowImages
+import com.tanya.domain.observers.ObserveRelatedShows
 import com.tanya.domain.observers.ObserveShowDetails
 import com.tanya.domain.observers.ObserveShowImages
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +25,9 @@ internal class ShowDetailsViewModel @Inject constructor(
     private val updateShowDetails: UpdateShowDetails,
     observeShowDetails: ObserveShowDetails,
     private val updateShowImages: UpdateShowImages,
-    observeShowImages: ObserveShowImages
+    observeShowImages: ObserveShowImages,
+    private val updateRelatedShows: UpdateRelatedShows,
+    observeRelatedShows: ObserveRelatedShows
 ) : ViewModel() {
     private val showId: Long = savedStateHandle.get("showId")!!
     private val loadingState = ObservableLoadingCounter()
@@ -31,11 +35,13 @@ internal class ShowDetailsViewModel @Inject constructor(
     val state = combine(
         loadingState.observable,
         observeShowDetails.flow,
-        observeShowImages.flow
-    ) { refreshing, show, showImages ->
+        observeShowImages.flow,
+        observeRelatedShows.flow
+    ) { refreshing, show, showImages, relatedShows ->
         ShowDetailsViewState(
             show = show,
             backdropImage = showImages.backdrop,
+            relatedShows = relatedShows,
             refreshing = refreshing
         )
     }.stateIn(
@@ -47,13 +53,15 @@ internal class ShowDetailsViewModel @Inject constructor(
     init {
         observeShowDetails(ObserveShowDetails.Params(showId))
         observeShowImages(ObserveShowImages.Params(showId))
+        observeRelatedShows(ObserveRelatedShows.Params(showId))
 
-        refresh(true)
+        refresh()
     }
 
-    private fun refresh(forceLoad: Boolean) {
+    private fun refresh(forceLoad: Boolean = true) {
         updateShowDetails(UpdateShowDetails.Params(showId, forceLoad)).watchStatus()
         updateShowImages(UpdateShowImages.Params(showId, forceLoad)).watchStatus()
+        updateRelatedShows(UpdateRelatedShows.Params(showId, forceLoad)).watchStatus()
     }
 
     private fun Flow<InvokeStatus>.watchStatus() = viewModelScope.launch { collectStatus() }
