@@ -138,7 +138,7 @@ internal fun ShowDetailsContent(
         }
 
         item {
-            Header(title = "Overview")
+            Header(title = "About")
         }
         item {
             Column(modifier = Modifier
@@ -187,16 +187,6 @@ internal fun ShowDetailsContent(
                 )
             }
         }
-
-        /*TODO - Remove this list item, add the recommended list of movies here*/
-        /*repeat(50) {
-            item {
-                Text(
-                    text = "List Content",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }*/
     }
 }
 
@@ -210,7 +200,8 @@ private fun Header(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.subtitle1
+            style = MaterialTheme.typography.h5,
+            color = MaterialTheme.colors.onBackground.copy(alpha = 0.8f)
         )
     }
 }
@@ -378,8 +369,9 @@ private fun BackdropContent(
         )
         Text(
             text = stringResource(R.string.trakt_rating_text, rating*10f, votes/1000f),
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
+            fontSize = 13.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .alpha(minOf(1f, decay))
