@@ -1,5 +1,8 @@
 package com.tanya.data.mappers
 
+import com.uwetrottmann.tmdb2.entities.BaseTvShow
+import com.uwetrottmann.tmdb2.entities.TvShowResultsPage
+
 internal fun <F, T1, T2> pairMapperOf(
     firstMapper: Mapper<F, T1>,
     secondMapper: Mapper<F, T2>
@@ -16,4 +19,10 @@ internal fun <F, T1, T2> pairMapperOf(
     from.mapIndexed { index, value ->
         firstMapper.map(value) to secondMapper.map(index, value)
     }
+}
+
+internal inline fun <T> unwrapTmdbShowResults(
+    crossinline f: suspend (List<BaseTvShow>) -> List<T>
+): suspend (TvShowResultsPage) -> List<T> = {
+    f(it.results ?: emptyList())
 }

@@ -4,17 +4,15 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.tanya.data.ShowhubDatabase
-import com.tanya.data.entities.PopularShowEntity
-import com.tanya.data.entities.ShowEntity
-import com.tanya.data.entities.ShowImagesEntity
-import com.tanya.data.entities.TrendingShowEntity
+import com.tanya.data.entities.*
 
 @Database(
     entities = [
         ShowEntity::class,
         ShowImagesEntity::class,
         PopularShowEntity::class,
-        TrendingShowEntity::class
+        TrendingShowEntity::class,
+        RelatedShowEntity::class
     ],
     version = 1
 )
