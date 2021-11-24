@@ -75,7 +75,7 @@ abstract class EpisodesDao : EntityDao<EpisodeEntity>() {
             FROM shows
             INNER JOIN seasons AS s ON shows.id = s.show_id
             INNER JOIN episodes AS eps ON eps.season_id = s.id
-            INNER JOIN episode_watch_entries AS ew ON ew.episode_id = eps.id
+            INNER JOIN watched_episodes AS ew ON ew.episode_id = eps.id
             WHERE s.number != ${SeasonEntity.NUMBER_SPECIALS}
                 AND s.ignored = 0
                 AND shows.id = :showId
