@@ -43,11 +43,11 @@ abstract class SeasonsDao : EntityDao<SeasonEntity>() {
 
     @Query(
         """
-        SELECT id from seasons WHERE 
-          show_id = (SELECT show_id from SEASONS WHERE id = :seasonId)
-          AND number != $NUMBER_SPECIALS
-          AND number < (SELECT number from SEASONS WHERE id = :seasonId)
-    """
+            SELECT id from seasons 
+            WHERE show_id = (SELECT show_id from seasons WHERE id = :seasonId)
+            AND number != $NUMBER_SPECIALS
+            AND number < (SELECT number from seasons WHERE id = :seasonId)
+        """
     )
     abstract suspend fun showPreviousSeasonIds(seasonId: Long): LongArray
 
