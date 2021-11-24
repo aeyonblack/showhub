@@ -5,7 +5,8 @@ import com.tanya.data.entities.SeasonEntity
 import org.threeten.bp.OffsetDateTime
 
 @DatabaseView(
-    value = """
+    value =
+    """
         SELECT fs.id, MIN(datetime(eps.first_aired)) AS next_to_watch_air_date
         FROM library AS fs
         INNER JOIN seasons AS s ON fs.show_id = s.show_id
