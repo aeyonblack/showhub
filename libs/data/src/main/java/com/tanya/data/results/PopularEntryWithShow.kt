@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Relation
 import com.tanya.data.entities.*
-import com.tanya.data.entities.findHighestRatedBackdrop
 import java.util.*
 
 class PopularEntryWithShow : EntryWithShow<PopularShowEntity>{
+
     @Embedded
     override lateinit var entry: PopularShowEntity
 
