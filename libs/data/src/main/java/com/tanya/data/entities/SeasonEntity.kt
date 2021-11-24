@@ -30,7 +30,7 @@ data class SeasonEntity(
     @ColumnInfo(name = "ep_count") val episodeCount: Int? = null,
     @ColumnInfo(name = "ep_aired") val episodesAired: Int? = null,
     @ColumnInfo(name = "trakt_rating") val traktRating: Float? = null,
-    @ColumnInfo(name = "trakt_votes") val traktRatingVotes: Float? = null,
+    @ColumnInfo(name = "trakt_votes") val traktRatingVotes: Int? = null,
     @ColumnInfo(name = "tmdb_poster_path") val tmdbPosterPath: String? = null,
     @ColumnInfo(name = "tmdb_backdrop_path") val tmdbBackdropPath: String? = null,
     @ColumnInfo(name = "ignored") val ignored: Boolean = false
