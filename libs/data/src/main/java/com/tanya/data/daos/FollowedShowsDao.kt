@@ -6,5 +6,4 @@ import com.tanya.data.results.FollowedShowEntryWithShow
 
 @Dao
 abstract class FollowedShowsDao : EntryDao<FollowedShowEntity, FollowedShowEntryWithShow>() {
-
 }
