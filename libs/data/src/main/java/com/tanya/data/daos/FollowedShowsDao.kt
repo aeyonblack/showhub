@@ -89,8 +89,6 @@ abstract class FollowedShowsDao : EntryDao<FollowedShowEntity, FollowedShowEntry
     )
     abstract fun entryShowViewStats(showId: Long): Flow<FollowedShowsWatchStats>
 
-    suspend fun entriesWithNoPendingAction() = entriesWithPendingAction(PendingAction.NOTHING.value)
-
     suspend fun entriesWithSendPendingActions() = entriesWithPendingAction(PendingAction.UPLOAD.value)
 
     suspend fun entriesWithDeletePendingActions() = entriesWithPendingAction(PendingAction.DELETE.value)
@@ -151,54 +149,54 @@ abstract class FollowedShowsDao : EntryDao<FollowedShowEntity, FollowedShowEntry
 
         private const val ENTRY_QUERY_ORDER_LAST_WATCHED =
             """
-            SELECT fs.* FROM myshows_entries as fs
-            INNER JOIN seasons AS s ON fs.show_id = s.show_id
-            INNER JOIN episodes AS eps ON eps.season_id = s.id
-            LEFT JOIN episode_watch_entries as ew ON ew.episode_id = eps.id
-            GROUP BY fs.id
-            ORDER BY MAX(datetime(ew.watched_at)) DESC
-        """
+                SELECT fs.* FROM library as fs
+                INNER JOIN seasons AS s ON fs.show_id = s.show_id
+                INNER JOIN episodes AS eps ON eps.season_id = s.id
+                LEFT JOIN watched_episodes as ew ON ew.episode_id = eps.id
+                GROUP BY fs.id
+                ORDER BY MAX(datetime(ew.watched_at)) DESC
+            """
 
         private const val ENTRY_QUERY_ORDER_LAST_WATCHED_FILTER =
             """
-            SELECT fs.* FROM myshows_entries as fs
-            INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
-            INNER JOIN seasons AS s ON fs.show_id = s.show_id
-            INNER JOIN episodes AS eps ON eps.season_id = s.id
-            LEFT JOIN episode_watch_entries as ew ON ew.episode_id = eps.id
-            WHERE s_fts.title MATCH :filter
-            GROUP BY fs.id
-            ORDER BY MAX(datetime(ew.watched_at)) DESC
-        """
+                SELECT fs.* FROM library as fs
+                INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
+                INNER JOIN seasons AS s ON fs.show_id = s.show_id
+                INNER JOIN episodes AS eps ON eps.season_id = s.id
+                LEFT JOIN watched_episodes as ew ON ew.episode_id = eps.id
+                WHERE s_fts.title MATCH :filter
+                GROUP BY fs.id
+                ORDER BY MAX(datetime(ew.watched_at)) DESC
+            """
 
         private const val ENTRY_QUERY_ORDER_ALPHA =
             """
-            SELECT fs.* FROM myshows_entries as fs
-            INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
-            ORDER BY title ASC
-        """
+                SELECT fs.* FROM library as fs
+                INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
+                ORDER BY title ASC
+            """
 
         private const val ENTRY_QUERY_ORDER_ALPHA_FILTER =
             """
-            SELECT fs.* FROM myshows_entries as fs
-            INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
-            WHERE s_fts.title MATCH :filter
-            ORDER BY title ASC
-        """
+                SELECT fs.* FROM library as fs
+                INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
+                WHERE s_fts.title MATCH :filter
+                ORDER BY title ASC
+            """
 
         private const val ENTRY_QUERY_ORDER_ADDED =
             """
-            SELECT * FROM myshows_entries
-            ORDER BY datetime(followed_at) DESC
-        """
+                SELECT * FROM library
+                ORDER BY datetime(followed_at) DESC
+            """
 
         private const val ENTRY_QUERY_ORDER_ADDED_FILTER =
             """
-            SELECT fs.* FROM myshows_entries as fs
-            INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
-            WHERE s_fts.title MATCH :filter
-            ORDER BY datetime(followed_at) DESC
-        """
+                SELECT fs.* FROM library as fs
+                INNER JOIN shows_fts AS s_fts ON fs.show_id = s_fts.docid
+                WHERE s_fts.title MATCH :filter
+                ORDER BY datetime(followed_at) DESC
+            """
     }
 }
 
