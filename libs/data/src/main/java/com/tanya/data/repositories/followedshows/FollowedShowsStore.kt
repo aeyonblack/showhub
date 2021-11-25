@@ -5,8 +5,12 @@ import com.tanya.data.DatabaseTransactionRunner
 import com.tanya.data.daos.FollowedShowsDao
 import com.tanya.data.entities.FollowedShowEntity
 import com.tanya.data.entities.PendingAction
+import com.tanya.data.entities.SortOption
+import com.tanya.data.results.FollowedShowEntryWithShow
 import com.tanya.data.syncers.syncerForEntity
+import com.tanya.data.views.FollowedShowsWatchStats
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -89,9 +93,9 @@ class FollowedShowsStore @Inject constructor(
 
     suspend fun isShowFollowed(showId: Long) = followedShowsDao.entryCountWithShowId(showId) > 0
 
-    suspend fun sync(entities: List<FollowedShowEntry>) = transactionRunner {
+    suspend fun sync(entities: List<FollowedShowEntity>) = transactionRunner {
         syncer.sync(followedShowsDao.entries(), entities)
     }
 
-    suspend fun save(entry: FollowedShowEntry) = followedShowsDao.insertOrUpdate(entry)
+    suspend fun save(entry: FollowedShowEntity) = followedShowsDao.insertOrUpdate(entry)
 }
