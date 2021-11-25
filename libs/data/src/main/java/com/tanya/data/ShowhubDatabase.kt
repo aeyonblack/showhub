@@ -8,4 +8,8 @@ interface ShowhubDatabase {
     fun popularDao(): PopularDao
     fun trendingDao(): TrendingDao
     fun relatedShowsDao(): RelatedShowsDao
+    fun episodesDao(): EpisodesDao
+    fun episodeWatchDao(): EpisodeWatchEntityDao
+    fun followedShowsDao(): FollowedShowsDao
+    fun seasonDao(): SeasonsDao
 }

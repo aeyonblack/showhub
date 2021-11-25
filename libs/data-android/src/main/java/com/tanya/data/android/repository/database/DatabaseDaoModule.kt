@@ -25,4 +25,16 @@ object DatabaseDaoModule {
     @Provides
     fun provideRelatedShowsDao(db: ShowhubDatabase) = db.relatedShowsDao()
 
+    @Provides
+    fun provideEpisodesDao(db: ShowhubDatabase) = db.episodesDao()
+
+    @Provides
+    fun provideEpisodeWatchesDao(db: ShowhubDatabase) = db.episodeWatchDao()
+
+    @Provides
+    fun provideSeaonsDao(db: ShowhubDatabase) = db.seasonDao()
+
+    @Provides
+    fun followedShowsDao(db: ShowhubDatabase) = db.followedShowsDao()
+
 }
