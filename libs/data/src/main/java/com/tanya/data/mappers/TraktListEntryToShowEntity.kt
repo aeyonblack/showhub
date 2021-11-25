@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Singleton
-class TraktListEntryToTiviShow @Inject constructor(
+class TraktListEntryToShowEntity @Inject constructor(
     private val showMapper: TraktShowToShowEntity
 ) : Mapper<ListEntry, ShowEntity> {
     override suspend fun map(from: ListEntry) = showMapper.map(from.show)
