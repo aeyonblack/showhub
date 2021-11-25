@@ -1,5 +1,6 @@
 package com.tanya.data.repositories.followedshows
 
+import com.tanya.base.data.entities.Result
 import com.tanya.data.entities.FollowedShowEntity
 import com.tanya.data.entities.ShowEntity
 

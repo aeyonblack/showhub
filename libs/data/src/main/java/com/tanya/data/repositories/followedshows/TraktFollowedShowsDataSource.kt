@@ -1,5 +1,17 @@
 package com.tanya.data.repositories.followedshows
 
+import com.tanya.base.data.entities.ErrorResult
+import com.tanya.base.data.entities.Result
+import com.tanya.base.data.entities.Success
+import com.tanya.base.extensions.bodyOrThrow
+import com.tanya.base.extensions.executeWithRetry
+import com.tanya.base.extensions.toResult
+import com.tanya.base.extensions.toResultUnit
+import com.tanya.data.entities.FollowedShowEntity
+import com.tanya.data.entities.ShowEntity
+import com.tanya.data.mappers.TraktListEntryToFollowedShowEntity
+import com.tanya.data.mappers.TraktListEntryToShowEntity
+import com.tanya.data.mappers.pairMapperOf
 import com.uwetrottmann.trakt5.entities.*
 import com.uwetrottmann.trakt5.enums.Extended
 import com.uwetrottmann.trakt5.enums.ListPrivacy
@@ -9,8 +21,8 @@ import javax.inject.Provider
 
 class TraktFollowedShowsDataSource @Inject constructor(
     private val usersService: Provider<Users>,
-    listEntryToShowMapper: TraktListEntryToTiviShow,
-    listEntryToFollowedEntry: TraktListEntryToFollowedShowEntry
+    listEntryToShowMapper: TraktListEntryToShowEntity,
+    listEntryToFollowedEntry: TraktListEntryToFollowedShowEntity
 ) : FollowedShowsDataSource {
     companion object {
         private val LIST_NAME = "Following"
@@ -18,7 +30,7 @@ class TraktFollowedShowsDataSource @Inject constructor(
 
     private val listShowsMapper = pairMapperOf(listEntryToFollowedEntry, listEntryToShowMapper)
 
-    override suspend fun addShowIdsToList(listId: Int, shows: List<TiviShow>): Result<Unit> {
+    override suspend fun addShowIdsToList(listId: Int, shows: List<ShowEntity>): Result<Unit> {
         val syncItems = SyncItems()
         syncItems.shows = shows.map { show ->
             SyncShow().apply {
@@ -34,7 +46,7 @@ class TraktFollowedShowsDataSource @Inject constructor(
             .toResultUnit()
     }
 
-    override suspend fun removeShowIdsFromList(listId: Int, shows: List<TiviShow>): Result<Unit> {
+    override suspend fun removeShowIdsFromList(listId: Int, shows: List<ShowEntity>): Result<Unit> {
         val syncItems = SyncItems()
         syncItems.shows = shows.map { show ->
             SyncShow().apply {
@@ -50,7 +62,7 @@ class TraktFollowedShowsDataSource @Inject constructor(
             .toResultUnit()
     }
 
-    override suspend fun getListShows(listId: Int): Result<List<Pair<FollowedShowEntry, TiviShow>>> {
+    override suspend fun getListShows(listId: Int): Result<List<Pair<FollowedShowEntity, ShowEntity>>> {
         return usersService.get().listItems(UserSlug.ME, listId.toString(), Extended.NOSEASONS)
             .executeWithRetry()
             .toResult(listShowsMapper)
