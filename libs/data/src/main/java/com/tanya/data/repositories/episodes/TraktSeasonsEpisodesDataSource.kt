@@ -1,10 +1,13 @@
 package com.tanya.data.repositories.episodes
 
 import com.tanya.base.data.entities.Result
+import com.tanya.base.extensions.executeWithRetry
+import com.tanya.base.extensions.toResult
 import com.tanya.data.entities.EpisodeEntity
 import com.tanya.data.entities.EpisodeWatchEntity
 import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.mappers.*
+import com.uwetrottmann.trakt5.enums.Extended
 import com.uwetrottmann.trakt5.services.Seasons
 import com.uwetrottmann.trakt5.services.Users
 import org.threeten.bp.OffsetDateTime
@@ -21,9 +24,10 @@ class TraktSeasonsEpisodesDataSource @Inject constructor(
     private val seasonsService: Provider<Seasons>,
     private val userService: Provider<Users>,
 ): SeasonsEpisodesDataSource {
-    override suspend fun getSeasonsEpisodes(showId: Long): Result<List<Pair<SeasonEntity, List<EpisodeEntity>>>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getSeasonsEpisodes(showId: Long): Result<List<Pair<SeasonEntity, List<EpisodeEntity>>>> =
+        seasonsService.get().summary(showIdToTraktIdMapper.map(showId).toString(), Extended.FULLEPISODES)
+            .executeWithRetry()
+            .toResult(seasonMapper.forLists())
 
     override suspend fun getShowEpisodeWatches(
         showId: Long,
