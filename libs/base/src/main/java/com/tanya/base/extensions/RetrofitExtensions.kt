@@ -73,10 +73,19 @@ fun <T> Response<T>.isFromNetwork(): Boolean {
     return raw().cacheResponse == null
 }
 
-@Suppress("REDUNDANT_INLINE_SUSPEND_FUNCTION_TYPE")
 suspend fun <T, E> Response<T>.toResult(mapper: suspend (T) -> E): Result<E> = try {
     if (isSuccessful) {
         Success(data = mapper(bodyOrThrow()), responseModified = isFromNetwork())
+    } else {
+        ErrorResult(toException())
+    }
+} catch (e: Exception) {
+    ErrorResult(e)
+}
+
+fun <T> Response<T>.toResultUnit(): Result<Unit> = try {
+    if (isSuccessful) {
+        Success(data = Unit, responseModified = isFromNetwork())
     } else {
         ErrorResult(toException())
     }
