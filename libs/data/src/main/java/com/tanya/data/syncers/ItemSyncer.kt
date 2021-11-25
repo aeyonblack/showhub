@@ -1,11 +1,11 @@
 package com.tanya.data.syncers
 
 import com.tanya.data.daos.EntityDao
-import com.tanya.data.entities.ShowEntity
+import com.tanya.data.entities.BaseEntity
 
-/*TODO - understand how this works*/
+/*TODO - understand how this works */
 
-class ItemSyncer<LocalType : ShowEntity, NetworkType, Key>(
+class ItemSyncer<LocalType : BaseEntity, NetworkType, Key>(
     private val insertEntity: suspend (LocalType) -> Long,
     private val updateEntity: suspend (LocalType) -> Unit,
     private val deleteEntity: suspend (LocalType) -> Int,
@@ -68,13 +68,13 @@ class ItemSyncer<LocalType : ShowEntity, NetworkType, Key>(
     }
 }
 
-data class ItemSyncerResult<ET : ShowEntity>(
+data class ItemSyncerResult<ET : BaseEntity>(
     val added: List<ET> = emptyList(),
     val deleted: List<ET> = emptyList(),
     val updated: List<ET> = emptyList()
 )
 
-fun <LocalType : ShowEntity, NetworkType, Key> syncerForEntity(
+fun <LocalType : BaseEntity, NetworkType, Key> syncerForEntity(
     entityDao: EntityDao<LocalType>,
     localEntityToKey: suspend (LocalType) -> Key?,
     networkEntityToKey: suspend (NetworkType) -> Key,
@@ -88,7 +88,7 @@ fun <LocalType : ShowEntity, NetworkType, Key> syncerForEntity(
     networkEntityToLocalEntity,
 )
 
-fun <Type : ShowEntity, Key> syncerForEntity(
+fun <Type : BaseEntity, Key> syncerForEntity(
     entityDao: EntityDao<Type>,
     entityToKey: suspend (Type) -> Key?,
     mapper: suspend (Type, Long?) -> Type,
