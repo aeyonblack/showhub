@@ -26,3 +26,6 @@ internal inline fun <T> unwrapTmdbShowResults(
 ): suspend (TvShowResultsPage) -> List<T> = {
     f(it.results ?: emptyList())
 }
+
+internal fun <F, T> Mapper<F,T>.forLists(): suspend (List<F>) -> List<T> =
+    { list ->  list.map { map(it) }}
