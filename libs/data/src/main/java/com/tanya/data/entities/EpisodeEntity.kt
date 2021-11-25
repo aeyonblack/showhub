@@ -33,7 +33,7 @@ data class EpisodeEntity(
     @ColumnInfo(name = "tmdb_backdrop_path") val tmdbBackdropPath: String? = null
 ): BaseEntity, TmdbIdEntity, TraktIdEntity {
     companion object {
-        val empty = EpisodeEntity(seasonId = 0)
+        val EMPTY = EpisodeEntity(seasonId = 0)
     }
 
     @delegate:Ignore
