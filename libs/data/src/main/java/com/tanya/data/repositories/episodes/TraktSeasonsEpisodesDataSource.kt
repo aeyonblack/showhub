@@ -5,7 +5,6 @@ import com.tanya.base.extensions.executeWithRetry
 import com.tanya.base.extensions.toResult
 import com.tanya.data.entities.EpisodeEntity
 import com.tanya.data.entities.EpisodeWatchEntity
-import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.mappers.*
 import com.uwetrottmann.trakt5.enums.Extended
 import com.uwetrottmann.trakt5.services.Seasons
@@ -24,8 +23,11 @@ class TraktSeasonsEpisodesDataSource @Inject constructor(
     private val seasonsService: Provider<Seasons>,
     private val userService: Provider<Users>,
 ): SeasonsEpisodesDataSource {
-    override suspend fun getSeasonsEpisodes(showId: Long): Result<List<Pair<SeasonEntity, List<EpisodeEntity>>>> =
-        seasonsService.get().summary(showIdToTraktIdMapper.map(showId).toString(), Extended.FULLEPISODES)
+
+    override suspend fun getSeasonsEpisodes(showId: Long) =
+        seasonsService
+            .get()
+            .summary(showIdToTraktIdMapper.map(showId).toString(), Extended.FULLEPISODES)
             .executeWithRetry()
             .toResult(seasonMapper.forLists())
 
