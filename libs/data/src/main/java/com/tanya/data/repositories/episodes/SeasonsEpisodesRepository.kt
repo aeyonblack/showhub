@@ -3,15 +3,12 @@ package com.tanya.data.repositories.episodes
 import com.tanya.base.data.entities.ErrorResult
 import com.tanya.base.data.entities.Success
 import com.tanya.data.DatabaseTransactionRunner
-import com.tanya.data.entities.EpisodeEntity
-import com.tanya.data.entities.RefreshType
-import com.tanya.data.entities.SeasonEntity
+import com.tanya.data.entities.*
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
 import com.tanya.trakt.TraktAuthState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import org.threeten.bp.Instant
 import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Provider
@@ -112,7 +109,7 @@ class SeasonsEpisodesRepository @Inject constructor(
             // If we have a lastUpdated time and we've already fetched the watched episodes, we can try
             // and do a delta fetch
             if (lastUpdated != null /*&& episodeWatchLastLastRequestStore.hasBeenRequested(showId)*/) {
-                if (forceRefresh || needShowEpisodeWatchesSync(showId, lastUpdated.toInstant())) {
+                if (forceRefresh || needShowEpisodeWatchesSync(showId, /*lastUpdated.toInstant()*/)) {
                     updateShowEpisodeWatches(showId, lastUpdated.plusSeconds(1))
                 }
             } else {
@@ -167,7 +164,7 @@ class SeasonsEpisodesRepository @Inject constructor(
                         ActionDate.NOW -> OffsetDateTime.now()
                         ActionDate.AIR_DATE -> episode.firstAired ?: OffsetDateTime.now()
                     }
-                    return@mapNotNull EpisodeWatchEntry(
+                    return@mapNotNull EpisodeWatchEntity(
                         episodeId = episode.id,
                         watchedAt = timestamp,
                         pendingAction = PendingAction.UPLOAD
@@ -189,7 +186,7 @@ class SeasonsEpisodesRepository @Inject constructor(
     suspend fun markSeasonUnwatched(seasonId: Long) {
         val season = seasonsEpisodesStore.getSeason(seasonId)!!
 
-        val watches = ArrayList<EpisodeWatchEntry>()
+        val watches = ArrayList<EpisodeWatchEntity>()
         seasonsEpisodesStore.getEpisodesInSeason(seasonId).forEach { episode ->
             watches += episodeWatchStore.getWatchesForEpisode(episode.id)
         }
@@ -214,7 +211,7 @@ class SeasonsEpisodesRepository @Inject constructor(
     }
 
     suspend fun addEpisodeWatch(episodeId: Long, timestamp: OffsetDateTime) {
-        val entry = EpisodeWatchEntry(
+        val entry = EpisodeWatchEntity(
             episodeId = episodeId,
             watchedAt = timestamp,
             pendingAction = PendingAction.UPLOAD
@@ -281,7 +278,7 @@ class SeasonsEpisodesRepository @Inject constructor(
         } else {
             episodeWatchStore.syncShowWatchEntries(showId, watches)
         }
-        episodeWatchLastLastRequestStore.updateLastRequest(showId)
+        //episodeWatchLastLastRequestStore.updateLastRequest(showId)
     }
 
     private suspend fun fetchEpisodeWatchesFromRemote(episodeId: Long) {
@@ -295,12 +292,12 @@ class SeasonsEpisodesRepository @Inject constructor(
      *
      * @return true if a network service was updated
      */
-    private suspend fun processPendingDeletes(entries: List<EpisodeWatchEntry>): Boolean {
+    private suspend fun processPendingDeletes(entries: List<EpisodeWatchEntity>): Boolean {
         if (traktAuthState.get() == TraktAuthState.LOGGED_IN) {
             val localOnlyDeletes = entries.filter { it.traktId == null }
             // If we've got deletes which are local only, just remove them from the DB
             if (localOnlyDeletes.isNotEmpty()) {
-                episodeWatchStore.deleteEntriesWithIds(localOnlyDeletes.map(EpisodeWatchEntry::id))
+                episodeWatchStore.deleteEntriesWithIds(localOnlyDeletes.map(EpisodeWatchEntity::id))
             }
 
             if (entries.size > localOnlyDeletes.size) {
@@ -308,7 +305,7 @@ class SeasonsEpisodesRepository @Inject constructor(
                 when (val response = traktSeasonsDataSource.removeEpisodeWatches(toRemove)) {
                     is Success -> {
                         // Now update the database
-                        episodeWatchStore.deleteEntriesWithIds(entries.map(EpisodeWatchEntry::id))
+                        episodeWatchStore.deleteEntriesWithIds(entries.map(EpisodeWatchEntity::id))
                         return true
                     }
                     is ErrorResult -> throw response.throwable
@@ -326,7 +323,7 @@ class SeasonsEpisodesRepository @Inject constructor(
      *
      * @return true if a network service was updated
      */
-    private suspend fun processPendingAdditions(entries: List<EpisodeWatchEntry>): Boolean {
+    private suspend fun processPendingAdditions(entries: List<EpisodeWatchEntity>): Boolean {
         if (traktAuthState.get() == TraktAuthState.LOGGED_IN) {
             when (val response = traktSeasonsDataSource.addEpisodeWatches(entries)) {
                 is Success -> {
@@ -363,7 +360,7 @@ class SeasonsEpisodesRepository @Inject constructor(
         tmdbBackdropPath = tmdb.tmdbBackdropPath ?: local.tmdbBackdropPath
     )
 
-    private fun mergeEpisode(local: Episode, trakt: Episode, tmdb: Episode) = local.copy(
+    private fun mergeEpisode(local: EpisodeEntity, trakt: EpisodeEntity, tmdb: EpisodeEntity) = local.copy(
         title = trakt.title ?: tmdb.title ?: local.title,
         summary = trakt.summary ?: tmdb.summary ?: local.summary,
         number = trakt.number ?: tmdb.number ?: local.number,
