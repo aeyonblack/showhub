@@ -19,10 +19,7 @@ import com.tanya.domain.interactors.ChangeShowFollowStatus.Params
 import com.tanya.domain.observers.*
 import com.tanya.ui.showdetails.ShowDetailsAction.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,6 +43,8 @@ internal class ShowDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val showId: Long = savedStateHandle.get("showId")!!
     private val loadingState = ObservableLoadingCounter()
+
+    private val pendingActions = MutableSharedFlow<ShowDetailsAction>()
 
     val state = combine(
         loadingState.observable,
@@ -75,6 +74,20 @@ internal class ShowDetailsViewModel @Inject constructor(
     )
 
     init {
+
+        viewModelScope.launch {
+            pendingActions.collect {
+                when (it) {
+                    is ChangeSeasonFollowedAction -> onChangeSeasonFollowStatus(it)
+                    FollowShowToggleAction -> onToggleFollowButtonClicked()
+                    is MarkSeasonUnwatchedAction -> onMarkSeasonUnwatched(it)
+                    is MarkSeasonWatchedAction -> onMarkSeasonWatched(it)
+                    is UnfollowPreviousSeasonsFollowed -> onUnfollowPreviousSeasonsFollowed(it)
+                    else -> {}
+                }
+            }
+        }
+
         observeShowDetails(ObserveShowDetails.Params(showId))
         observeShowImages(ObserveShowImages.Params(showId))
         observeRelatedShows(ObserveRelatedShows.Params(showId))
