@@ -27,4 +27,8 @@ object TraktModule {
             }.build()
     }
 
+    @Singleton
+    @Provides
+    fun provideTempTraktAuthState() = TraktAuthState.LOGGED_OUT
+
 }
