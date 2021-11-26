@@ -19,8 +19,8 @@ class SeasonsEpisodesRepository @Inject constructor(
     private val episodeWatchStore: EpisodeWatchStore,
     private val seasonsEpisodesStore: SeasonsEpisodesStore,
     private val traktSeasonsDataSource: SeasonsEpisodesDataSource,
-    private val traktEpisodeDataSource: EpisodeDataSource,
-    private val tmdbEpisodeDataSource: EpisodeDataSource,
+    private val traktEpisodeDataSource: TraktEpisodeDataSource,
+    private val tmdbEpisodeDataSource: TmdbEpisodeDataSource,
     private val traktAuthState: Provider<TraktAuthState>,
     private val transactionRunner: DatabaseTransactionRunner
 ) {

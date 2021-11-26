@@ -10,4 +10,9 @@ annotation class Tmdb
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
 @MustBeDocumented
+annotation class Trakt
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+@MustBeDocumented
 annotation class ApplicationId
