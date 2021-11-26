@@ -10,9 +10,15 @@ import com.tanya.base.base.InvokeSuccess
 import com.tanya.base.extensions.combine
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
 import com.tanya.domain.interactors.*
+import com.tanya.domain.interactors.ChangeSeasonFollowStatus.*
+import com.tanya.domain.interactors.ChangeSeasonFollowStatus.Action.FOLLOW
+import com.tanya.domain.interactors.ChangeSeasonFollowStatus.Action.IGNORE
+import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action.UNWATCH
+import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action.WATCHED
 import com.tanya.domain.interactors.ChangeShowFollowStatus.Action.TOGGLE
 import com.tanya.domain.interactors.ChangeShowFollowStatus.Params
 import com.tanya.domain.observers.*
+import com.tanya.ui.showdetails.ShowDetailsAction.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -102,5 +108,35 @@ internal class ShowDetailsViewModel @Inject constructor(
         }
     }
 
-    //private fun onMarkSeasonWatched()
+    private fun onMarkSeasonWatched(action: MarkSeasonWatchedAction) {
+        changeSeasonWatchedStatus(
+            ChangeSeasonWatchedStatus.Params(
+                seasonId = action.seasonId,
+                action = WATCHED,
+                onlyAired = action.onlyAired,
+                actionDate = action.date
+            )
+        ).watchStatus()
+    }
+
+    private fun onMarkSeasonUnwatched(action: MarkSeasonUnwatchedAction) {
+        changeSeasonWatchedStatus(
+            ChangeSeasonWatchedStatus.Params(
+                seasonId = action.seasonId,
+                action = UNWATCH
+            )
+        ).watchStatus()
+    }
+
+    private fun onChangeSeasonFollowStatus(action: ChangeSeasonFollowedAction) {
+        changeSeasonFollowStatus(
+            Params(
+                seasonId = action.seasonId,
+                action = when {
+                    action.followed -> FOLLOW
+                    else -> IGNORE
+                }
+            )
+        ).watchStatus()
+    }
 }

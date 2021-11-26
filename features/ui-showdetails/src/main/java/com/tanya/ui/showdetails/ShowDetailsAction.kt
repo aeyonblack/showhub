@@ -12,7 +12,9 @@ internal sealed class ShowDetailsAction {
         val date: ActionDate = ActionDate.NOW
     ): ShowDetailsAction()
 
-    data class MarkSeasonUnWatchedAction(val seasonId: Long): ShowDetailsAction()
+    data class MarkSeasonUnwatchedAction(val seasonId: Long): ShowDetailsAction()
+
+    data class UnfollowPreviousSeasonsFollowed(val seasonId: Long): ShowDetailsAction()
 
     data class ChangeSeasonFollowedAction(
         val seasonId: Long,
