@@ -7,13 +7,10 @@ import com.tanya.base.base.InvokeError
 import com.tanya.base.base.InvokeStarted
 import com.tanya.base.base.InvokeStatus
 import com.tanya.base.base.InvokeSuccess
+import com.tanya.base.extensions.combine
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
-import com.tanya.domain.interactors.UpdateRelatedShows
-import com.tanya.domain.interactors.UpdateShowDetails
-import com.tanya.domain.interactors.UpdateShowImages
-import com.tanya.domain.observers.ObserveRelatedShows
-import com.tanya.domain.observers.ObserveShowDetails
-import com.tanya.domain.observers.ObserveShowImages
+import com.tanya.domain.interactors.*
+import com.tanya.domain.observers.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -27,7 +24,15 @@ internal class ShowDetailsViewModel @Inject constructor(
     private val updateShowImages: UpdateShowImages,
     observeShowImages: ObserveShowImages,
     private val updateRelatedShows: UpdateRelatedShows,
-    observeRelatedShows: ObserveRelatedShows
+    observeRelatedShows: ObserveRelatedShows,
+    private val updateShowSeasons: UpdateShowSeasonData,
+    observeShowSeasons: ObserveShowSeasonsEpisodesWatches,
+    private val changeSeasonWatchedStatus: ChangeSeasonWatchedStatus,
+    observeNextEpisodeToWatch: ObserveShowNextEpisodeToWatch,
+    private val changeShowFollowStatus: ChangeShowFollowStatus,
+    observeShowFollowStatus: ObserveShowFollowStatus,
+    private val changeSeasonFollowStatus: ChangeSeasonFollowStatus,
+    observeShowViewStats: ObserveShowViewStats,
 ) : ViewModel() {
     private val showId: Long = savedStateHandle.get("showId")!!
     private val loadingState = ObservableLoadingCounter()
@@ -36,13 +41,22 @@ internal class ShowDetailsViewModel @Inject constructor(
         loadingState.observable,
         observeShowDetails.flow,
         observeShowImages.flow,
-        observeRelatedShows.flow
-    ) { refreshing, show, showImages, relatedShows ->
+        observeRelatedShows.flow,
+        observeShowSeasons.flow,
+        observeNextEpisodeToWatch.flow,
+        observeShowFollowStatus.flow,
+        observeShowViewStats.flow
+    ) { refreshing, show, showImages, relatedShows, seasons, nextEpisode,
+        isFollowed, stats ->
         ShowDetailsViewState(
             show = show,
             backdropImage = showImages.backdrop,
             relatedShows = relatedShows,
-            refreshing = refreshing
+            refreshing = refreshing,
+            seasons = seasons,
+            nextEpisodeToWatch = nextEpisode,
+            isFollowed = isFollowed,
+            watchStats = stats
         )
     }.stateIn(
         scope = viewModelScope,
