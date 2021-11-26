@@ -10,8 +10,7 @@ class ObserveShowFollowStatus @Inject constructor(
 ) : SubjectInteractor<Params, Boolean>() {
 
     override fun createObservable(params: Params) =
-        repository.observeIsShowFollowed(params
-            .showId)
+        repository.observeIsShowFollowed(params.showId)
 
     data class Params(val showId: Long)
 }
