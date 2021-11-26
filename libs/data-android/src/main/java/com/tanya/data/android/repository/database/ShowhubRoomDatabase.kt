@@ -12,6 +12,7 @@ import com.tanya.data.views.FollowedShowsWatchStats
 @Database(
     entities = [
         ShowEntity::class,
+        ShowFts::class,
         ShowImagesEntity::class,
         PopularShowEntity::class,
         TrendingShowEntity::class,
