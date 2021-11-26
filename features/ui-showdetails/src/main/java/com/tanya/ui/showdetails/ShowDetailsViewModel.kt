@@ -11,8 +11,7 @@ import com.tanya.base.extensions.combine
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
 import com.tanya.domain.interactors.*
 import com.tanya.domain.interactors.ChangeSeasonFollowStatus.*
-import com.tanya.domain.interactors.ChangeSeasonFollowStatus.Action.FOLLOW
-import com.tanya.domain.interactors.ChangeSeasonFollowStatus.Action.IGNORE
+import com.tanya.domain.interactors.ChangeSeasonFollowStatus.Action.*
 import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action.UNWATCH
 import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action.WATCHED
 import com.tanya.domain.interactors.ChangeShowFollowStatus.Action.TOGGLE
@@ -136,6 +135,15 @@ internal class ShowDetailsViewModel @Inject constructor(
                     action.followed -> FOLLOW
                     else -> IGNORE
                 }
+            )
+        ).watchStatus()
+    }
+
+    private fun onUnfollowPreviousSeasonsFollowed(action: UnfollowPreviousSeasonsFollowed) {
+        changeSeasonFollowStatus(
+            ChangeSeasonFollowStatus.Params(
+                seasonId = action.seasonId,
+                action = IGNORE_PREVIOUS
             )
         ).watchStatus()
     }
