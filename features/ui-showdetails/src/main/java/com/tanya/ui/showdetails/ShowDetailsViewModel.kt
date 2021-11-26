@@ -158,7 +158,7 @@ internal class ShowDetailsViewModel @Inject constructor(
 
     private fun onUnfollowPreviousSeasonsFollowed(action: UnfollowPreviousSeasonsFollowed) {
         changeSeasonFollowStatus(
-            ChangeSeasonFollowStatus.Params(
+            Params(
                 seasonId = action.seasonId,
                 action = IGNORE_PREVIOUS
             )
