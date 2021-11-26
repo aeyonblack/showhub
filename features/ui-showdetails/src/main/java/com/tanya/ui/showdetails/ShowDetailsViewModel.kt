@@ -10,9 +10,14 @@ import com.tanya.base.base.InvokeSuccess
 import com.tanya.base.extensions.combine
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
 import com.tanya.domain.interactors.*
+import com.tanya.domain.interactors.ChangeShowFollowStatus.Action.TOGGLE
+import com.tanya.domain.interactors.ChangeShowFollowStatus.Params
 import com.tanya.domain.observers.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -76,6 +81,7 @@ internal class ShowDetailsViewModel @Inject constructor(
         updateShowDetails(UpdateShowDetails.Params(showId, forceLoad)).watchStatus()
         updateShowImages(UpdateShowImages.Params(showId, forceLoad)).watchStatus()
         updateRelatedShows(UpdateRelatedShows.Params(showId, forceLoad)).watchStatus()
+        updateShowSeasons(UpdateShowSeasonData.Params(showId, forceLoad)).watchStatus()
     }
 
     private fun Flow<InvokeStatus>.watchStatus() = viewModelScope.launch { collectStatus() }
@@ -87,6 +93,12 @@ internal class ShowDetailsViewModel @Inject constructor(
             is InvokeError -> {
                 loadingState.removeLoader()
             }
+        }
+    }
+
+    private fun onToggleFollowButtonClicked() {
+        viewModelScope.launch {
+            changeShowFollowStatus(Params(showId, TOGGLE)).watchStatus()
         }
     }
 }

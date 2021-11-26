@@ -60,7 +60,9 @@ class ChangeShowFollowStatus @Inject constructor(
         val showIds: Collection<Long>,
         val action: Action,
         val deferDataFetch: Boolean = false
-    )
+    ) {
+        constructor(showId: Long, action: Action): this(listOf(showId), action)
+    }
 
     enum class Action {
         FOLLOW,
