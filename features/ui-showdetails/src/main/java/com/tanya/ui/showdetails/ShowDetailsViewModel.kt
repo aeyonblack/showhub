@@ -78,6 +78,10 @@ internal class ShowDetailsViewModel @Inject constructor(
         observeShowDetails(ObserveShowDetails.Params(showId))
         observeShowImages(ObserveShowImages.Params(showId))
         observeRelatedShows(ObserveRelatedShows.Params(showId))
+        observeShowFollowStatus(ObserveShowFollowStatus.Params(showId))
+        observeShowSeasons(ObserveShowSeasonsEpisodesWatches.Params(showId))
+        observeNextEpisodeToWatch(ObserveShowNextEpisodeToWatch.Params(showId))
+        observeShowViewStats(ObserveShowViewStats.Params(showId))
 
         refresh()
     }
