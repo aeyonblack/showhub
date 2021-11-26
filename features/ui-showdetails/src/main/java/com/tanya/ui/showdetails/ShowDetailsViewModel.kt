@@ -101,4 +101,6 @@ internal class ShowDetailsViewModel @Inject constructor(
             changeShowFollowStatus(Params(showId, TOGGLE)).watchStatus()
         }
     }
+
+    //private fun onMarkSeasonWatched()
 }
