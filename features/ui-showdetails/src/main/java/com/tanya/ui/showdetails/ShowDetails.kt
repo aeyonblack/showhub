@@ -67,6 +67,7 @@ internal fun ShowDetails(
         when (it) {
             is ShowDetailsAction.NavigateUp -> navigateUp()
             is ShowDetailsAction.OpenShowDetails -> openShowDetails(it.showId)
+            else -> viewModel.submitAction(it)
         }
     }
 }
