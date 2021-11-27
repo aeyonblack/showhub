@@ -12,7 +12,6 @@ class EpisodeWatchStore @Inject constructor(
     private val transactionRunner: DatabaseTransactionRunner,
     private val episodeWatchEntryDao: EpisodeWatchEntityDao
 ) {
-
     private val episodeWatchSyncer = syncerForEntity(
         episodeWatchEntryDao,
         {it.traktId},

@@ -16,7 +16,7 @@ class SeasonWithEpisodesAndWatches {
         parentColumn = "id",
         entityColumn = "season_id",
     )
-    lateinit var episodes: List<EpisodeWithWatches>
+    var episodes: List<EpisodeWithWatches> = emptyList()
 
     override fun equals(other: Any?): Boolean = when {
         other === this -> true

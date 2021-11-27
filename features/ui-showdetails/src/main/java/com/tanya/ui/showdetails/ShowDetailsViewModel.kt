@@ -7,17 +7,14 @@ import com.tanya.base.base.InvokeError
 import com.tanya.base.base.InvokeStarted
 import com.tanya.base.base.InvokeStatus
 import com.tanya.base.base.InvokeSuccess
-import com.tanya.base.extensions.combine
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
-import com.tanya.domain.interactors.*
-import com.tanya.domain.interactors.ChangeSeasonFollowStatus.*
-import com.tanya.domain.interactors.ChangeSeasonFollowStatus.Action.*
-import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action.UNWATCH
-import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action.WATCHED
-import com.tanya.domain.interactors.ChangeShowFollowStatus.Action.TOGGLE
-import com.tanya.domain.interactors.ChangeShowFollowStatus.Params
-import com.tanya.domain.observers.*
-import com.tanya.ui.showdetails.ShowDetailsAction.*
+import com.tanya.domain.interactors.UpdateRelatedShows
+import com.tanya.domain.interactors.UpdateShowDetails
+import com.tanya.domain.interactors.UpdateShowImages
+import com.tanya.domain.observers.ObserveRelatedShows
+import com.tanya.domain.observers.ObserveShowDetails
+import com.tanya.domain.observers.ObserveShowImages
+import com.tanya.domain.observers.ObserveShowViewStats
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -32,13 +29,13 @@ internal class ShowDetailsViewModel @Inject constructor(
     observeShowImages: ObserveShowImages,
     private val updateRelatedShows: UpdateRelatedShows,
     observeRelatedShows: ObserveRelatedShows,
-    private val updateShowSeasons: UpdateShowSeasonData,
-    observeShowSeasons: ObserveShowSeasonsEpisodesWatches,
-    private val changeSeasonWatchedStatus: ChangeSeasonWatchedStatus,
-    observeNextEpisodeToWatch: ObserveShowNextEpisodeToWatch,
-    private val changeShowFollowStatus: ChangeShowFollowStatus,
-    observeShowFollowStatus: ObserveShowFollowStatus,
-    private val changeSeasonFollowStatus: ChangeSeasonFollowStatus,
+    //private val updateShowSeasons: UpdateShowSeasonData,
+    //observeShowSeasons: ObserveShowSeasonsEpisodesWatches,
+    //private val changeSeasonWatchedStatus: ChangeSeasonWatchedStatus,
+    //observeNextEpisodeToWatch: ObserveShowNextEpisodeToWatch,
+    //private val changeShowFollowStatus: ChangeShowFollowStatus,
+    //observeShowFollowStatus: ObserveShowFollowStatus,
+    //private val changeSeasonFollowStatus: ChangeSeasonFollowStatus,
     observeShowViewStats: ObserveShowViewStats,
 ) : ViewModel() {
     private val showId: Long = savedStateHandle.get("showId")!!
@@ -51,21 +48,21 @@ internal class ShowDetailsViewModel @Inject constructor(
         observeShowDetails.flow,
         observeShowImages.flow,
         observeRelatedShows.flow,
-        observeShowSeasons.flow,
+        /*observeShowSeasons.flow,
         observeNextEpisodeToWatch.flow,
         observeShowFollowStatus.flow,
-        observeShowViewStats.flow
-    ) { refreshing, show, showImages, relatedShows, seasons, nextEpisode,
-        isFollowed, stats ->
+        observeShowViewStats.flow*/
+    ) { refreshing, show, showImages, relatedShows -> /*, seasons, nextEpisode,
+        isFollowed, stats ->*/
         ShowDetailsViewState(
             show = show,
             backdropImage = showImages.backdrop,
             relatedShows = relatedShows,
             refreshing = refreshing,
-            seasons = seasons,
+           /* seasons = seasons,
             nextEpisodeToWatch = nextEpisode,
             isFollowed = isFollowed,
-            watchStats = stats
+            watchStats = stats*/
         )
     }.stateIn(
         scope = viewModelScope,
@@ -75,7 +72,7 @@ internal class ShowDetailsViewModel @Inject constructor(
 
     init {
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             pendingActions.collect {
                 when (it) {
                     is ChangeSeasonFollowedAction -> onChangeSeasonFollowStatus(it)
@@ -86,15 +83,15 @@ internal class ShowDetailsViewModel @Inject constructor(
                     else -> {}
                 }
             }
-        }
+        }*/
 
         observeShowDetails(ObserveShowDetails.Params(showId))
         observeShowImages(ObserveShowImages.Params(showId))
         observeRelatedShows(ObserveRelatedShows.Params(showId))
-        observeShowFollowStatus(ObserveShowFollowStatus.Params(showId))
+        /*observeShowFollowStatus(ObserveShowFollowStatus.Params(showId))
         observeShowSeasons(ObserveShowSeasonsEpisodesWatches.Params(showId))
         observeNextEpisodeToWatch(ObserveShowNextEpisodeToWatch.Params(showId))
-        observeShowViewStats(ObserveShowViewStats.Params(showId))
+        observeShowViewStats(ObserveShowViewStats.Params(showId))*/
 
         refresh()
     }
@@ -103,7 +100,7 @@ internal class ShowDetailsViewModel @Inject constructor(
         updateShowDetails(UpdateShowDetails.Params(showId, forceLoad)).watchStatus()
         updateShowImages(UpdateShowImages.Params(showId, forceLoad)).watchStatus()
         updateRelatedShows(UpdateRelatedShows.Params(showId, forceLoad)).watchStatus()
-        updateShowSeasons(UpdateShowSeasonData.Params(showId, forceLoad)).watchStatus()
+        /*updateShowSeasons(UpdateShowSeasonData.Params(showId, forceLoad)).watchStatus()*/
     }
 
     private fun Flow<InvokeStatus>.watchStatus() = viewModelScope.launch { collectStatus() }
@@ -118,7 +115,7 @@ internal class ShowDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun onToggleFollowButtonClicked() {
+    /*private fun onToggleFollowButtonClicked() {
         viewModelScope.launch {
             changeShowFollowStatus(Params(showId, TOGGLE)).watchStatus()
         }
@@ -163,5 +160,5 @@ internal class ShowDetailsViewModel @Inject constructor(
                 action = IGNORE_PREVIOUS
             )
         ).watchStatus()
-    }
+    }*/
 }

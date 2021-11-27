@@ -114,13 +114,11 @@ abstract class FollowedShowsDao : EntryDao<FollowedShowEntity, FollowedShowEntry
                 AND s.ignored = 0
                 GROUP BY fs.id
                 ORDER BY
-                /* shows with aired episodes to watch first */
                 SUM(CASE WHEN datetime(first_aired) < datetime('now') THEN 1 ELSE 0 END) = COUNT(watched_at) ASC,
-                /* latest event */
                 MAX(
-                    MAX(datetime(coalesce(next_to_watch_air_date, 0))), /* next episode to watch */
-                    MAX(datetime(coalesce(watched_at, 0))), /* last watch */
-                    MAX(datetime(coalesce(followed_at, 0))) /* when followed */
+                    MAX(datetime(coalesce(next_to_watch_air_date, 0))),
+                    MAX(datetime(coalesce(watched_at, 0))),
+                    MAX(datetime(coalesce(followed_at, 0)))
                 ) DESC
             """
 
@@ -137,13 +135,11 @@ abstract class FollowedShowsDao : EntryDao<FollowedShowEntity, FollowedShowEntry
                 AND s_fts.title MATCH :filter
                 GROUP BY fs.id
                 ORDER BY
-                /* shows with aired episodes to watch first */
                 SUM(CASE WHEN datetime(first_aired) < datetime('now') THEN 1 ELSE 0 END) = COUNT(watched_at) ASC,
-                /* latest event */
                 MAX(
-                    MAX(datetime(coalesce(next_to_watch_air_date, 0))), /* next episode to watch */
-                    MAX(datetime(coalesce(watched_at, 0))), /* last watch */
-                    MAX(datetime(coalesce(followed_at, 0))) /* when followed */
+                    MAX(datetime(coalesce(next_to_watch_air_date, 0))),
+                    MAX(datetime(coalesce(watched_at, 0))), 
+                    MAX(datetime(coalesce(followed_at, 0))) 
                 ) DESC
             """
 

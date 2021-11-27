@@ -37,6 +37,6 @@ data class SeasonEntity(
 ): BaseEntity, TmdbIdEntity, TraktIdEntity {
     companion object {
         const val NUMBER_SPECIALS = 0
-        val empty = SeasonEntity(showId = 0)
+        val EMPTY = SeasonEntity(showId = 0)
     }
 }

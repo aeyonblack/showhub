@@ -1,25 +1,17 @@
 package com.tanya.data.repositories.followedshows
 
-import com.tanya.base.data.entities.Success
 import com.tanya.data.daos.ShowDao
-import com.tanya.data.entities.FollowedShowEntity
-import com.tanya.data.entities.PendingAction
-import com.tanya.data.entities.SortOption
-import com.tanya.data.syncers.ItemSyncerResult
-import com.tanya.trakt.TraktAuthState
-import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
-import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
 class FollowedShowsRepository @Inject constructor(
     private val followedShowsStore: FollowedShowsStore,
     private val dataSource: TraktFollowedShowsDataSource,
-    private val traktAuthState: Provider<TraktAuthState>,
+    //private val traktAuthState: Provider<TraktAuthState>,
     private val showDao: ShowDao
 ) {
-    fun observeFollowedShows(
+    /*fun observeFollowedShows(
         sort: SortOption,
         filter: String? = null
     ) = followedShowsStore.observeForPaging(sort, filter)
@@ -28,7 +20,7 @@ class FollowedShowsRepository @Inject constructor(
 
     fun observeIsShowFollowed(showId: Long) = followedShowsStore.observeIsShowFollowed(showId)
 
-    fun observeNextShowToWatch() = followedShowsStore.observeNextShowToWatch()
+    *//*fun observeNextShowToWatch() = followedShowsStore.observeNextShowToWatch()*//*
 
     suspend fun isShowFollowed(showId: Long) = followedShowsStore.isShowFollowed(showId)
 
@@ -36,9 +28,9 @@ class FollowedShowsRepository @Inject constructor(
         return followedShowsStore.getEntries()
     }
 
-    suspend fun needFollowedShowsSync(/*expiry: Instant = instantInPast(hours = 1)*/): Boolean {
-        return true /*followedShowsLastRequestStore.isRequestBefore(expiry)*/
-    }
+    *//*suspend fun needFollowedShowsSync(*//**//*expiry: Instant = instantInPast(hours = 1)*//**//*): Boolean {
+        return true *//**//*followedShowsLastRequestStore.isRequestBefore(expiry)*//**//*
+    }*//*
 
     suspend fun addFollowedShow(showId: Long) {
         val entry = followedShowsStore.getEntryForShowId(showId)
@@ -51,7 +43,8 @@ class FollowedShowsRepository @Inject constructor(
                 followedAt = entry?.followedAt ?: OffsetDateTime.now(),
                 pendingAction = PendingAction.UPLOAD
             )
-            val newEntryId = followedShowsStore.save(newEntry)
+            followedShowsStore.save(newEntry)
+            //val newEntryId = followedShowsStore.save(newEntry)
         }
     }
 
@@ -65,20 +58,22 @@ class FollowedShowsRepository @Inject constructor(
     }
 
     suspend fun syncFollowedShows(): ItemSyncerResult<FollowedShowEntity> {
-        val listId = when (traktAuthState.get()) {
+        *//*val listId = when (traktAuthState.get()) {
             TraktAuthState.LOGGED_IN -> getFollowedTraktListId()
             else -> null
-        }
+        }*//*
+        val listId = null
 
         processPendingAdditions(listId)
         processPendingDelete(listId)
 
-        return when {
+        *//*return when {
             listId != null -> pullDownTraktFollowedList(listId)
             else -> ItemSyncerResult()
-        }/*.also {
+        }.also {
             followedShowsLastRequestStore.updateLastRequest()
-        }*/
+        }*//*
+        return ItemSyncerResult()
     }
 
     private suspend fun pullDownTraktFollowedList(
@@ -103,7 +98,7 @@ class FollowedShowsRepository @Inject constructor(
             return
         }
 
-        if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
+        *//*if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
             val shows = pending.mapNotNull { showDao.getShowWithId(it.showId) }
 
             val response = dataSource.addShowIdsToList(listId, shows)
@@ -115,7 +110,8 @@ class FollowedShowsRepository @Inject constructor(
         } else {
             // We're not logged in, so just update the database
             followedShowsStore.updateEntriesWithAction(pending.map { it.id }, PendingAction.NOTHING)
-        }
+        }*//*
+        followedShowsStore.updateEntriesWithAction(pending.map { it.id }, PendingAction.NOTHING)
     }
 
     private suspend fun processPendingDelete(listId: Int?) {
@@ -125,7 +121,7 @@ class FollowedShowsRepository @Inject constructor(
             return
         }
 
-        if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
+        *//*if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
             val shows = pending.mapNotNull { showDao.getShowWithId(it.showId) }
 
             val response = dataSource.removeShowIdsFromList(listId, shows)
@@ -137,7 +133,8 @@ class FollowedShowsRepository @Inject constructor(
         } else {
             // We're not logged in, so just update the database
             followedShowsStore.deleteEntriesInIds(pending.map { it.id })
-        }
+        }*//*
+        followedShowsStore.deleteEntriesInIds(pending.map { it.id })
     }
 
     private suspend fun getFollowedTraktListId(): Int? {
@@ -148,5 +145,5 @@ class FollowedShowsRepository @Inject constructor(
             }
         }
         return followedShowsStore.traktListId
-    }
+    }*/
 }

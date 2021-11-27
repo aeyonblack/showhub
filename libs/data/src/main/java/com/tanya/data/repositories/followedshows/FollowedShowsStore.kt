@@ -1,16 +1,7 @@
 package com.tanya.data.repositories.followedshows
 
-import androidx.paging.PagingSource
 import com.tanya.data.DatabaseTransactionRunner
 import com.tanya.data.daos.FollowedShowsDao
-import com.tanya.data.entities.FollowedShowEntity
-import com.tanya.data.entities.PendingAction
-import com.tanya.data.entities.SortOption
-import com.tanya.data.results.FollowedShowEntryWithShow
-import com.tanya.data.syncers.syncerForEntity
-import com.tanya.data.views.FollowedShowsWatchStats
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +10,7 @@ class FollowedShowsStore @Inject constructor(
     private val transactionRunner: DatabaseTransactionRunner,
     private val followedShowsDao: FollowedShowsDao,
 ) {
-    var traktListId: Int? = null
+    /*var traktListId: Int? = null
 
     private val syncer = syncerForEntity(
         followedShowsDao,
@@ -97,5 +88,5 @@ class FollowedShowsStore @Inject constructor(
         syncer.sync(followedShowsDao.entries(), entities)
     }
 
-    suspend fun save(entry: FollowedShowEntity) = followedShowsDao.insertOrUpdate(entry)
+    suspend fun save(entry: FollowedShowEntity) = followedShowsDao.insertOrUpdate(entry)*/
 }

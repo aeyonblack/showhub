@@ -6,7 +6,6 @@ import com.uwetrottmann.trakt5.entities.Season
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Singleton
 class TraktSeasonToSeasonWithEpisodes @Inject constructor(
     private val seasonMapper: TraktSeasonToSeasonEntity,

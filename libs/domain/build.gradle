@@ -27,6 +27,7 @@ dependencies {
     api project(":libs:data")
     implementation project(":libs:base")
     implementation project(":libs:tmdb")
+    implementation project(":libs:trakt")
     implementation project(":libs:data-android")
 
     implementation(libs.hilt.library)

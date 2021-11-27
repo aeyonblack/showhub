@@ -38,7 +38,7 @@ dependencies {
     implementation project(":libs:base-android")
     implementation project(":libs:data")
 
-    implementation(libs.androidx.room.runtime)
+    api(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     kapt(libs.androidx.room.compiler)

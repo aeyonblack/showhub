@@ -8,7 +8,6 @@ import com.tanya.data.entities.SeasonEntity.Companion.NUMBER_SPECIALS
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
 import kotlinx.coroutines.flow.Flow
 
-/*TODO - Dissect the meaning of all this*/
 @Dao
 abstract class SeasonsDao : EntityDao<SeasonEntity>() {
 

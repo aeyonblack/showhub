@@ -6,8 +6,8 @@ import org.threeten.bp.OffsetDateTime
 @Entity(
     tableName = "watched_episodes",
     indices = [
-        Index(value = ["trakt_id"], unique = true),
-        Index(value = ["episode_id"])
+        Index(value = ["episode_id"]),
+        Index(value = ["trakt_id"], unique = true)
     ],
     foreignKeys = [
         ForeignKey(
@@ -20,7 +20,7 @@ import org.threeten.bp.OffsetDateTime
     ]
 )
 data class EpisodeWatchEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     @ColumnInfo(name = "episode_id") val episodeId: Long,
     @ColumnInfo(name = "trakt_id") val traktId: Long? = null,
     @ColumnInfo(name = "watched_at") val watchedAt: OffsetDateTime,

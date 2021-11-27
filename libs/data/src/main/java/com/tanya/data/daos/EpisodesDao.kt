@@ -9,7 +9,6 @@ import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.results.EpisodeWithSeason
 import kotlinx.coroutines.flow.Flow
 
-/*TODO - Revist and understand every single line*/
 @Dao
 abstract class EpisodesDao : EntityDao<EpisodeEntity>() {
     @Query("SELECT * from episodes WHERE season_id = :seasonId ORDER BY number")

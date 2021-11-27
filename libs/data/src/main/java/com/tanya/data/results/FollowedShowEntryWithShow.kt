@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Relation
 import com.tanya.data.entities.*
+import com.tanya.data.views.FollowedShowsWatchStats
 import java.util.*
 
 class FollowedShowEntryWithShow : EntryWithShow<FollowedShowEntity> {
@@ -17,7 +18,11 @@ class FollowedShowEntryWithShow : EntryWithShow<FollowedShowEntity> {
     @Relation(parentColumn = "show_id", entityColumn = "show_id")
     override lateinit var images: List<ShowImagesEntity>
 
-    /*TODO - Add watch stats later*/
+    @Relation(parentColumn = "id", entityColumn = "id")
+    lateinit var _stats: List<FollowedShowsWatchStats>
+
+    val stats: FollowedShowsWatchStats?
+        get() = _stats.firstOrNull()
 
     @delegate:Ignore
     val backdrop: ShowImagesEntity? by lazy(LazyThreadSafetyMode.NONE) {
@@ -32,10 +37,10 @@ class FollowedShowEntryWithShow : EntryWithShow<FollowedShowEntity> {
     override fun equals(other: Any?): Boolean = when {
         other === this -> true
         other is FollowedShowEntryWithShow -> {
-            entry == other.entry && relations == other.relations && images == other.images
+            entry == other.entry && relations == other.relations && stats == other.stats && images == other.images
         }
         else -> false
     }
 
-    override fun hashCode(): Int = Objects.hash(entry, relations, images)
+    override fun hashCode(): Int = Objects.hash(entry, relations, stats, images)
 }

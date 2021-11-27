@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/libs/domain" />
             <option value="$PROJECT_DIR$/libs/tmdb" />
             <option value="$PROJECT_DIR$/libs/trakt" />
+            <option value="$PROJECT_DIR$/libs/trakt-auth" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -3,7 +3,6 @@ package com.tanya.data.android.repository.database
 import android.content.Context
 import android.os.Debug
 import androidx.room.Room
-import com.tanya.data.ShowhubDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +18,7 @@ object RoomDatabaseModule {
     @Provides
     fun provideDatabase(
         @ApplicationContext context: Context
-    ): ShowhubDatabase {
+    ): ShowhubRoomDatabase {
         val builder = Room
             .databaseBuilder(context, ShowhubRoomDatabase::class.java, "shows.db")
             .fallbackToDestructiveMigration()

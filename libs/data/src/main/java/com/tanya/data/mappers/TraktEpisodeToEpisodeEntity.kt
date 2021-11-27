@@ -6,9 +6,7 @@ import javax.inject.Singleton
 import com.uwetrottmann.trakt5.entities.Episode as TraktEpisode
 
 @Singleton
-class TraktEpisodeToEpisodeEntity
-@Inject
-constructor(): Mapper<TraktEpisode, EpisodeEntity> {
+class TraktEpisodeToEpisodeEntity @Inject constructor(): Mapper<TraktEpisode, EpisodeEntity> {
     override suspend fun map(from: TraktEpisode) = EpisodeEntity(
         seasonId = 0,
         traktId = from.ids?.trakt,
