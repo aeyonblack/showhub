@@ -42,6 +42,7 @@ import com.tanya.common.ui.resources.R
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.results.RelatedShowEntryWithShow
+import com.tanya.data.results.SeasonWithEpisodesAndWatches
 
 @Composable
 fun ShowDetails(
@@ -99,6 +100,7 @@ internal fun ShowDetails(
             }
             ShowDetailsAppBar(
                 title = state.show.title,
+                following = state.isFollowed,
                 showBackground = showAppBarBackground,
                 dispatcher = dispatcher,
                 modifier = Modifier
@@ -111,6 +113,7 @@ internal fun ShowDetails(
             ShowDetailsContent(
                 show = state.show,
                 relatedShows = state.relatedShows,
+                seasons = state.seasons,
                 listState = listState,
                 backdrop = state.backdropImage,
                 dispatcher = dispatcher,
@@ -125,6 +128,7 @@ internal fun ShowDetails(
 internal fun ShowDetailsContent(
     show: ShowEntity,
     relatedShows: List<RelatedShowEntryWithShow>,
+    seasons: List<SeasonWithEpisodesAndWatches>,
     listState: LazyListState,
     backdrop: ShowImagesEntity?,
     dispatcher: (ShowDetailsAction) -> Unit,
@@ -184,6 +188,16 @@ internal fun ShowDetailsContent(
                             .padding(vertical = 8.dp)
                     )
                 }
+            }
+        }
+
+        if (seasons.isNotEmpty()) {
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                Header(title = "Seasons ${seasons.size}")
             }
         }
 
@@ -292,6 +306,7 @@ private fun RelatedShows(
 @Composable
 private fun ShowDetailsAppBar(
     title: String?,
+    following: Boolean,
     showBackground: Boolean,
     dispatcher: (ShowDetailsAction) -> Unit,
     modifier: Modifier = Modifier
@@ -304,7 +319,7 @@ private fun ShowDetailsAppBar(
         animationSpec = tween()
     )
 
-    var enabled by remember { mutableStateOf(true) }
+    //var enabled by remember { mutableStateOf(true) }
     
     TopAppBar(
         title = {
@@ -333,16 +348,19 @@ private fun ShowDetailsAppBar(
         },
         actions = {
             Text(
-                text = "Follow",
+                text = when {
+                  following -> "Following"
+                  else -> "Follow"
+                },
                 style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
                 modifier = Modifier
                     .clickable {
-                        enabled = !enabled
+                        dispatcher(ShowDetailsAction.FollowShowToggleAction)
                     }
                     .actionButtonBackground(
-                        enabled = enabled
+                        enabled = !following
                     )
                     .align(Alignment.CenterVertically)
                     .padding(horizontal = 8.dp, vertical = 4.dp)

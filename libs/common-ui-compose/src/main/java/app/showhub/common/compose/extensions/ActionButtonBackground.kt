@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 
 fun Modifier.actionButtonBackground(
     enabled: Boolean = false,
-    @FloatRange alpha: Float = 0.35f,
+    @FloatRange alpha: Float = 0.3f,
     shape: Shape = RoundedCornerShape(6.dp)
 ): Modifier = composed {
     if (enabled) {
