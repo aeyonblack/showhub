@@ -103,6 +103,8 @@ dependencies {
     implementation(libs.androidx.hilt.compose)
     kapt(libs.hilt.compiler)
 
+    implementation(libs.threeTenAbp)
+
     implementation(libs.androidx.startup.runtime)
 
     implementation(libs.androidx.hilt.work)

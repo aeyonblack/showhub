@@ -1,6 +1,7 @@
 package com.tanya.data.repositories.followedshows
 
 import com.tanya.base.data.entities.Success
+import com.tanya.base.util.Logger
 import com.tanya.data.daos.ShowDao
 import com.tanya.data.entities.FollowedShowEntity
 import com.tanya.data.entities.PendingAction
@@ -19,7 +20,8 @@ class FollowedShowsRepository @Inject constructor(
     private val followedShowsStore: FollowedShowsStore,
     private val dataSource: TraktFollowedShowsDataSource,
     private val traktAuthState: Provider<TraktAuthState>,
-    private val showDao: ShowDao
+    private val showDao: ShowDao,
+    private val logger: Logger
 ) {
     fun observeFollowedShows(
         sort: SortOption,
@@ -43,17 +45,28 @@ class FollowedShowsRepository @Inject constructor(
     }
 
     suspend fun addFollowedShow(showId: Long) {
+        logger.d("addFollowedShow: Start of Function")
         val entry = followedShowsStore.getEntryForShowId(showId)
-
+        logger.d("addFollowedShow: Mid of Function")
         if (entry == null || entry.pendingAction == PendingAction.DELETE) {
-            val newEntry = FollowedShowEntity(
-                id = entry?.id ?: 0,
-                showId = showId,
-                followedAt = entry?.followedAt ?: OffsetDateTime.now(),
-                pendingAction = PendingAction.UPLOAD
-            )
-            followedShowsStore.save(newEntry)
+            logger.d("addFollowedShow: Creating new entry")
+            try {
+                val newEntry = FollowedShowEntity(
+                    id = entry?.id ?: 0,
+                    showId = showId,
+                    followedAt = entry?.followedAt ?: OffsetDateTime.now(),
+                    pendingAction = PendingAction.UPLOAD
+                )
+                followedShowsStore.save(newEntry)
+            } catch (t: Throwable) {
+                logger.d("Something happened while creating entry: ${t.message}")
+            }
+            logger.d("addFollowedShow: New entry created")
+
+
+            logger.d("addFollowedShow: Entry saved")
         }
+        logger.d("addFollowedShow: End of Function")
     }
 
     suspend fun removeFollowedShow(showId: Long) {
