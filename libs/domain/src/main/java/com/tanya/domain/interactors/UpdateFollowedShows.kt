@@ -23,7 +23,7 @@ class UpdateFollowedShows @Inject constructor(
 ) : Interactor<UpdateFollowedShows.Params>() {
 
     override suspend fun doWork(params: Params) = withContext(Dispatchers.IO) {
-        if (params.forceRefresh /*|| followedShowsRepository.needFollowedShowsSync()*/) {
+        if (params.forceRefresh || followedShowsRepository.needFollowedShowsSync()) {
             followedShowsRepository.syncFollowedShows()
         }
 
@@ -38,7 +38,7 @@ class UpdateFollowedShows @Inject constructor(
             }
 
             ensureActive()
-            if (params.forceRefresh /*|| seasonsEpisodesRepository.needShowSeasonsUpdate(it.showId)*/) {
+            if (params.forceRefresh || seasonsEpisodesRepository.needShowSeasonsUpdate(it.showId)) {
                 seasonsEpisodesRepository.updateSeasonsEpisodes(it.showId)
             }
 

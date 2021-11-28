@@ -5,16 +5,20 @@ import com.tanya.data.daos.ShowDao
 import com.tanya.data.entities.FollowedShowEntity
 import com.tanya.data.entities.PendingAction
 import com.tanya.data.entities.SortOption
+import com.tanya.data.extensions.instantInPast
 import com.tanya.data.syncers.ItemSyncerResult
+import com.tanya.trakt.TraktAuthState
+import org.threeten.bp.Instant
 import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
 class FollowedShowsRepository @Inject constructor(
     private val followedShowsStore: FollowedShowsStore,
     private val dataSource: TraktFollowedShowsDataSource,
-    //private val traktAuthState: Provider<TraktAuthState>,
+    private val traktAuthState: Provider<TraktAuthState>,
     private val showDao: ShowDao
 ) {
     fun observeFollowedShows(
@@ -26,7 +30,7 @@ class FollowedShowsRepository @Inject constructor(
 
     fun observeIsShowFollowed(showId: Long) = followedShowsStore.observeIsShowFollowed(showId)
 
-    /*fun observeNextShowToWatch() = followedShowsStore.observeNextShowToWatch()*/
+    fun observeNextShowToWatch() = followedShowsStore.observeNextShowToWatch()
 
     suspend fun isShowFollowed(showId: Long) = followedShowsStore.isShowFollowed(showId)
 
@@ -34,15 +38,14 @@ class FollowedShowsRepository @Inject constructor(
         return followedShowsStore.getEntries()
     }
 
-    /*suspend fun needFollowedShowsSync(*//**//*expiry: Instant = instantInPast(hours = 1)*//**//*): Boolean {
-        return true *//**//*followedShowsLastRequestStore.isRequestBefore(expiry)*//**//*
-    }*/
+    suspend fun needFollowedShowsSync(expiry: Instant = instantInPast(hours = 1)): Boolean {
+        return true /*followedShowsLastRequestStore.isRequestBefore(expiry)*/
+    }
 
     suspend fun addFollowedShow(showId: Long) {
         val entry = followedShowsStore.getEntryForShowId(showId)
 
         if (entry == null || entry.pendingAction == PendingAction.DELETE) {
-            // If we don't have an entry, or it is marked for deletion, lets update it to be uploaded
             val newEntry = FollowedShowEntity(
                 id = entry?.id ?: 0,
                 showId = showId,
@@ -50,36 +53,31 @@ class FollowedShowsRepository @Inject constructor(
                 pendingAction = PendingAction.UPLOAD
             )
             followedShowsStore.save(newEntry)
-            //val newEntryId = followedShowsStore.save(newEntry)
         }
     }
 
     suspend fun removeFollowedShow(showId: Long) {
-        // Update the followed show to be deleted
         val entry = followedShowsStore.getEntryForShowId(showId)
         if (entry != null) {
-            // Mark the show as pending deletion
             followedShowsStore.save(entry.copy(pendingAction = PendingAction.DELETE))
         }
     }
 
     suspend fun syncFollowedShows(): ItemSyncerResult<FollowedShowEntity> {
-        /*val listId = when (traktAuthState.get()) {
+        val listId = when (traktAuthState.get()) {
             TraktAuthState.LOGGED_IN -> getFollowedTraktListId()
             else -> null
-        }*/
-        val listId = null
+        }
 
         processPendingAdditions(listId)
         processPendingDelete(listId)
 
-        /*return when {
+        return when {
             listId != null -> pullDownTraktFollowedList(listId)
             else -> ItemSyncerResult()
-        }.also {
+        }/*.also {
             followedShowsLastRequestStore.updateLastRequest()
         }*/
-        return ItemSyncerResult()
     }
 
     private suspend fun pullDownTraktFollowedList(
@@ -87,12 +85,9 @@ class FollowedShowsRepository @Inject constructor(
     ): ItemSyncerResult<FollowedShowEntity> {
         val response = dataSource.getListShows(listId)
         return response.getOrThrow().map { (entry, show) ->
-            // Grab the show id if it exists, or save the show and use it's generated ID
             val showId = showDao.getIdOrSavePlaceholder(show)
-            // Create a followed show entry with the show id
             entry.copy(showId = showId)
         }.let { entries ->
-            // Save the show entries
             followedShowsStore.sync(entries)
         }
     }
@@ -104,20 +99,17 @@ class FollowedShowsRepository @Inject constructor(
             return
         }
 
-        /*if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
+        if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
             val shows = pending.mapNotNull { showDao.getShowWithId(it.showId) }
 
             val response = dataSource.addShowIdsToList(listId, shows)
 
             if (response is Success) {
-                // Now update the database
                 followedShowsStore.updateEntriesWithAction(pending.map { it.id }, PendingAction.NOTHING)
             }
         } else {
-            // We're not logged in, so just update the database
             followedShowsStore.updateEntriesWithAction(pending.map { it.id }, PendingAction.NOTHING)
-        }*/
-        followedShowsStore.updateEntriesWithAction(pending.map { it.id }, PendingAction.NOTHING)
+        }
     }
 
     private suspend fun processPendingDelete(listId: Int?) {
@@ -127,20 +119,17 @@ class FollowedShowsRepository @Inject constructor(
             return
         }
 
-        /*if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
+        if (listId != null && traktAuthState.get() == TraktAuthState.LOGGED_IN) {
             val shows = pending.mapNotNull { showDao.getShowWithId(it.showId) }
 
             val response = dataSource.removeShowIdsFromList(listId, shows)
 
             if (response is Success) {
-                // Now update the database
                 followedShowsStore.deleteEntriesInIds(pending.map { it.id })
             }
         } else {
-            // We're not logged in, so just update the database
             followedShowsStore.deleteEntriesInIds(pending.map { it.id })
-        }*/
-        followedShowsStore.deleteEntriesInIds(pending.map { it.id })
+        }
     }
 
     private suspend fun getFollowedTraktListId(): Int? {

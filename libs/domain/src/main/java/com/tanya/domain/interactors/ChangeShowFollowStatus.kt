@@ -44,11 +44,14 @@ class ChangeShowFollowStatus @Inject constructor(
     }
 
     private suspend fun follow(showId: Long, deferDataFetch: Boolean) {
+        Log.d("changeShowFollow", "[Sof] - follow show")
         followedShowsRepository.addFollowedShow(showId)
+        Log.d("changeShowFollow", "[Mof] - follow show")
         if (!deferDataFetch) {
             seasonsEpisodesRepository.updateSeasonsEpisodes(showId)
             seasonsEpisodesRepository.updateShowEpisodeWatches(showId, forceRefresh = true)
         }
+        Log.d("changeShowFollow", "[Eof] - follow show")
     }
 
     private suspend fun unfollow(showId: Long) {
