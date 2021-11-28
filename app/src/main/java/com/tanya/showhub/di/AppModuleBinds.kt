@@ -3,6 +3,7 @@ package com.tanya.showhub.di
 import com.tanya.base.android.appinitializer.AppInitializer
 import com.tanya.base.android.appinitializer.util.ShowhubLogger
 import com.tanya.base.util.Logger
+import com.tanya.showhub.initializers.ThreetenBpInitializer
 import com.tanya.showhub.initializers.TimberInitializer
 import dagger.Binds
 import dagger.Module
@@ -22,5 +23,9 @@ abstract class AppModuleBinds {
     @Binds
     @IntoSet
     abstract fun bindTimberInitializer(initializer: TimberInitializer): AppInitializer
+
+    @Binds
+    @IntoSet
+    abstract fun bindThreeTenInitializer(initializer: ThreetenBpInitializer): AppInitializer
 
 }
