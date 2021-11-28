@@ -82,6 +82,7 @@ dependencies {
     implementation project(":libs:data-android")
     implementation project(":libs:domain")
     implementation project(":libs:trakt")
+    implementation project(":libs:trakt-auth")
     implementation project(":libs:tmdb")
     implementation project(":libs:tasks")
     implementation project(":libs:common-ui-view")
