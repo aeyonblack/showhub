@@ -83,6 +83,7 @@ dependencies {
     implementation project(":libs:domain")
     implementation project(":libs:trakt")
     implementation project(":libs:tmdb")
+    implementation project(":libs:tasks")
     implementation project(":libs:common-ui-view")
     implementation project(":libs:common-ui-compose")
 

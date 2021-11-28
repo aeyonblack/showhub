@@ -15,10 +15,10 @@ abstract class TasksModuleBinds {
 
     @Binds
     @IntoSet
-    abstract fun bindTasksInitializer(source: ShowTasksInitializer): AppInitializer
+    abstract fun bindTasksInitializer(bind: ShowTasksInitializer): AppInitializer
 
     @Binds
     @Singleton
-    abstract fun bindShowhubActions(source: ShowTasksImpl): ShowTasks
+    abstract fun bindShowhubActions(bind: ShowTasksImpl): ShowTasks
 
 }
