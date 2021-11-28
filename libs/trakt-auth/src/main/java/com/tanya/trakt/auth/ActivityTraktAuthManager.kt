@@ -2,14 +2,17 @@ package com.tanya.trakt.auth
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.DelicateCoroutinesApi
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.ClientAuthentication
 import javax.inject.Inject
 
+@DelicateCoroutinesApi
 internal class ActivityTraktAuthManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val traktManager: TraktManager,
@@ -38,7 +41,7 @@ internal class ActivityTraktAuthManager @Inject constructor(
                     traktManager.onNewAuthState(state)
                 }
             }
-            error != null -> logger.d(error, "AuthException")
+            error != null -> Log.d("activityTraktManager", error.message.toString(), )
         }
     }
 }
