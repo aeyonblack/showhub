@@ -30,6 +30,7 @@ androidx-emoji = "androidx.emoji:emoji:1.1.0"
 androidx-navigation-compose = "androidx.navigation:navigation-compose:2.4.0-alpha10"
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-work-runtime = "androidx.work:work-runtime-ktx:2.7.0"
+androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.0"
 androidx-constraint-compose = "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
 
 # ---------------------------------------ANDROIDX LIFECYCLE-----------------------------------------
