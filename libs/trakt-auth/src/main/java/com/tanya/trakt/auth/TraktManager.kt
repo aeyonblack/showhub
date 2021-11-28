@@ -27,7 +27,7 @@ class TraktManager @Inject constructor(
 
     private val _state = MutableStateFlow(TraktAuthState.LOGGED_OUT)
 
-    private val state: StateFlow<TraktAuthState>
+    val state: StateFlow<TraktAuthState>
         get() = _state
 
     init {
