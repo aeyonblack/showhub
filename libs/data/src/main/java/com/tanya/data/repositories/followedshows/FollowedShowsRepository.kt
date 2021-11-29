@@ -45,28 +45,19 @@ class FollowedShowsRepository @Inject constructor(
     }
 
     suspend fun addFollowedShow(showId: Long) {
-        logger.d("addFollowedShow: Start of Function")
         val entry = followedShowsStore.getEntryForShowId(showId)
-        logger.d("addFollowedShow: Mid of Function")
-        if (entry == null || entry.pendingAction == PendingAction.DELETE) {
-            logger.d("addFollowedShow: Creating new entry")
-            try {
-                val newEntry = FollowedShowEntity(
-                    id = entry?.id ?: 0,
-                    showId = showId,
-                    followedAt = entry?.followedAt ?: OffsetDateTime.now(),
-                    pendingAction = PendingAction.UPLOAD
-                )
-                followedShowsStore.save(newEntry)
-            } catch (t: Throwable) {
-                logger.d("Something happened while creating entry: ${t.message}")
-            }
-            logger.d("addFollowedShow: New entry created")
 
+        if (entry == null || entry.pendingAction == PendingAction.DELETE) {
+            val newEntry = FollowedShowEntity(
+                id = entry?.id ?: 0,
+                showId = showId,
+                followedAt = entry?.followedAt ?: OffsetDateTime.now(),
+                pendingAction = PendingAction.UPLOAD
+            )
+            followedShowsStore.save(newEntry)
 
             logger.d("addFollowedShow: Entry saved")
         }
-        logger.d("addFollowedShow: End of Function")
     }
 
     suspend fun removeFollowedShow(showId: Long) {
