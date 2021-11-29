@@ -161,8 +161,8 @@ private fun <T: EntryWithShow<*>> EntryShowCarousel(
     ) {
         items(items) {
             PosterCard(
-                show = it.show,
-                poster = it.poster,
+                showTitle = it.show.title,
+                posterPath = it.poster?.path,
                 onClick = { onItemClick(it.show) },
                 modifier = Modifier
                     .fillParentMaxHeight()

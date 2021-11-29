@@ -10,9 +10,10 @@
     <string name="episodes_title">Episodes</string>
     <string name="trakt_rating_text">Rated %1$.0f%% by %1$.1fk viewers</string>
     <string name="show_seasons_count">%02d Seasons</string>
-    <string name="show_season">Season %02d</string>
-    <string name="season_episodes_count">%02d Episodes</string>
-    <string name="season_episode">Episode %02d</string>
+    <string name="show_season_number">Season %02d</string>
+    <string name="episodes_to_watch">%02d to watch</string>
+    <string name="episodes_watched">%02d watched</string>
+    <string name="season_episode_number">Episode %02d</string>
 
     <string name="genre_label_drama">Drama</string>
     <string name="genre_label_fantasy">Fantasy</string>

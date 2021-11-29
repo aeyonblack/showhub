@@ -11,21 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.tanya.data.entities.ShowEntity
-import com.tanya.data.entities.TmdbImageEntity
 
 @Composable
 fun PosterCard(
-    show: ShowEntity,
+    showTitle: String?,
     modifier: Modifier = Modifier,
-    poster: TmdbImageEntity? = null,
+    posterPath: String? = null,
+    shape: Shape? = null,
     onClick: (() -> Unit)? = null
 ) {
     Card(
-        shape = MaterialTheme.shapes.medium,
+        shape = shape ?: MaterialTheme.shapes.medium,
         modifier = modifier,
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface
@@ -34,15 +34,15 @@ fun PosterCard(
             modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
         ) {
             Text(
-                text = show.title ?: "No title",
+                text = showTitle ?: "No title",
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier
                     .padding(4.dp)
                     .align(Alignment.CenterStart)
                     .alpha(0.7f)
             )
-            if (poster != null) {
-                val image = loadPicture(poster.path).value
+            if (posterPath != null) {
+                val image = loadPicture(posterPath).value
                 image?.let {
                     Image(
                         bitmap = it.asImageBitmap(),

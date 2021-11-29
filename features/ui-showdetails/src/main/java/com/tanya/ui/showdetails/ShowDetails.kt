@@ -3,9 +3,7 @@ package com.tanya.ui.showdetails
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,10 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import app.showhub.common.compose.components.ExpandingText
-import app.showhub.common.compose.components.PosterCard
-import app.showhub.common.compose.components.drawForegroundGradientScrim
-import app.showhub.common.compose.components.loadPicture
+import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.theme.yellow400
@@ -39,10 +34,13 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R
+import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.results.RelatedShowEntryWithShow
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
+import com.tanya.data.results.numberAiredToWatch
+import com.tanya.data.results.numberWatched
 
 @Composable
 fun ShowDetails(
@@ -197,7 +195,13 @@ internal fun ShowDetailsContent(
             }
 
             item {
-                Header(title = "Seasons ${seasons.size}")
+                Header(title = "Seasons")
+            }
+
+            item {
+                SeasonsGrid(
+                    seasons = seasons,
+                )
             }
         }
 
@@ -275,6 +279,65 @@ private fun BackdropImage(
 }
 
 @Composable
+private fun SeasonsGrid(
+    seasons: List<SeasonWithEpisodesAndWatches>,
+    modifier: Modifier = Modifier
+) {
+    StaggeredGrid(
+        modifier = modifier
+        .horizontalScroll(rememberScrollState())
+        .padding(8.dp)
+    ) {
+        seasons.forEach {
+            SeasonChip(
+                season = it.season,
+                episodesToWatch = it.episodes.numberAiredToWatch,
+                episodesWatched = it.episodes.numberWatched
+            )
+        }
+    }
+}
+
+@Composable
+private fun SeasonChip(
+    season: SeasonEntity,
+    episodesToWatch: Int,
+    episodesWatched: Int
+) {
+    Surface(
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Row {
+            PosterCard(
+                showTitle = season.title
+                    ?: stringResource(R.string.show_season_number, season.number!!),
+                posterPath = season.tmdbPosterPath,
+                //shape = RoundedCornerShape(0f)
+            )
+            Column {
+                Text(
+                    text = season.title
+                        ?: stringResource(R.string.show_season_number, season.number!!)
+                )
+                Text(
+                    text = stringResource(R.string.episodes_to_watch, episodesToWatch)
+                )
+                Text(
+                    text = stringResource(R.string.episodes_watched, episodesWatched)
+                )
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_menu),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun RelatedShows(
     relatedShows: List<RelatedShowEntryWithShow>,
     dispatcher: (ShowDetailsAction) -> Unit,
@@ -291,8 +354,8 @@ private fun RelatedShows(
     ) {
         items(relatedShows) {
             PosterCard(
-                show = it.show,
-                poster = it.poster,
+                showTitle = it.show.title,
+                posterPath = it.poster?.path,
                 modifier = Modifier
                     .fillParentMaxWidth(0.2f)
                     .aspectRatio(2 / 3f)
