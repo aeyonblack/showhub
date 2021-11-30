@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,8 +40,6 @@ import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.results.RelatedShowEntryWithShow
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
-import com.tanya.data.results.numberAiredToWatch
-import com.tanya.data.results.numberWatched
 
 @Composable
 fun ShowDetails(
@@ -71,12 +70,14 @@ internal fun ShowDetails(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun ShowDetails(
     state: ShowDetailsViewState,
     dispatcher: (ShowDetailsAction) -> Unit
 ) {
     val listState = rememberLazyListState()
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     Scaffold(
         topBar = {
             var appBarHeight by remember { mutableStateOf(0) }
@@ -155,7 +156,12 @@ internal fun ShowDetailsContent(
         }
 
         item {
-            Header(title = "About")
+            Header(
+                title = "About",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
         }
         item {
             Column(modifier = Modifier
@@ -195,7 +201,18 @@ internal fun ShowDetailsContent(
             }
 
             item {
-                Header(title = "Seasons")
+                Header(
+                    title = "Seasons",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 2.dp)
+                )
+                Text(
+                    text = stringResource(R.string.show_seasons_count, seasons.size),
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.65f),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
 
             item {
@@ -211,7 +228,12 @@ internal fun ShowDetailsContent(
             }
 
             item {
-                Header(title = "People also watch")
+                Header(
+                    title = "People also watch",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
             }
             item {
                 RelatedShows(
@@ -226,16 +248,14 @@ internal fun ShowDetailsContent(
 
 @Composable
 private fun Header(
-    title: String
+    title: String,
+    modifier: Modifier = Modifier
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = title,
             style = MaterialTheme.typography.h5,
-            color = MaterialTheme.colors.onBackground.copy(alpha = 0.8f)
+            color = MaterialTheme.colors.onBackground
         )
     }
 }
@@ -283,16 +303,16 @@ private fun SeasonsGrid(
     seasons: List<SeasonWithEpisodesAndWatches>,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
+
     StaggeredGrid(
         modifier = modifier
-        .horizontalScroll(rememberScrollState())
-        .padding(8.dp)
+            .horizontalScroll(scrollState)
+            .padding(12.dp)
     ) {
         seasons.forEach {
             SeasonChip(
                 season = it.season,
-                episodesToWatch = it.episodes.numberAiredToWatch,
-                episodesWatched = it.episodes.numberWatched
             )
         }
     }
@@ -301,36 +321,40 @@ private fun SeasonsGrid(
 @Composable
 private fun SeasonChip(
     season: SeasonEntity,
-    episodesToWatch: Int,
-    episodesWatched: Int
 ) {
     Surface(
         modifier = Modifier.padding(4.dp)
     ) {
-        Row {
+        Row(modifier = Modifier.width(320.dp)) {
             PosterCard(
                 showTitle = season.title
                     ?: stringResource(R.string.show_season_number, season.number!!),
                 posterPath = season.tmdbPosterPath,
-                //shape = RoundedCornerShape(0f)
+                shape = RoundedCornerShape(0.dp),
+                modifier = Modifier
+                    .height(78.dp)
+                    .aspectRatio(2 / 3f)
             )
-            Column {
+            Column(modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .padding(8.dp)
+            ) {
                 Text(
                     text = season.title
-                        ?: stringResource(R.string.show_season_number, season.number!!)
+                        ?: stringResource(R.string.show_season_number, season.number!!),
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = stringResource(R.string.episodes_to_watch, episodesToWatch)
-                )
-                Text(
-                    text = stringResource(R.string.episodes_watched, episodesWatched)
+                    text = stringResource(R.string.episodes_to_watch, season.episodeCount!!),
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.65f)
                 )
             }
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_menu),
+                    painter = painterResource(id = R.drawable.ic_kebab),
                     contentDescription = null,
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
@@ -381,8 +405,6 @@ private fun ShowDetailsAppBar(
         },
         animationSpec = tween()
     )
-
-    //var enabled by remember { mutableStateOf(true) }
     
     TopAppBar(
         title = {
@@ -390,7 +412,11 @@ private fun ShowDetailsAppBar(
                 targetState = showBackground && title != null,
                 animationSpec = tween(1000)
             ) {
-                if (it) Text(text = title!!)
+                if (it) Text(
+                    text = title!!,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         },
         contentPadding = rememberInsetsPaddingValues(

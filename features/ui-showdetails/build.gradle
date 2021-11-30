@@ -41,6 +41,8 @@ dependencies {
 
     implementation(libs.androidx.constraint.compose)
 
+    implementation(libs.compose.pager.snap)
+
     implementation(libs.bundles.compose)
     implementation(libs.coil.compose)
 
