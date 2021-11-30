@@ -14,18 +14,18 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import app.showhub.common.compose.theme.ShowhubTheme
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.ui.Scaffold
 import com.tanya.showhub.ui.components.BottomNavBar
 import com.tanya.showhub.ui.components.currentScreenAsState
 import dagger.hilt.android.AndroidEntryPoint
-import com.google.accompanist.insets.ui.Scaffold
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navHostController = rememberNavController()
-            val selectedItem by navHostController.currentScreenAsState()
+            val navController = rememberNavController()
+            val selectedItem by navController.currentScreenAsState()
 
             WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -36,15 +36,16 @@ class MainActivity : ComponentActivity() {
                         bottomBar = {
                             BottomNavBar(
                                 selectedNavigation = selectedItem,
+                                navController = navController,
                                 onNavigationSelected = {
-                                    navHostController.navigate(it.route) {
+                                    navController.navigate(it.route) {
                                         launchSingleTop = true
                                         restoreState = true
-                                        popUpTo(navHostController.graph.findStartDestination().id) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
                                             saveState = true
                                         }
                                     }
-                                }
+                                },
                             )
                         },
                         backgroundColor = MaterialTheme.colors.background
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize()
                         ) {
                             AppNavigation(
-                                navHostController = navHostController,
+                                navHostController = navController,
                                 modifier = Modifier
                                     .weight(1f)
                                     .fillMaxHeight()

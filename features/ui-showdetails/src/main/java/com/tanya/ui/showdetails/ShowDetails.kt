@@ -31,6 +31,7 @@ import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.theme.yellow400
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
@@ -40,6 +41,7 @@ import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.results.RelatedShowEntryWithShow
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
+import kotlinx.coroutines.launch
 
 @Composable
 fun ShowDetails(
@@ -77,50 +79,97 @@ internal fun ShowDetails(
     dispatcher: (ShowDetailsAction) -> Unit
 ) {
     val listState = rememberLazyListState()
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    Scaffold(
-        topBar = {
-            var appBarHeight by remember { mutableStateOf(0) }
-            val showAppBarBackground by remember {
-                derivedStateOf {
-                    val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
-                    when {
-                        visibleItemsInfo.isEmpty() -> false
-                        appBarHeight <= 0 -> false
-                        else -> {
-                            val firstVisibleItem = visibleItemsInfo[0]
-                            when {
-                                firstVisibleItem.index > 0 -> true
-                                else -> firstVisibleItem.size + firstVisibleItem.offset <= appBarHeight
+    val scope = rememberCoroutineScope()
+    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val season: MutableState<SeasonEntity?> = remember { mutableStateOf(null)}
+
+    ModalBottomSheetLayout(
+        sheetContent = {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 72.dp)
+            ) {
+                season.value?.let {
+                    val title = it.title
+                        ?: stringResource(R.string.show_season_number, it.number ?: -1)
+                    PosterCard(
+                        showTitle = title,
+                        posterPath = it.tmdbPosterPath,
+                        shape = RoundedCornerShape(0.dp),
+                        modifier = Modifier
+                            .height(195.dp)
+                            .aspectRatio(2/3f)
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        text = it.title
+                            ?: stringResource(R.string.show_season_number, it.number ?: -1),
+                        style = MaterialTheme.typography.h2,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
+        },
+        sheetState = modalBottomSheetState,
+        sheetBackgroundColor = Color.Transparent,
+        scrimColor = MaterialTheme.colors.background,
+        sheetShape = RoundedCornerShape(0.dp),
+        modifier = Modifier
+            .navigationBarsPadding()
+    ) {
+        Scaffold(
+            topBar = {
+                var appBarHeight by remember { mutableStateOf(0) }
+                val showAppBarBackground by remember {
+                    derivedStateOf {
+                        val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
+                        when {
+                            visibleItemsInfo.isEmpty() -> false
+                            appBarHeight <= 0 -> false
+                            else -> {
+                                val firstVisibleItem = visibleItemsInfo[0]
+                                when {
+                                    firstVisibleItem.index > 0 -> true
+                                    else -> firstVisibleItem.size + firstVisibleItem.offset <= appBarHeight
+                                }
                             }
                         }
                     }
                 }
+                ShowDetailsAppBar(
+                    title = state.show.title,
+                    following = state.isFollowed,
+                    showBackground = showAppBarBackground,
+                    dispatcher = dispatcher,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged { appBarHeight = it.height }
+                )
             }
-            ShowDetailsAppBar(
-                title = state.show.title,
-                following = state.isFollowed,
-                showBackground = showAppBarBackground,
-                dispatcher = dispatcher,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onSizeChanged { appBarHeight = it.height }
-            )
-        }
-    ) { contentPadding ->
-        Surface {
-            ShowDetailsContent(
-                show = state.show,
-                relatedShows = state.relatedShows,
-                seasons = state.seasons,
-                listState = listState,
-                backdrop = state.backdropImage,
-                dispatcher = dispatcher,
-                contentPadding = contentPadding,
-                modifier = Modifier.fillMaxSize()
-            )
+        ) { contentPadding ->
+            Surface {
+                ShowDetailsContent(
+                    show = state.show,
+                    relatedShows = state.relatedShows,
+                    seasons = state.seasons,
+                    listState = listState,
+                    backdrop = state.backdropImage,
+                    dispatcher = dispatcher,
+                    contentPadding = contentPadding,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    season.value = it
+                    scope.launch {
+                        modalBottomSheetState.show()
+                    }
+                }
+            }
         }
     }
+
 }
 
 @Composable
@@ -132,7 +181,8 @@ internal fun ShowDetailsContent(
     backdrop: ShowImagesEntity?,
     dispatcher: (ShowDetailsAction) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    openSeasonMenu: (SeasonEntity) -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -218,6 +268,7 @@ internal fun ShowDetailsContent(
             item {
                 SeasonsGrid(
                     seasons = seasons,
+                    openSeasonMenu = openSeasonMenu
                 )
             }
         }
@@ -298,10 +349,38 @@ private fun BackdropImage(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun SheetOption(
+    icon: Int,
+    actionName: String,
+    modifier: Modifier = Modifier,
+    action: () -> Unit
+) {
+    Surface(
+        onClick = action
+    ) {
+        Row(modifier) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                tint = MaterialTheme.colors.onBackground.copy(0.7f),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterVertically)
+            )
+            Text(
+                text = actionName,
+            )
+        }
+    }
+}
+
 @Composable
 private fun SeasonsGrid(
     seasons: List<SeasonWithEpisodesAndWatches>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    openSeasonMenu: (SeasonEntity) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -313,6 +392,7 @@ private fun SeasonsGrid(
         seasons.forEach {
             SeasonChip(
                 season = it.season,
+                openSeasonMenu = openSeasonMenu
             )
         }
     }
@@ -321,6 +401,7 @@ private fun SeasonsGrid(
 @Composable
 private fun SeasonChip(
     season: SeasonEntity,
+    openSeasonMenu: (SeasonEntity) -> Unit
 ) {
     Surface(
         modifier = Modifier.padding(4.dp)
@@ -350,7 +431,11 @@ private fun SeasonChip(
                     color = MaterialTheme.colors.onBackground.copy(alpha = 0.65f)
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = {
+                    openSeasonMenu(season)
+                }
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_kebab),
                     contentDescription = null,

@@ -1,11 +1,7 @@
 package com.tanya.showhub.extensions
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
-import androidx.navigation.navigation
 import com.tanya.showhub.LeafScreen
 import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.home.About
@@ -17,6 +13,17 @@ import com.tanya.ui.showdetails.ShowDetails
 /*These extension functions are for adding top level
 * destinations and all destinations that can be reached from them
 * ---------------------------------------------------------------*/
+
+val topLevelDestinations = listOf(
+    Screen.Home.route,
+    Screen.Search.route,
+    Screen.Library.route,
+    Screen.About.route,
+    LeafScreen.Home.createRoute(Screen.Home),
+    LeafScreen.Search.createRoute(Screen.Search),
+    LeafScreen.Library.createRoute(Screen.Library),
+    LeafScreen.About.createRoute(Screen.About)
+)
 
 fun NavGraphBuilder.addHomeTopLevel(
     navController: NavController
@@ -123,3 +130,4 @@ fun NavGraphBuilder.addShowDetails(
         )
     }
 }
+
