@@ -98,7 +98,7 @@ internal fun ShowDetails(
                         shape = RoundedCornerShape(0.dp),
                         modifier = Modifier
                             .height(195.dp)
-                            .aspectRatio(2/3f)
+                            .aspectRatio(2 / 3f)
                             .padding(8.dp)
                             .align(Alignment.CenterHorizontally)
                     )
@@ -109,6 +109,22 @@ internal fun ShowDetails(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(56.dp))
+                    SheetOption(
+                        icon = R.drawable.ic_open,
+                        actionName = "Open",
+                        action = {}
+                    )
+                    SheetOption(
+                        icon = R.drawable.ic_play,
+                        actionName = "Mark watched",
+                        action = {}
+                    )
+                    SheetOption(
+                        icon = R.drawable.ic_ignore,
+                        actionName = "Ignore",
+                        action = {}
                     )
                 }
             }
@@ -358,19 +374,28 @@ private fun SheetOption(
     action: () -> Unit
 ) {
     Surface(
-        onClick = action
+        onClick = action,
+        color = Color.Transparent,
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
-        Row(modifier) {
+        Row(modifier.padding(start = 8.dp)) {
             Icon(
                 painter = painterResource(id = icon),
                 contentDescription = null,
                 tint = MaterialTheme.colors.onBackground.copy(0.7f),
                 modifier = Modifier
+                    .size(48.dp, 48.dp)
                     .padding(8.dp)
                     .align(Alignment.CenterVertically)
             )
             Text(
                 text = actionName,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onBackground.copy(1f),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterVertically)
             )
         }
     }
@@ -529,12 +554,17 @@ private fun ShowDetailsAppBar(
                 style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
+                color = MaterialTheme.colors.onBackground.copy(1f),
                 modifier = Modifier
                     .clickable {
                         dispatcher(ShowDetailsAction.FollowShowToggleAction)
                     }
                     .actionButtonBackground(
-                        enabled = !following
+                        enabled = !following,
+                        alpha = when {
+                            following -> 1f
+                            else -> 0.3f
+                        }
                     )
                     .align(Alignment.CenterVertically)
                     .padding(horizontal = 8.dp, vertical = 4.dp)
