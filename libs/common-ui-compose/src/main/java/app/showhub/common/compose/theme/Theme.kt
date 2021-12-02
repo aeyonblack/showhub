@@ -45,3 +45,21 @@ fun ShowhubTheme(content: @Composable () -> Unit) {
         )
     }
 }
+
+@Composable
+fun ShowhubPinkTheme(content: @Composable () -> Unit) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(
+        color = Color.Transparent,
+        darkIcons = false
+    )
+    val elevations = Elevations(card = 1.dp)
+    CompositionLocalProvider(LocalElevations provides elevations) {
+        MaterialTheme(
+            colors = showhubSecondary,
+            typography = typography,
+            shapes = shapes,
+            content = content
+        )
+    }
+}
