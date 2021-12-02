@@ -21,6 +21,13 @@ private val showhubDefault = darkColors(
     onSurface = Color.White
 )
 
+private val showhubSecondary = darkColors(
+    primary = pink200,
+    secondary = pink200,
+    onPrimary = Color.Black,
+    onSecondary = Color.Black
+)
+
 @Composable
 fun ShowhubTheme(content: @Composable () -> Unit) {
     val systemUiController = rememberSystemUiController()
