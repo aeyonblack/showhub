@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -80,14 +81,15 @@ fun ExpandingCard(
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colors.onBackground.copy(1f),
+                    color = Color.White,
                     modifier = Modifier
                         .clickable {
                             onWatchClicked()
                         }
                         .actionButtonBackground(
                             enabled = !watched,
-                            alpha = 1f
+                            alpha = 1f,
+                            color = Color.Black
                         )
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
