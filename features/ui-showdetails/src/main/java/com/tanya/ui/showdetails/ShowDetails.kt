@@ -37,6 +37,7 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R
+import com.tanya.data.entities.EpisodeEntity
 import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
@@ -629,5 +630,43 @@ private fun BackdropContent(
                 .alpha(minOf(1f, decay))
                 .align(Alignment.CenterHorizontally)
         )
+    }
+}
+
+@Composable
+fun Episode(
+    episode: EpisodeEntity,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.padding(
+            vertical = 16.dp
+        )
+    ) {
+        EpisodeBackdropImage(
+            path = episode.tmdbBackdropPath ?: "",
+            modifier = Modifier
+                .width(112.dp)
+                .aspectRatio(16f/10)
+        )
+
+    }
+}
+
+@Composable
+fun EpisodeBackdropImage(
+    path: String,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        val image = loadPicture(url = path).value
+        image?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
