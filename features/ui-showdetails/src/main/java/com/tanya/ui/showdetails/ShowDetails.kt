@@ -1,5 +1,6 @@
 package com.tanya.ui.showdetails
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -82,6 +83,15 @@ internal fun ShowDetails(
     val scope = rememberCoroutineScope()
     val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val season: MutableState<SeasonEntity?> = remember { mutableStateOf(null)}
+    
+    BackHandler(
+        enabled = modalBottomSheetState.currentValue == ModalBottomSheetValue.Expanded,
+        onBack = {
+            scope.launch {
+                modalBottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
+            }
+        }
+    )
 
     ModalBottomSheetLayout(
         sheetContent = {
@@ -179,7 +189,7 @@ internal fun ShowDetails(
                 ) {
                     season.value = it
                     scope.launch {
-                        modalBottomSheetState.show()
+                        modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                     }
                 }
             }
