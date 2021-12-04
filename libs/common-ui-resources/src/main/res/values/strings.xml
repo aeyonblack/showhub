@@ -14,6 +14,7 @@
     <string name="episodes_to_watch">%02d Episodes</string>
     <string name="episodes_watched">%02d watched</string>
     <string name="season_episode_number">Episode %02d</string>
+    <string name="episode_number">%02d</string>
 
     <string name="genre_label_drama">Drama</string>
     <string name="genre_label_fantasy">Fantasy</string>

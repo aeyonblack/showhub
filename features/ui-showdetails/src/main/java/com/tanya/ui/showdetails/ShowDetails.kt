@@ -30,6 +30,7 @@ import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.theme.yellow400
+import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -636,7 +637,7 @@ private fun BackdropContent(
 @Composable
 fun Episode(
     episode: EpisodeEntity,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.padding(
@@ -647,9 +648,27 @@ fun Episode(
             path = episode.tmdbBackdropPath ?: "",
             modifier = Modifier
                 .width(112.dp)
-                .aspectRatio(16f/10)
+                .aspectRatio(16f / 10)
         )
-
+        episode.firstAired?.let {
+            val formatter = LocalShowhubDateTimeFormatter.current
+            val formattedDate = formatter.formatShortRelativeTime(it)
+            ExpandingCard(
+                title = episode.title ?: "",
+                description = episode.summary ?: "",
+                date = formattedDate,
+                icon = R.drawable.ic_calendar,
+                onWatchClicked = {},
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp)
+            )
+        }
+        Text(
+            text = stringResource(R.string.episode_number, episode.number ?: -1),
+            style = MaterialTheme.typography.subtitle2,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
     }
 }
 

@@ -19,18 +19,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.showhub.common.compose.extensions.actionButtonBackground
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExpandingCard(
     title: String,
     description: String,
     icon: Int,
     modifier: Modifier = Modifier,
-    date: String? = null,
+    date: String,
     shape: Shape = RoundedCornerShape(0.dp),
     watched: Boolean = false,
     onWatchClicked: () -> Unit
 ) {
-    val expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier
@@ -42,6 +43,7 @@ fun ExpandingCard(
                 )
             ),
         shape = shape,
+        onClick = { expanded = !expanded }
     ) {
         Column(modifier) {
             Text(
@@ -51,22 +53,20 @@ fun ExpandingCard(
                 overflow = TextOverflow.Ellipsis
             )
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                if (date != null) {
-                    Row(
-                        modifier = Modifier.padding(top = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = icon),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = date,
-                            style = MaterialTheme.typography.caption,
-                            modifier = Modifier.padding(start = 4.dp)
-                        )
-                    }
+                Row(
+                    modifier = Modifier.padding(top = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = date,
+                        style = MaterialTheme.typography.caption,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
                 }
             }
             if (expanded) {
