@@ -3,6 +3,7 @@ package com.tanya.ui.showdetails
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -35,6 +36,7 @@ import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R
@@ -673,6 +675,32 @@ fun Episode(
 }
 
 @Composable
+fun Episodes(
+    episodes: List<EpisodeEntity>
+) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+        ) {
+            val listState = rememberLazyListState()
+            val appBarElevation by animateDpAsState(if (listState.isScrolled) 4.dp else 0.dp)
+            val appBarColor = when {
+                appBarElevation > 0.dp -> MaterialTheme.colors.surface
+                else -> Color.Transparent
+            }
+            TopAppBar(
+                backgroundColor = appBarColor,
+                elevation = appBarElevation
+            ) {
+                // To be continued
+            }
+        }
+    }
+}
+
+@Composable
 fun EpisodeBackdropImage(
     path: String,
     modifier: Modifier = Modifier
@@ -689,3 +717,6 @@ fun EpisodeBackdropImage(
         }
     }
 }
+
+private val LazyListState.isScrolled: Boolean
+    get() = firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0
