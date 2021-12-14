@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -574,11 +576,7 @@ private fun ShowDetailsAppBar(
                         dispatcher(ShowDetailsAction.FollowShowToggleAction)
                     }
                     .actionButtonBackground(
-                        enabled = !following,
-                        alpha = when {
-                            following -> 1f
-                            else -> 0.3f
-                        }
+                        enabled = !following
                     )
                     .align(Alignment.CenterVertically)
                     .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -637,7 +635,7 @@ private fun BackdropContent(
 }
 
 @Composable
-fun Episode(
+private fun Episode(
     episode: EpisodeEntity,
     modifier: Modifier = Modifier,
 ) {
@@ -675,8 +673,11 @@ fun Episode(
 }
 
 @Composable
-fun Episodes(
-    episodes: List<EpisodeEntity>
+private fun Episodes(
+    episodes: List<EpisodeEntity>,
+    seasonTitle: String? = null,
+    seasonNumber: Int? = null,
+    updateSheetState: (SheetState) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -694,14 +695,45 @@ fun Episodes(
                 backgroundColor = appBarColor,
                 elevation = appBarElevation
             ) {
-                // To be continued
+                Text(
+                    text = seasonTitle
+                        ?: stringResource(R.string.show_season_number, seasonNumber!!),
+                    style = MaterialTheme.typography.subtitle1,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
+                )
+                IconButton(
+                    onClick = { updateSheetState(SheetState.CLOSED) },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.ExpandMore,
+                        contentDescription = null
+                    )
+                }
             }
-        }
+            LazyColumn(
+                state = listState,
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.systemBars,
+                    applyTop = false
+                )
+            ) {
+                items(episodes) {
+                    Episode(episode = it)
+                    Divider(startIndent = 128.dp)
+                }
+            }
+         }
     }
 }
 
 @Composable
-fun EpisodeBackdropImage(
+private fun EpisodeBackdropImage(
     path: String,
     modifier: Modifier = Modifier
 ) {
@@ -717,6 +749,8 @@ fun EpisodeBackdropImage(
         }
     }
 }
+
+private enum class SheetState {OPEN, CLOSED}
 
 private val LazyListState.isScrolled: Boolean
     get() = firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0
