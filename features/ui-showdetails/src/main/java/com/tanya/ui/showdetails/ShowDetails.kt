@@ -1,5 +1,6 @@
 package com.tanya.ui.showdetails
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
@@ -33,7 +34,6 @@ import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.theme.yellow400
-import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -43,9 +43,9 @@ import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R
 import com.tanya.data.entities.EpisodeEntity
-import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
+import com.tanya.data.results.EpisodeWithWatches
 import com.tanya.data.results.RelatedShowEntryWithShow
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
 import kotlinx.coroutines.launch
@@ -87,116 +87,137 @@ internal fun ShowDetails(
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+    var isEpisodesSheetOpen by remember { mutableStateOf(false)}
     val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val season: MutableState<SeasonEntity?> = remember { mutableStateOf(null)}
-    
-    BackHandler(
-        enabled = modalBottomSheetState.currentValue == ModalBottomSheetValue.Expanded,
-        onBack = {
-            scope.launch {
-                modalBottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
-            }
-        }
-    )
+    val seasonWithEpisodes: MutableState<SeasonWithEpisodesAndWatches?> = remember { mutableStateOf(null)}
 
-    ModalBottomSheetLayout(
-        sheetContent = {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 72.dp)
-            ) {
-                season.value?.let {
-                    val title = it.title
-                        ?: stringResource(R.string.show_season_number, it.number ?: -1)
-                    PosterCard(
-                        showTitle = title,
-                        posterPath = it.tmdbPosterPath,
-                        shape = RoundedCornerShape(0.dp),
-                        modifier = Modifier
-                            .height(195.dp)
-                            .aspectRatio(2 / 3f)
-                            .padding(8.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
-                    Text(
-                        text = it.title
-                            ?: stringResource(R.string.show_season_number, it.number ?: -1),
-                        style = MaterialTheme.typography.h2,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    Spacer(modifier = Modifier.height(56.dp))
-                    SheetOption(
-                        icon = R.drawable.ic_open,
-                        actionName = "Open",
-                        action = {}
-                    )
-                    SheetOption(
-                        icon = R.drawable.ic_play,
-                        actionName = "Mark watched",
-                        action = {}
-                    )
-                    SheetOption(
-                        icon = R.drawable.ic_ignore,
-                        actionName = "Ignore",
-                        action = {}
-                    )
+    BoxWithConstraints {
+
+        BackHandler(
+            enabled = modalBottomSheetState.currentValue == ModalBottomSheetValue.Expanded
+                    || isEpisodesSheetOpen,
+            onBack = {
+                scope.launch {
+                    modalBottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
                 }
+                if (isEpisodesSheetOpen) isEpisodesSheetOpen = false
             }
-        },
-        sheetState = modalBottomSheetState,
-        sheetBackgroundColor = Color.Transparent,
-        scrimColor = MaterialTheme.colors.background,
-        sheetShape = RoundedCornerShape(0.dp),
-        modifier = Modifier
-            .navigationBarsPadding()
-    ) {
-        Scaffold(
-            topBar = {
-                var appBarHeight by remember { mutableStateOf(0) }
-                val showAppBarBackground by remember {
-                    derivedStateOf {
-                        val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
-                        when {
-                            visibleItemsInfo.isEmpty() -> false
-                            appBarHeight <= 0 -> false
-                            else -> {
-                                val firstVisibleItem = visibleItemsInfo[0]
+        )
+
+        Box {
+            ModalBottomSheetLayout(
+                sheetContent = {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 72.dp)
+                    ) {
+                        seasonWithEpisodes.value?.season?.let {
+                            val title = it.title
+                                ?: stringResource(R.string.show_season_number, it.number ?: -1)
+                            PosterCard(
+                                showTitle = title,
+                                posterPath = it.tmdbPosterPath,
+                                shape = RoundedCornerShape(0.dp),
+                                modifier = Modifier
+                                    .height(195.dp)
+                                    .aspectRatio(2 / 3f)
+                                    .padding(8.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                            Text(
+                                text = it.title
+                                    ?: stringResource(R.string.show_season_number, it.number ?: -1),
+                                style = MaterialTheme.typography.h2,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                            Spacer(modifier = Modifier.height(56.dp))
+                            SheetOption(
+                                icon = R.drawable.ic_open,
+                                actionName = "Open",
+                                action = {}
+                            )
+                            SheetOption(
+                                icon = R.drawable.ic_play,
+                                actionName = "Mark watched",
+                                action = {}
+                            )
+                            SheetOption(
+                                icon = R.drawable.ic_ignore,
+                                actionName = "Ignore",
+                                action = {}
+                            )
+                        }
+                    }
+                },
+                sheetState = modalBottomSheetState,
+                sheetBackgroundColor = Color.Transparent,
+                scrimColor = MaterialTheme.colors.background,
+                sheetShape = RoundedCornerShape(0.dp),
+                modifier = Modifier
+                    .navigationBarsPadding()
+            ) {
+                Scaffold(
+                    topBar = {
+                        var appBarHeight by remember { mutableStateOf(0) }
+                        val showAppBarBackground by remember {
+                            derivedStateOf {
+                                val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
                                 when {
-                                    firstVisibleItem.index > 0 -> true
-                                    else -> firstVisibleItem.size + firstVisibleItem.offset <= appBarHeight
+                                    visibleItemsInfo.isEmpty() -> false
+                                    appBarHeight <= 0 -> false
+                                    else -> {
+                                        val firstVisibleItem = visibleItemsInfo[0]
+                                        when {
+                                            firstVisibleItem.index > 0 -> true
+                                            else -> firstVisibleItem.size + firstVisibleItem.offset <= appBarHeight
+                                        }
+                                    }
                                 }
+                            }
+                        }
+                        ShowDetailsAppBar(
+                            title = state.show.title,
+                            following = state.isFollowed,
+                            showBackground = showAppBarBackground,
+                            dispatcher = dispatcher,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onSizeChanged { appBarHeight = it.height }
+                        )
+                    }
+                ) { contentPadding ->
+                    Surface {
+                        ShowDetailsContent(
+                            show = state.show,
+                            relatedShows = state.relatedShows,
+                            seasons = state.seasons,
+                            listState = listState,
+                            backdrop = state.backdropImage,
+                            dispatcher = dispatcher,
+                            contentPadding = contentPadding,
+                            modifier = Modifier.fillMaxSize(),
+                            openSeasonDetails = {
+                                seasonWithEpisodes.value = it
+                                isEpisodesSheetOpen = true
+                            }
+                        ) {
+                            seasonWithEpisodes.value = it
+                            scope.launch {
+                                modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                             }
                         }
                     }
                 }
-                ShowDetailsAppBar(
-                    title = state.show.title,
-                    following = state.isFollowed,
-                    showBackground = showAppBarBackground,
-                    dispatcher = dispatcher,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onSizeChanged { appBarHeight = it.height }
-                )
             }
-        ) { contentPadding ->
-            Surface {
-                ShowDetailsContent(
-                    show = state.show,
-                    relatedShows = state.relatedShows,
-                    seasons = state.seasons,
-                    listState = listState,
-                    backdrop = state.backdropImage,
-                    dispatcher = dispatcher,
-                    contentPadding = contentPadding,
-                    modifier = Modifier.fillMaxSize()
+            if (isEpisodesSheetOpen) {
+                EpisodesSheet(
+                    episodes = seasonWithEpisodes.value?.episodes ?: listOf(),
+                    seasonTitle = seasonWithEpisodes.value?.season?.title,
+                    seasonNumber = seasonWithEpisodes.value?.season?.number
                 ) {
-                    season.value = it
-                    scope.launch {
-                        modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                    }
+                    isEpisodesSheetOpen = it == SheetState.OPEN
                 }
             }
         }
@@ -214,7 +235,8 @@ internal fun ShowDetailsContent(
     dispatcher: (ShowDetailsAction) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    openSeasonMenu: (SeasonEntity) -> Unit
+    openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
+    openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -300,7 +322,8 @@ internal fun ShowDetailsContent(
             item {
                 SeasonsGrid(
                     seasons = seasons,
-                    openSeasonMenu = openSeasonMenu
+                    openSeasonDetails = openSeasonDetails,
+                    openSeasonMenu = openSeasonMenu,
                 )
             }
         }
@@ -421,7 +444,8 @@ private fun SheetOption(
 private fun SeasonsGrid(
     seasons: List<SeasonWithEpisodesAndWatches>,
     modifier: Modifier = Modifier,
-    openSeasonMenu: (SeasonEntity) -> Unit
+    openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
+    openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -432,26 +456,30 @@ private fun SeasonsGrid(
     ) {
         seasons.forEach {
             SeasonChip(
-                season = it.season,
+                seasonWithEpisodes = it,
+                openSeasonDetails = openSeasonDetails,
                 openSeasonMenu = openSeasonMenu
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun SeasonChip(
-    season: SeasonEntity,
-    openSeasonMenu: (SeasonEntity) -> Unit
+    seasonWithEpisodes: SeasonWithEpisodesAndWatches,
+    openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
+    openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
     Surface(
-        modifier = Modifier.padding(4.dp)
+        onClick = { openSeasonDetails(seasonWithEpisodes) },
+        modifier = Modifier.padding(4.dp),
     ) {
         Row(modifier = Modifier.width(320.dp)) {
             PosterCard(
-                showTitle = season.title
-                    ?: stringResource(R.string.show_season_number, season.number!!),
-                posterPath = season.tmdbPosterPath,
+                showTitle = seasonWithEpisodes.season.title
+                    ?: stringResource(R.string.show_season_number, seasonWithEpisodes.season.number!!),
+                posterPath = seasonWithEpisodes.season.tmdbPosterPath,
                 shape = RoundedCornerShape(0.dp),
                 modifier = Modifier
                     .height(78.dp)
@@ -462,19 +490,19 @@ private fun SeasonChip(
                 .padding(8.dp)
             ) {
                 Text(
-                    text = season.title
-                        ?: stringResource(R.string.show_season_number, season.number!!),
+                    text = seasonWithEpisodes.season.title
+                        ?: stringResource(R.string.show_season_number, seasonWithEpisodes.season.number!!),
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = stringResource(R.string.episodes_to_watch, season.episodeCount!!),
+                    text = stringResource(R.string.episodes_to_watch, seasonWithEpisodes.season.episodeCount!!),
                     fontSize = 13.sp,
                     color = MaterialTheme.colors.onBackground.copy(alpha = 0.65f)
                 )
             }
             IconButton(
                 onClick = {
-                    openSeasonMenu(season)
+                    openSeasonMenu(seasonWithEpisodes)
                 }
             ) {
                 Icon(
@@ -651,12 +679,12 @@ private fun Episode(
                 .aspectRatio(16f / 10)
         )
         episode.firstAired?.let {
-            val formatter = LocalShowhubDateTimeFormatter.current
-            val formattedDate = formatter.formatShortRelativeTime(it)
+            /*val formatter = LocalShowhubDateTimeFormatter.current
+            val formattedDate = formatter.formatShortRelativeTime(it)*/
             ExpandingCard(
                 title = episode.title ?: "",
                 description = episode.summary ?: "",
-                date = formattedDate,
+                date = "",
                 icon = R.drawable.ic_calendar,
                 onWatchClicked = {},
                 modifier = Modifier
@@ -673,8 +701,25 @@ private fun Episode(
 }
 
 @Composable
+private fun EpisodesSheet(
+    episodes: List<EpisodeWithWatches>,
+    seasonTitle: String? = null,
+    seasonNumber: Int? =  null,
+    updateSheetState: (SheetState) -> Unit
+) {
+    Surface {
+        Episodes(
+            episodes = episodes,
+            seasonTitle = seasonTitle,
+            seasonNumber = seasonNumber,
+            updateSheetState = updateSheetState
+        )
+    }
+}
+
+@Composable
 private fun Episodes(
-    episodes: List<EpisodeEntity>,
+    episodes: List<EpisodeWithWatches>,
     seasonTitle: String? = null,
     seasonNumber: Int? = null,
     updateSheetState: (SheetState) -> Unit
@@ -697,7 +742,7 @@ private fun Episodes(
             ) {
                 Text(
                     text = seasonTitle
-                        ?: stringResource(R.string.show_season_number, seasonNumber!!),
+                        ?: stringResource(R.string.show_season_number, seasonNumber ?: -1),
                     style = MaterialTheme.typography.subtitle1,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -724,7 +769,7 @@ private fun Episodes(
                 )
             ) {
                 items(episodes) {
-                    Episode(episode = it)
+                    Episode(episode = it.episode)
                     Divider(startIndent = 128.dp)
                 }
             }
@@ -737,6 +782,7 @@ private fun EpisodeBackdropImage(
     path: String,
     modifier: Modifier = Modifier
 ) {
+    Log.d("episodeBackdropImage", "path = $path")
     Box(modifier = modifier) {
         val image = loadPicture(url = path).value
         image?.let {
