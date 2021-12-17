@@ -59,6 +59,7 @@ class SeasonsEpisodesRepository @Inject constructor(
     }
 
     suspend fun updateSeasonsEpisodes(showId: Long) {
+        logger.d("about to fetch season with episodes")
         when (val response = traktSeasonsDataSource.getSeasonsEpisodes(showId)) {
             is Success -> {
                 response.data.distinctBy { it.first.number }.associate { (season, episodes) ->
@@ -67,30 +68,38 @@ class SeasonsEpisodesRepository @Inject constructor(
                     val mergedSeason = when (
                         val tmdbResponse = tmdbSeasonsDataSource.getSeason(showId, season.number!!)
                     ) {
-                        is Success -> {
-                            logger.d("Season poster path = ${tmdbResponse.data.tmdbPosterPath}")
-                            mergeSeason(localSeason, season, tmdbResponse.data)
-                        }
-                        else -> {
-                            logger.d("Failed to fetch tmdb season")
-                            mergeSeason(localSeason, season, SeasonEntity.EMPTY)
-                        }
+                        is Success -> mergeSeason(localSeason, season, tmdbResponse.data)
+                        else -> mergeSeason(localSeason, season, SeasonEntity.EMPTY)
                     }
-
-                    //val mergedSeason = mergeSeason(localSeason, season, SeasonEntity.EMPTY)
 
                     val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
                         val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
                             ?: EpisodeEntity(seasonId = mergedSeason.id)
-                        mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
+                        when {
+                            it.number != null -> when (
+                                val tmdbResponse = tmdbEpisodeDataSource
+                                    .getEpisode(showId, season.number, it.number)
+                            ) {
+                                is Success -> {
+                                    mergeEpisode(localEpisode, it, tmdbResponse.data)
+                                }
+                                else -> {
+                                    mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
+                                }
+                            }
+                            else -> mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
+                        }
                     }
                     mergedSeason to mergedEpisodes
-                }.also { seasonsEpisodesStore.save(showId, it) }
+                }.also {
+                    seasonsEpisodesStore.save(showId, it)
+                }
 
                 //seasonsLastRequestStore.updateLastRequest(showId)
             }
             is ErrorResult -> throw response.throwable
         }
+        logger.d("done merging season to episode")
     }
 
     suspend fun updateEpisode(episodeId: Long) = coroutineScope {

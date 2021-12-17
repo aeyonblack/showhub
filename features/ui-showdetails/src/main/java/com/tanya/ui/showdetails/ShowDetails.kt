@@ -673,7 +673,7 @@ private fun Episode(
         )
     ) {
         EpisodeBackdropImage(
-            path = episode.tmdbBackdropPath ?: "",
+            path = episode.tmdbBackdropPath ?: "null",
             modifier = Modifier
                 .width(112.dp)
                 .aspectRatio(16f / 10)
