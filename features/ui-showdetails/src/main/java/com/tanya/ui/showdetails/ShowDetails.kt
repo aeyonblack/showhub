@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -12,7 +11,7 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -663,42 +662,46 @@ private fun BackdropContent(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Episode(
     episode: EpisodeEntity,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.padding(
-            vertical = 16.dp
-        )
+    var expanded by remember { mutableStateOf(false) }
+
+    Surface(
+        onClick = { expanded = !expanded }
     ) {
-        EpisodeBackdropImage(
-            path = episode.tmdbBackdropPath ?: "null",
-            modifier = Modifier
-                .width(112.dp)
-                .aspectRatio(16f / 10)
-        )
-        episode.firstAired?.let {
-            val formatter = LocalShowhubDateTimeFormatter.current
-            val formattedDate = formatter.formatShortRelativeTime(it)
-            ExpandingCard(
-                title = episode.title ?: "",
-                description = episode.summary ?: "",
-                date = formattedDate,
-                icon = R.drawable.ic_calendar,
-                onWatchClicked = {},
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
+        Row(
+            modifier = modifier.padding(
+                vertical = 16.dp
             )
+        ) {
+            EpisodeBackdropImage(
+                path = episode.tmdbBackdropPath ?: "null",
+                modifier = Modifier
+                    .width(112.dp)
+                    .aspectRatio(16f / 10)
+            )
+            episode.firstAired?.let {
+                val formatter = LocalShowhubDateTimeFormatter.current
+                val formattedDate = formatter.formatShortRelativeTime(it)
+                ExpandingCard(
+                    title = episode.title ?: "",
+                    description = episode.summary ?: "",
+                    episodeNumber = episode.number,
+                    date = formattedDate,
+                    icon = R.drawable.ic_calendar,
+                    expanded = expanded,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                )
+            }
         }
-        Text(
-            text = stringResource(R.string.episode_number, episode.number ?: -1),
-            style = MaterialTheme.typography.subtitle2,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
     }
+
 }
 
 @Composable
@@ -732,14 +735,8 @@ private fun Episodes(
                 .statusBarsPadding()
         ) {
             val listState = rememberLazyListState()
-            val appBarElevation by animateDpAsState(if (listState.isScrolled) 4.dp else 0.dp)
-            val appBarColor = when {
-                appBarElevation > 0.dp -> MaterialTheme.colors.surface
-                else -> Color.Transparent
-            }
             TopAppBar(
-                backgroundColor = appBarColor,
-                elevation = appBarElevation
+                backgroundColor = Color.Transparent,
             ) {
                 Text(
                     text = seasonTitle
@@ -757,7 +754,7 @@ private fun Episodes(
                     modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.ExpandMore,
+                        imageVector = Icons.Rounded.Close,
                         contentDescription = null
                     )
                 }
