@@ -34,6 +34,7 @@ import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.theme.yellow400
+import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -679,12 +680,12 @@ private fun Episode(
                 .aspectRatio(16f / 10)
         )
         episode.firstAired?.let {
-            /*val formatter = LocalShowhubDateTimeFormatter.current
-            val formattedDate = formatter.formatShortRelativeTime(it)*/
+            val formatter = LocalShowhubDateTimeFormatter.current
+            val formattedDate = formatter.formatShortRelativeTime(it)
             ExpandingCard(
                 title = episode.title ?: "",
                 description = episode.summary ?: "",
-                date = "",
+                date = formattedDate,
                 icon = R.drawable.ic_calendar,
                 onWatchClicked = {},
                 modifier = Modifier

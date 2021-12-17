@@ -72,6 +72,7 @@ class SeasonsEpisodesRepository @Inject constructor(
                         else -> mergeSeason(localSeason, season, SeasonEntity.EMPTY)
                     }
 
+                    // TODO - I can do better than this...
                     val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
                         val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
                             ?: EpisodeEntity(seasonId = mergedSeason.id)
@@ -99,7 +100,6 @@ class SeasonsEpisodesRepository @Inject constructor(
             }
             is ErrorResult -> throw response.throwable
         }
-        logger.d("done merging season to episode")
     }
 
     suspend fun updateEpisode(episodeId: Long) = coroutineScope {
