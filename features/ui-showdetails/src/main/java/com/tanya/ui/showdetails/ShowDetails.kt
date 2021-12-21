@@ -1,6 +1,5 @@
 package com.tanya.ui.showdetails
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
@@ -11,15 +10,19 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
+import app.showhub.common.compose.theme.pink600
 import app.showhub.common.compose.theme.yellow400
 import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
@@ -785,13 +789,18 @@ private fun EpisodeBackdropImage(
     path: String,
     modifier: Modifier = Modifier
 ) {
-    Log.d("episodeBackdropImage", "path = $path")
+    val (watched, onWatched) = remember { mutableStateOf(false) }
+    val episodeImageTransitionState = episodeImageTransition(episodeWatched = watched)
 
     Surface(
-
+        shape = RoundedCornerShape(size = 0.dp).copy(
+            topStart = CornerSize(
+                episodeImageTransitionState.cornerRadius
+            )
+        )
     ) {
         Box(
-            modifier = modifier,
+            modifier = modifier.toggleable(value = watched, onValueChange = onWatched),
         ) {
             val image = loadPicture(url = path).value
             image?.let {
@@ -802,14 +811,30 @@ private fun EpisodeBackdropImage(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+            if (episodeImageTransitionState.selectedAlpha > 0f) {
+                Surface(
+                    color = pink600.copy(alpha = episodeImageTransitionState.selectedAlpha),
+                    modifier = Modifier.matchParentSize()
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Done,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .scale(episodeImageTransitionState.checkScale)
+                    )
+                }
+            }
         }
     }
 }
 
+@Suppress("TransitionPropertiesLabel")
 @Composable
 private fun episodeImageTransition(episodeWatched: Boolean): EpisodeImageTransition {
     val transition = updateTransition(
-        targetState = if (episodeWatched) SELECTED else UNSELECTED
+        targetState = if (episodeWatched) SELECTED else UNSELECTED, label = ""
     )
     val corerRadius = transition.animateDp { state ->
         when (state) {
@@ -820,7 +845,7 @@ private fun episodeImageTransition(episodeWatched: Boolean): EpisodeImageTransit
     val selectedAlpha = transition.animateFloat { state ->
         when (state) {
             UNSELECTED -> 0f
-            SELECTED -> 0.8f
+            SELECTED -> 0.5f
         }
     }
     val checkScale = transition.animateFloat { state ->
