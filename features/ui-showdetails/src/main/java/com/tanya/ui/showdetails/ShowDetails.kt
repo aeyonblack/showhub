@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -701,7 +702,6 @@ private fun Episode(
             }
         }
     }
-
 }
 
 @Composable
@@ -771,7 +771,7 @@ private fun Episodes(
                     Divider(startIndent = 128.dp)
                 }
             }
-         }
+        }
     }
 }
 
@@ -794,7 +794,14 @@ private fun EpisodeBackdropImage(
     }
 }
 
-private enum class SheetState {OPEN, CLOSED}
+private class EpisodeImageTransition(
+    cornerRadius: State<Dp>,
+    selectedAlpha: State<Float>,
+    checkScale: State<Float>
+) {
+    val cornerRadius by cornerRadius
+    val selectedAlpha by selectedAlpha
+    val checkScale by checkScale
+}
 
-private val LazyListState.isScrolled: Boolean
-    get() = firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0
+private enum class SheetState {OPEN, CLOSED}
