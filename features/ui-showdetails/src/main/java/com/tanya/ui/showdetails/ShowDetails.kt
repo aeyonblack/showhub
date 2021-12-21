@@ -60,6 +60,8 @@ import com.tanya.ui.showdetails.SelectionState.SELECTED
 import com.tanya.ui.showdetails.SelectionState.UNSELECTED
 import kotlinx.coroutines.launch
 
+/*TODO - Add more features and reduce LOC*/
+
 @Composable
 fun ShowDetails(
     navigateUp: () -> Unit,
