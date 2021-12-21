@@ -4,7 +4,10 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -49,6 +52,8 @@ import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.results.EpisodeWithWatches
 import com.tanya.data.results.RelatedShowEntryWithShow
 import com.tanya.data.results.SeasonWithEpisodesAndWatches
+import com.tanya.ui.showdetails.SelectionState.SELECTED
+import com.tanya.ui.showdetails.SelectionState.UNSELECTED
 import kotlinx.coroutines.launch
 
 @Composable
@@ -781,16 +786,51 @@ private fun EpisodeBackdropImage(
     modifier: Modifier = Modifier
 ) {
     Log.d("episodeBackdropImage", "path = $path")
-    Box(modifier = modifier) {
-        val image = loadPicture(url = path).value
-        image?.let {
-            Image(
-                bitmap = it.asImageBitmap(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+
+    Surface(
+
+    ) {
+        Box(
+            modifier = modifier,
+        ) {
+            val image = loadPicture(url = path).value
+            image?.let {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun episodeImageTransition(episodeWatched: Boolean): EpisodeImageTransition {
+    val transition = updateTransition(
+        targetState = if (episodeWatched) SELECTED else UNSELECTED
+    )
+    val corerRadius = transition.animateDp { state ->
+        when (state) {
+            UNSELECTED -> 0.dp
+            SELECTED -> 28.dp
+        }
+    }
+    val selectedAlpha = transition.animateFloat { state ->
+        when (state) {
+            UNSELECTED -> 0f
+            SELECTED -> 0.8f
+        }
+    }
+    val checkScale = transition.animateFloat { state ->
+        when (state) {
+            SELECTED -> 0.6f
+            UNSELECTED -> 1f
+        }
+    }
+    return remember(transition) {
+        EpisodeImageTransition(corerRadius, selectedAlpha, checkScale)
     }
 }
 
@@ -803,5 +843,7 @@ private class EpisodeImageTransition(
     val selectedAlpha by selectedAlpha
     val checkScale by checkScale
 }
+
+private enum class SelectionState {SELECTED, UNSELECTED}
 
 private enum class SheetState {OPEN, CLOSED}
