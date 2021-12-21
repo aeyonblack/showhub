@@ -2,10 +2,11 @@ package com.tanya.data.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.repositories.shows.mergeShows
+import com.tanya.data.results.ShowDetailed
 import kotlinx.coroutines.flow.Flow
-import java.lang.IllegalArgumentException
 
 @Dao
 abstract class ShowDao : EntityDao<ShowEntity>() {
@@ -24,6 +25,14 @@ abstract class ShowDao : EntityDao<ShowEntity>() {
 
     @Query("SELECT * FROM shows WHERE id = :id")
     abstract suspend fun getShowWithId(id: Long): ShowEntity?
+
+    @Transaction
+    @Query("SELECT * FROM shows WHERE id = :id")
+    abstract suspend fun getShowWithIdDetailed(id: Long): ShowDetailed?
+
+    @Transaction
+    @Query("SELECT * FROM shows WHERE id = :id")
+    abstract fun getShowDetailedWithIdFlow(id: Long): Flow<ShowDetailed>
 
     suspend fun getShowWithIdOrThrow(id: Long): ShowEntity =
         getShowWithId(id) ?: throw IllegalArgumentException("No show with id $id in database")
