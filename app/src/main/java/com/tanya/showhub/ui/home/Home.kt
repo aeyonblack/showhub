@@ -8,15 +8,6 @@ import app.showhub.common.compose.components.AppBar
 
 
 @Composable
-internal fun Search() {
-    Scaffold(
-        topBar = { AppBar("Search")},
-        modifier = Modifier.fillMaxSize()
-    ) {
-    }
-}
-
-@Composable
 internal fun Library() {
     Scaffold(
         topBar = { AppBar("Your Library")},

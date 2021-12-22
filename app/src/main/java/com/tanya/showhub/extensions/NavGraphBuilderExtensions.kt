@@ -6,8 +6,8 @@ import com.tanya.showhub.LeafScreen
 import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.home.About
 import com.tanya.showhub.ui.home.Library
-import com.tanya.showhub.ui.home.Search
 import com.tanya.ui.home.Home
+import com.tanya.ui.search.Search
 import com.tanya.ui.showdetails.ShowDetails
 
 /*These extension functions are for adding top level
@@ -45,6 +45,7 @@ fun NavGraphBuilder.addSearchTopLevel(
         startDestination = LeafScreen.Search.createRoute(Screen.Search)
     ) {
         addSearch(navController, Screen.Search)
+        addShowDetails(navController, Screen.Search)
     }
 }
 
@@ -88,7 +89,11 @@ fun NavGraphBuilder.addSearch(
     root: Screen
 ) {
     composable(LeafScreen.Search.createRoute(Screen.Search)) {
-        Search()
+        Search(
+            openShowDetails = {
+                navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
+            }
+        )
     }
 }
 
