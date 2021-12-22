@@ -1,5 +1,8 @@
 package com.tanya.ui.search
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,4 +40,16 @@ internal fun Search(
     dispatcher: (SearchAction) -> Unit
 ) {
 
+}
+
+@Composable
+private fun SearchBox() {
+    Surface() {
+        Column() {
+            Text(
+                text = "Search"
+            )
+
+        }
+    }
 }
