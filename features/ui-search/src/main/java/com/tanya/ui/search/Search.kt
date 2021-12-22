@@ -1,12 +1,14 @@
 package com.tanya.ui.search
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.showhub.common.compose.components.SearchTextField
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 
 @Composable
@@ -39,17 +41,31 @@ internal fun Search(
     viewState: SearchViewState,
     dispatcher: (SearchAction) -> Unit
 ) {
-
+    SearchBox(state = viewState, dispatcher = dispatcher)
 }
 
 @Composable
-private fun SearchBox() {
+private fun SearchBox(
+    state: SearchViewState,
+    dispatcher: (SearchAction) -> Unit
+) {
     Surface() {
         Column() {
+            var searchQuery by remember {
+                mutableStateOf(TextFieldValue(state.query))
+            }
             Text(
                 text = "Search"
             )
-
+            SearchTextField(
+                value = searchQuery,
+                onValueChange = {
+                    searchQuery = it
+                    dispatcher(SearchAction.Search(it.text))
+                },
+                hint = "Snowfall",
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
