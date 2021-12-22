@@ -1,5 +1,6 @@
 package com.tanya.ui.search
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -16,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.SearchTextField
 import app.showhub.common.compose.extensions.itemsInGrid
+import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -59,7 +62,7 @@ internal fun Search(
         SearchList(
             results = viewState.searchResults,
             onShowClicked = { dispatcher(SearchAction.OpenShowDetails(it.id)) },
-            modifier = Modifier.bodyWid
+            modifier = Modifier.bodyWidth()
         )
     }
 }
@@ -70,13 +73,14 @@ private fun SearchBox(
     dispatcher: (SearchAction) -> Unit
 ) {
     Surface(modifier = Modifier.statusBarsPadding()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             var searchQuery by remember {
                 mutableStateOf(TextFieldValue(state.query))
             }
             Text(
                 text = "Search",
                 style = MaterialTheme.typography.h4,
+                color = Color.White.copy(alpha = 1f),
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             SearchTextField(
@@ -85,7 +89,7 @@ private fun SearchBox(
                     searchQuery = it
                     dispatcher(SearchAction.Search(it.text))
                 },
-                hint = "Family Guy",
+                hint = "e.g. Family Guy",
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -162,6 +166,7 @@ private fun SearchRow(
 }
 
 
+@SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.bodyWidth() = fillMaxWidth()
     .wrapContentWidth(align = Alignment.CenterHorizontally)
     .composed {
