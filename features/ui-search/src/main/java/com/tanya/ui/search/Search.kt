@@ -1,19 +1,20 @@
 package com.tanya.ui.search
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.SearchTextField
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.statusBarsPadding
+import com.tanya.data.entities.ShowEntity
+import com.tanya.data.entities.ShowImagesEntity
 
 @Composable
 fun Search(
@@ -81,4 +82,44 @@ private fun SearchBox(
 @Composable
 private fun SearchList() {
 
+}
+
+@Composable
+private fun SearchRow(
+    show: ShowEntity,
+    poster: ShowImagesEntity?,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier.padding(vertical = 8.dp)) {
+        PosterCard(
+            showTitle = show.title,
+            posterPath = poster?.path,
+            modifier = Modifier
+                .fillMaxWidth(0.2f)
+                .aspectRatio(2 / 3f)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
+            Text(
+                text = show.title ?: "",
+                style = MaterialTheme.typography.subtitle2
+            )
+            if (show.summary?.isNotEmpty() == true) {
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    Text(
+                        text = show.summary!!,
+                        style = MaterialTheme.typography.caption,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
+                    )
+                }
+            }
+        }
+    }
 }
