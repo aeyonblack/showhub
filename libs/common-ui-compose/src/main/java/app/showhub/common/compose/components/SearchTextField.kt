@@ -4,10 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.runtime.Composable
@@ -15,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import app.showhub.common.compose.theme.green500
 import com.tanya.common.ui.resources.R.drawable
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -32,7 +34,8 @@ fun SearchTextField(
             Icon(
                 painter = painterResource(id = drawable.ic_search),
                 contentDescription = null,
-                tint = Color.Black
+                tint = Color.Black,
+                modifier = Modifier.size(16.dp)
             )
         },
         trailingIcon = {
@@ -45,14 +48,32 @@ fun SearchTextField(
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = null,
-                        tint = Color.Black
+                        tint = Color.Black,
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             }
         },
-        placeholder = { Text(text = hint) },
+        placeholder = {
+            Text(
+                text = hint,
+                style = MaterialTheme.typography.h5.copy(fontSize = 15.sp)
+            ) },
         maxLines = 1,
         singleLine = true,
+        shape = RoundedCornerShape(4.dp),
+        textStyle = MaterialTheme.typography.h5.copy(fontSize = 15.sp),
+
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color.Gray,
+            placeholderColor = Color.Gray,
+            backgroundColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            disabledPlaceholderColor = Color.Gray,
+            cursorColor = green500.copy(alpha = 0.5f)
+        ),
         modifier = modifier
     )
 }

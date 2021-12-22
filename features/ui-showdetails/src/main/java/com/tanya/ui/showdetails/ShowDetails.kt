@@ -39,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
-import app.showhub.common.compose.theme.pink600
 import app.showhub.common.compose.theme.yellow400
 import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
@@ -815,7 +814,7 @@ private fun EpisodeBackdropImage(
             }
             if (episodeImageTransitionState.selectedAlpha > 0f) {
                 Surface(
-                    color = pink600.copy(alpha = episodeImageTransitionState.selectedAlpha),
+                    color = Color.Black.copy(alpha = episodeImageTransitionState.selectedAlpha),
                     modifier = Modifier.matchParentSize()
                 ) {
                     Icon(
@@ -847,7 +846,7 @@ private fun episodeImageTransition(episodeWatched: Boolean): EpisodeImageTransit
     val selectedAlpha = transition.animateFloat { state ->
         when (state) {
             UNSELECTED -> 0f
-            SELECTED -> 0.5f
+            SELECTED -> 0.45f
         }
     }
     val checkScale = transition.animateFloat { state ->

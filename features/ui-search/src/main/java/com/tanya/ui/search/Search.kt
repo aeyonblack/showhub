@@ -2,14 +2,18 @@ package com.tanya.ui.search
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.SearchTextField
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
+import com.google.accompanist.insets.statusBarsPadding
 
 @Composable
 fun Search(
@@ -41,7 +45,9 @@ internal fun Search(
     viewState: SearchViewState,
     dispatcher: (SearchAction) -> Unit
 ) {
-    SearchBox(state = viewState, dispatcher = dispatcher)
+    Column {
+        SearchBox(state = viewState, dispatcher = dispatcher)
+    }
 }
 
 @Composable
@@ -49,13 +55,15 @@ private fun SearchBox(
     state: SearchViewState,
     dispatcher: (SearchAction) -> Unit
 ) {
-    Surface() {
-        Column() {
+    Surface(modifier = Modifier.statusBarsPadding()) {
+        Column(modifier = Modifier.padding(16.dp)) {
             var searchQuery by remember {
                 mutableStateOf(TextFieldValue(state.query))
             }
             Text(
-                text = "Search"
+                text = "Search",
+                style = MaterialTheme.typography.h4,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
             SearchTextField(
                 value = searchQuery,
@@ -63,9 +71,14 @@ private fun SearchBox(
                     searchQuery = it
                     dispatcher(SearchAction.Search(it.text))
                 },
-                hint = "Snowfall",
+                hint = "Family Guy",
                 modifier = Modifier.fillMaxWidth()
             )
         }
     }
+}
+
+@Composable
+private fun SearchList() {
+
 }
