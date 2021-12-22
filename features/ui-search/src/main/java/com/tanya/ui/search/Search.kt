@@ -1,20 +1,28 @@
 package com.tanya.ui.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isFinite
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.SearchTextField
+import app.showhub.common.compose.extensions.itemsInGrid
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.statusBarsPadding
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
+import com.tanya.data.results.ShowDetailed
 
 @Composable
 fun Search(
@@ -48,6 +56,11 @@ internal fun Search(
 ) {
     Column {
         SearchBox(state = viewState, dispatcher = dispatcher)
+        SearchList(
+            results = viewState.searchResults,
+            onShowClicked = { dispatcher(SearchAction.OpenShowDetails(it.id)) },
+            modifier = Modifier.bodyWid
+        )
     }
 }
 
@@ -80,8 +93,32 @@ private fun SearchBox(
 }
 
 @Composable
-private fun SearchList() {
-
+private fun SearchList(
+    results: List<ShowDetailed>,
+    onShowClicked: (ShowEntity) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(8.dp)
+) {
+    LazyColumn(
+        contentPadding = contentPadding,
+        modifier = modifier
+    ) {
+        itemsInGrid(
+            items = results,
+            columns = 8/4,
+            horizontalItemPadding = 16.dp,
+            verticalItemPadding = 16.dp,
+            contentPadding = PaddingValues(horizontal = 16.dp)
+        ) {
+            SearchRow(
+                show = it.show ,
+                poster = it.poster,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onShowClicked(it.show) }
+            )
+        }
+    }
 }
 
 @Composable
@@ -123,3 +160,20 @@ private fun SearchRow(
         }
     }
 }
+
+
+fun Modifier.bodyWidth() = fillMaxWidth()
+    .wrapContentWidth(align = Alignment.CenterHorizontally)
+    .composed {
+        val bodyMaxWidth = Layout.bodyMaxWidth
+        if (bodyMaxWidth.isFinite) widthIn(max = bodyMaxWidth) else this
+    }
+    .composed {
+        padding(
+            rememberInsetsPaddingValues(
+                insets = LocalWindowInsets.current.systemBars,
+                applyBottom = false,
+                applyTop = false,
+            )
+        )
+    }
