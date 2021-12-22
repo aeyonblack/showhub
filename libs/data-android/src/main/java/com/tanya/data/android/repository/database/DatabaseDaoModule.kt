@@ -37,4 +37,7 @@ object DatabaseDaoModule {
     @Provides
     fun followedShowsDao(db: ShowhubDatabase) = db.followedShowsDao()
 
+    @Provides
+    fun provideShowFtsDao(db: ShowhubDatabase) = db.showFtsDao()
+
 }
