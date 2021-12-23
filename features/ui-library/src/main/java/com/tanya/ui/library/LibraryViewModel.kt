@@ -15,6 +15,7 @@ import com.tanya.domain.observers.ObservePagedFollowedShows
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +75,9 @@ internal class LibraryViewModel @Inject constructor(
     }
 
     private fun setSort(sort: SortOption) {
-
+        viewModelScope.launch {
+            this@LibraryViewModel.sort.emit(sort)
+        }
     }
 
     fun submitAction(action: LibraryAction) {
