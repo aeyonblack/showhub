@@ -63,6 +63,12 @@ internal class LibraryViewModel @Inject constructor(
 
     init {
 
+        viewModelScope.launch {
+            sort.collect { updateDataSource() }
+        }
+
+
+
     }
 
     private fun updateDataSource() {
@@ -81,7 +87,9 @@ internal class LibraryViewModel @Inject constructor(
     }
 
     fun submitAction(action: LibraryAction) {
-
+        viewModelScope.launch {
+            pendingActions.emit(action)
+        }
     }
 
     companion object {
