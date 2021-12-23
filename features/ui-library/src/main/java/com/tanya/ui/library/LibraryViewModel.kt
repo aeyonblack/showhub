@@ -2,6 +2,7 @@ package com.tanya.ui.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
@@ -64,7 +65,12 @@ internal class LibraryViewModel @Inject constructor(
     }
 
     private fun updateDataSource() {
-
+        observePagedFollowedShows(
+            ObservePagedFollowedShows.Params(
+                sort = sort.value,
+                pagingConfig = PAGING_CONFIG
+            )
+        )
     }
 
     private fun setSort(sort: SortOption) {
@@ -73,5 +79,12 @@ internal class LibraryViewModel @Inject constructor(
 
     fun submitAction(action: LibraryAction) {
 
+    }
+
+    companion object {
+        private val PAGING_CONFIG = PagingConfig(
+            pageSize = 16,
+            initialLoadSize = 32,
+        )
     }
 }
