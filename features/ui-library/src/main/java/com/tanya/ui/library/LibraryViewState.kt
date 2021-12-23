@@ -7,7 +7,6 @@ internal data class LibraryViewState(
     val selectionOpen: Boolean = false,
     val selectedShowIds: Set<Long> = emptySet(),
     val filterActive: Boolean = false,
-    val filter: String? = null,
     val availableSorts: List<SortOption> = emptyList(),
     val sort: SortOption = SortOption.SUPER_SORT
 ) {
