@@ -67,7 +67,15 @@ internal class LibraryViewModel @Inject constructor(
             sort.collect { updateDataSource() }
         }
 
-
+        viewModelScope.launch {
+            pendingActions.collect {
+                when (it) {
+                    LibraryAction.RefreshAction -> {}
+                    is LibraryAction.ChangeSort -> setSort(it.sort)
+                    else -> {}
+                }
+            }
+        }
 
     }
 
