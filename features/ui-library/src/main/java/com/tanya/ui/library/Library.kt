@@ -1,9 +1,8 @@
 package com.tanya.ui.library
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,11 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
+import com.tanya.data.entities.SortOption
 import com.tanya.data.results.FollowedShowEntryWithShow
 import kotlinx.coroutines.launch
 
@@ -85,8 +86,42 @@ internal fun Library(
             topBar = { LibraryAppBar() },
             modifier = Modifier.fillMaxSize()
         ) {
-
+            LibraryContent(contentPadding = it) {
+                scope.launch {
+                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun LibraryContent(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    openSortOptions: (SortOption) -> Unit
+) {
+    val columns = Layout.columns
+    val bodyMargin = Layout.bodyMargin
+    val gutter = Layout.gutter
+
+    LazyColumn(
+        contentPadding = contentPadding,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item { SortOptionButton(openSortOptions = openSortOptions) }
+        item {}
+    }
+}
+
+@Composable
+private fun SortOptionButton(
+    openSortOptions: (SortOption) -> Unit
+) {
+    Row {
+        /*Icon(
+            painter = painter,
+            contentDescription =
+        )*/
     }
 }
 
