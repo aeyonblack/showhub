@@ -1,6 +1,7 @@
 package com.tanya.ui.library
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
@@ -21,6 +24,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
+import com.tanya.common.ui.resources.R.drawable.ic_sort_arrows
 import com.tanya.data.entities.SortOption
 import com.tanya.data.results.FollowedShowEntryWithShow
 import kotlinx.coroutines.launch
@@ -117,11 +121,24 @@ private fun LibraryContent(
 private fun SortOptionButton(
     openSortOptions: (SortOption) -> Unit
 ) {
-    Row {
-        /*Icon(
-            painter = painter,
-            contentDescription =
-        )*/
+    Row(
+        modifier = Modifier
+            .clickable { openSortOptions(SortOption.SUPER_SORT) }
+            .padding(16.dp)
+
+    ) {
+        Icon(
+            painter = painterResource(id = ic_sort_arrows),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+        Text(
+            text = "Alphabetical Order",
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(start = 4.dp)
+        )
     }
 }
 

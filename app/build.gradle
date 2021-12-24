@@ -91,6 +91,7 @@ dependencies {
     implementation project(":features:ui-home")
     implementation project(":features:ui-showdetails")
     implementation project(":features:ui-search")
+    implementation project(":features:ui-library")
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
