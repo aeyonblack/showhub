@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -124,7 +123,6 @@ private fun LibraryContent(
 private fun SortOptionButton(
     openSortOptions: (SortOption) -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     var isPressed by remember { mutableStateOf(false) }
     val sortOptionTransitionState = sortOptionTransition(pressed = isPressed)
 
