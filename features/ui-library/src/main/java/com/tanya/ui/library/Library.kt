@@ -1,18 +1,20 @@
 package com.tanya.ui.library
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -84,7 +86,8 @@ internal fun Library(
             }
         },
         sheetState = sheetState,
-        sheetShape = RoundedCornerShape(2.dp)
+        sheetShape = RoundedCornerShape(2.dp),
+        scrimColor = MaterialTheme.colors.background.copy(0.35f)
     ) {
         Scaffold(
             topBar = { LibraryAppBar() },
@@ -121,20 +124,42 @@ private fun LibraryContent(
 private fun SortOptionButton(
     openSortOptions: (SortOption) -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    var isPressed by remember { mutableStateOf(false) }
+    val sortOptionTransitionState = sortOptionTransition(pressed = isPressed)
+
     Row(
         modifier = Modifier
-            .clickable { openSortOptions(SortOption.SUPER_SORT) }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        try {
+                            isPressed = true
+                            awaitRelease()
+                        } finally {
+                            isPressed = false
+                            openSortOptions(SortOption.SUPER_SORT)
+                        }
+                    }
+                )
+            }
             .padding(16.dp)
+            .scale(sortOptionTransitionState.scale)
 
     ) {
         Icon(
             painter = painterResource(id = ic_sort_arrows),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            tint = Color.White.copy(alpha = sortOptionTransitionState.alpha),
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .size(16.dp)
+
         )
         Text(
             text = "Alphabetical Order",
-            style = MaterialTheme.typography.caption,
+            style = MaterialTheme.typography.subtitle2,
+            color = Color.White.copy(alpha = sortOptionTransitionState.alpha),
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(start = 4.dp)
@@ -162,3 +187,37 @@ private fun LibraryAppBar(
         modifier = modifier.fillMaxWidth()
     )
 }
+
+@Composable
+private fun sortOptionTransition(pressed: Boolean) : SortOptionTransition {
+    val transition = updateTransition(
+        targetState = if (pressed) PressState.PRESSED else PressState.RELEASED, label = ""
+    )
+    val scale = transition.animateFloat(label = "scale animation") {
+        when (it) {
+            PressState.PRESSED -> 0.9f
+            PressState.RELEASED -> 1f
+        }
+    }
+
+    val alpha = transition.animateFloat(label = "alpha animation") {
+        when (it) {
+            PressState.PRESSED -> 0.7f
+            PressState.RELEASED -> 1f
+        }
+    }
+
+    return remember(transition) {
+        SortOptionTransition(scale = scale, alpha = alpha)
+    }
+}
+
+private class SortOptionTransition(
+    scale: State<Float>,
+    alpha: State<Float>
+) {
+    val scale by scale
+    val alpha by alpha
+}
+
+private enum class PressState {PRESSED, RELEASED}

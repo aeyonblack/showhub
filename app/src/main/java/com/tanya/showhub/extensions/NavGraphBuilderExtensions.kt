@@ -5,8 +5,8 @@ import androidx.navigation.compose.composable
 import com.tanya.showhub.LeafScreen
 import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.home.About
-import com.tanya.showhub.ui.home.Library
 import com.tanya.ui.home.Home
+import com.tanya.ui.library.Library
 import com.tanya.ui.search.Search
 import com.tanya.ui.showdetails.ShowDetails
 
@@ -102,7 +102,11 @@ fun NavGraphBuilder.addLibrary(
     root: Screen
 ) {
     composable(LeafScreen.Library.createRoute(Screen.Library)) {
-        Library()
+        Library(
+            openShowDetails = {
+                navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
+            }
+        )
     }
 }
 
