@@ -2,18 +2,25 @@ package com.tanya.ui.library
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
+import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.data.results.FollowedShowEntryWithShow
 import kotlinx.coroutines.launch
 
@@ -75,9 +82,31 @@ internal fun Library(
         sheetShape = RoundedCornerShape(2.dp)
     ) {
         Scaffold(
-            topBar = {}
+            topBar = { LibraryAppBar() },
+            modifier = Modifier.fillMaxSize()
         ) {
 
         }
     }
+}
+
+@Composable
+private fun LibraryAppBar(
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = {
+            Text(
+                text = "Your Library",
+                style = MaterialTheme.typography.h5,
+            )
+        },
+        contentPadding = rememberInsetsPaddingValues(
+            insets = LocalWindowInsets.current.systemBars,
+            applyBottom = false
+        ),
+        backgroundColor = Color.Transparent,
+        elevation = 0.dp,
+        modifier = modifier.fillMaxWidth()
+    )
 }
