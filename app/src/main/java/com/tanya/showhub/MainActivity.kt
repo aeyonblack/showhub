@@ -13,7 +13,7 @@ import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.tanya.base.android.appinitializer.util.ShowhubDateFormatter
 import com.tanya.showhub.ui.components.currentScreenAsState
-import com.tanya.showhub.ui.home.Home
+import com.tanya.showhub.ui.home.App
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 ProvideWindowInsets(consumeWindowInsets = false) {
                     ShowhubTheme {
-                        Home(
+                        App(
                             navController = navController,
                             selectedNavigation = selectedItem,
                             onNavigationSelected = {

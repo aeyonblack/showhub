@@ -14,7 +14,7 @@ import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.components.BottomNavBar
 
 @Composable
-internal fun Home(
+internal fun App(
     navController: NavHostController,
     selectedNavigation: Screen,
     onNavigationSelected: (Screen) -> Unit
