@@ -19,9 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import app.showhub.common.compose.extensions.itemsInGrid
 import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
@@ -32,23 +34,27 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Library(
-    openShowDetails: (showId: Long) -> Unit
+    openShowDetails: (showId: Long) -> Unit,
+    onHideBottomBar: ((Boolean) -> Unit)?
 ) {
     Library(
         viewModel = hiltViewModel(),
-        openShowDetails = openShowDetails
+        openShowDetails = openShowDetails,
+        onHideBottomBar = onHideBottomBar
     )
 }
 
 @Composable
 internal fun Library(
     viewModel: LibraryViewModel,
-    openShowDetails: (showId: Long) -> Unit
+    openShowDetails: (showId: Long) -> Unit,
+    onHideBottomBar: ((Boolean) -> Unit)?
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
         .collectAsState(initial = LibraryViewState.Empty)
     Library(
         state = viewState,
+        onHideBottomBar = onHideBottomBar,
         list = rememberFlowWithLifeCycle(flow = viewModel.pagedList).collectAsLazyPagingItems()
     ) {
 
@@ -59,6 +65,7 @@ internal fun Library(
 @Composable
 internal fun Library(
     state: LibraryViewState,
+    onHideBottomBar: ((Boolean) -> Unit)?,
     list: LazyPagingItems<FollowedShowEntryWithShow>,
     dispatcher: (LibraryAction) -> Unit
 ) {
@@ -69,14 +76,17 @@ internal fun Library(
         enabled = sheetState.currentValue == ModalBottomSheetValue.Expanded,
         onBack = {
             scope.launch {
+                onHideBottomBar?.invoke(false)
                 sheetState.animateTo(ModalBottomSheetValue.Hidden)
             }
         }
     )
 
+    if (sheetState.currentValue != ModalBottomSheetValue.Expanded) onHideBottomBar?.invoke(false)
+
     ModalBottomSheetLayout(
         sheetContent = {
-            Column() {
+            Column {
                 Text(text = "modal", style = MaterialTheme.typography.h4)
                 Text(text = "modal", style = MaterialTheme.typography.h4)
                 Text(text = "modal", style = MaterialTheme.typography.h4)
@@ -86,7 +96,8 @@ internal fun Library(
         },
         sheetState = sheetState,
         sheetShape = RoundedCornerShape(2.dp),
-        scrimColor = MaterialTheme.colors.background.copy(0.35f)
+        scrimColor = MaterialTheme.colors.background.copy(0.35f),
+        modifier = Modifier.navigationBarsPadding()
     ) {
         Scaffold(
             topBar = { LibraryAppBar() },
@@ -94,6 +105,7 @@ internal fun Library(
         ) {
             LibraryContent(contentPadding = it) {
                 scope.launch {
+                    onHideBottomBar?.invoke(true)
                     sheetState.animateTo(ModalBottomSheetValue.Expanded)
                 }
             }
@@ -104,6 +116,7 @@ internal fun Library(
 @Composable
 private fun LibraryContent(
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    list: LazyPagingItems<FollowedShowEntryWithShow>,
     openSortOptions: (SortOption) -> Unit
 ) {
     val columns = Layout.columns
@@ -115,7 +128,7 @@ private fun LibraryContent(
         modifier = Modifier.fillMaxSize()
     ) {
         item { SortOptionButton(openSortOptions = openSortOptions) }
-        item {}
+
     }
 }
 

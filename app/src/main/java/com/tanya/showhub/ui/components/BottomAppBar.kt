@@ -1,6 +1,6 @@
 package com.tanya.showhub.ui.components
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -23,41 +23,48 @@ import com.tanya.showhub.extensions.topLevelDestinations
 import com.tanya.showhub.ui.NavigationItem
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun BottomNavBar(
     selectedNavigation: Screen,
     navController: NavController,
+    hideBottomBar: Boolean = false,
     onNavigationSelected: (Screen) -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     if (currentRoute in topLevelDestinations) {
-        BottomNavigation(
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = MaterialTheme.colors.onSurface,
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.navigationBars
-            ),
-            modifier = Modifier.fillMaxWidth(),
+        AnimatedVisibility(
+            visible = !hideBottomBar,
+            enter = slideInVertically() + fadeIn()
         ) {
-            navigationItems.forEach {
-                val selected = selectedNavigation == it.screen
-                BottomNavigationItem(
-                    icon = {
-                        NavigationItemIcon(item = it, selected = selected)
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(id = it.labelResId),
-                            fontSize = 10.sp
-                        )
-                    },
-                    selected = selected,
-                    onClick = {
-                        onNavigationSelected(it.screen)
-                    }
-                )
+            BottomNavigation(
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = MaterialTheme.colors.onSurface,
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.navigationBars
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                navigationItems.forEach {
+                    val selected = selectedNavigation == it.screen
+                    BottomNavigationItem(
+                        icon = {
+                            NavigationItemIcon(item = it, selected = selected)
+                        },
+                        label = {
+                            Text(
+                                text = stringResource(id = it.labelResId),
+                                fontSize = 10.sp
+                            )
+                        },
+                        selected = selected,
+                        onClick = {
+                            onNavigationSelected(it.screen)
+                        }
+                    )
+                }
             }
         }
     }

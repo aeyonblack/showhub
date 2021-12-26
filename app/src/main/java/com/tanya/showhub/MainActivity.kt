@@ -12,8 +12,8 @@ import app.showhub.common.compose.theme.ShowhubTheme
 import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.tanya.base.android.appinitializer.util.ShowhubDateFormatter
+import com.tanya.showhub.ui.app.App
 import com.tanya.showhub.ui.components.currentScreenAsState
-import com.tanya.showhub.ui.home.App
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

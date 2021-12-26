@@ -1,10 +1,10 @@
-package com.tanya.showhub.ui.home
+package com.tanya.showhub.ui.app
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import app.showhub.common.compose.components.AppBar
@@ -19,11 +19,14 @@ internal fun App(
     selectedNavigation: Screen,
     onNavigationSelected: (Screen) -> Unit
 ) {
+    var hideBottomBar by remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
             BottomNavBar(
                 selectedNavigation = selectedNavigation,
                 navController = navController,
+                hideBottomBar = hideBottomBar,
                 onNavigationSelected = onNavigationSelected
             )
         },
@@ -37,7 +40,9 @@ internal fun App(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-            )
+            ) {
+                hideBottomBar = it
+            }
         }
     }
 }

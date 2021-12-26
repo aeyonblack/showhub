@@ -4,7 +4,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.tanya.showhub.LeafScreen
 import com.tanya.showhub.Screen
-import com.tanya.showhub.ui.home.About
+import com.tanya.showhub.ui.app.About
 import com.tanya.ui.home.Home
 import com.tanya.ui.library.Library
 import com.tanya.ui.search.Search
@@ -50,13 +50,14 @@ fun NavGraphBuilder.addSearchTopLevel(
 }
 
 fun NavGraphBuilder.addLibraryTopLevel(
-    navController: NavController
+    navController: NavController,
+    onHideBottomBar: ((Boolean) -> Unit)?
 ) {
     navigation(
         route = Screen.Library.route,
         startDestination = LeafScreen.Library.createRoute(Screen.Library)
     ) {
-        addLibrary(navController, Screen.Library)
+        addLibrary(navController, Screen.Library, onHideBottomBar)
     }
 }
 
@@ -99,13 +100,15 @@ fun NavGraphBuilder.addSearch(
 
 fun NavGraphBuilder.addLibrary(
     navController: NavController,
-    root: Screen
+    root: Screen,
+    onHideBottomBar: ((Boolean) -> Unit)?
 ) {
     composable(LeafScreen.Library.createRoute(Screen.Library)) {
         Library(
             openShowDetails = {
                 navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
-            }
+            },
+            onHideBottomBar = onHideBottomBar
         )
     }
 }

@@ -44,7 +44,8 @@ sealed class LeafScreen(private val route: String) {
 @Composable
 internal fun AppNavigation(
     navHostController: NavHostController,
-    modifier:Modifier = Modifier
+    modifier:Modifier = Modifier,
+    onHideBottomBar: ((Boolean) -> Unit)?
 ) {
     NavHost(
         navController = navHostController,
@@ -53,7 +54,7 @@ internal fun AppNavigation(
     ) {
         addHomeTopLevel(navHostController)
         addSearchTopLevel(navHostController)
-        addLibraryTopLevel(navHostController)
+        addLibraryTopLevel(navHostController, onHideBottomBar)
         addAboutTopLevel(navHostController)
     }
 }
