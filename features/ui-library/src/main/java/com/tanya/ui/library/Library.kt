@@ -92,7 +92,6 @@ internal fun Library(
         enabled = sheetState.currentValue == ModalBottomSheetValue.Expanded,
         onBack = {
             scope.launch {
-                //onHideBottomBar?.invoke(false)
                 sheetState.animateTo(ModalBottomSheetValue.Hidden)
             }
         }
