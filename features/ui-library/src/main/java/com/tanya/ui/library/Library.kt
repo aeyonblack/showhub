@@ -1,8 +1,13 @@
 package com.tanya.ui.library
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -13,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.HorizontalRule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -38,6 +44,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
+import com.tanya.common.ui.resources.R.drawable.ic_checkbox
 import com.tanya.common.ui.resources.R.drawable.ic_sort_arrows
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
@@ -72,7 +79,7 @@ internal fun Library(
     ) {
         when (it) {
             is LibraryAction.OpenShowDetails -> openShowDetails(it.showId)
-            else -> {}
+            else -> viewModel.submitAction(it)
         }
     }
 }
@@ -104,7 +111,11 @@ internal fun Library(
 
     ModalBottomSheetLayout(
         sheetContent = {
-            BottomSheetContent {
+            BottomSheetContent(
+                sortOptions = state.availableSorts,
+                currentSortOption = state.sort,
+                onSortSelected = { dispatcher(LibraryAction.ChangeSort(it)) }
+            ) {
                 scope.launch { sheetState.animateTo(ModalBottomSheetValue.Hidden) }
             }
         },
@@ -120,6 +131,7 @@ internal fun Library(
             LibraryContent(
                 contentPadding = it,
                 list = list,
+                currentSortOption = state.sort,
                 dispatcher = dispatcher,
             ) {
                 scope.launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
@@ -132,8 +144,9 @@ internal fun Library(
 private fun LibraryContent(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     list: LazyPagingItems<FollowedShowEntryWithShow>,
+    currentSortOption: SortOption,
     dispatcher: (LibraryAction) -> Unit,
-    openSortOptions: (SortOption) -> Unit
+    openSortOptionsMenu: () -> Unit
 ) {
     val columns = Layout.columns
     val bodyMargin = Layout.bodyMargin
@@ -146,7 +159,7 @@ private fun LibraryContent(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        item { SortOptionButton(openSortOptions = openSortOptions) }
+        item { SortOptionButton(openSortOptionsMenu = openSortOptionsMenu, currentSortOption = currentSortOption) }
 
         itemsInGrid(
             lazyPagingItems = list,
@@ -200,7 +213,7 @@ private fun FollowedShowItem(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .align(Alignment.CenterVertically)
+                .align(CenterVertically)
         ) {
             Text(
                 text = show.title ?: "",
@@ -222,7 +235,8 @@ private fun FollowedShowItem(
 
 @Composable
 private fun SortOptionButton(
-    openSortOptions: (SortOption) -> Unit
+    currentSortOption: SortOption,
+    openSortOptionsMenu: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
     val sortOptionTransitionState = sortOptionTransition(pressed = isPressed)
@@ -237,7 +251,7 @@ private fun SortOptionButton(
                             awaitRelease()
                         } finally {
                             isPressed = false
-                            openSortOptions(SortOption.SUPER_SORT)
+                            openSortOptionsMenu()
                         }
                     }
                 )
@@ -251,23 +265,81 @@ private fun SortOptionButton(
             contentDescription = null,
             tint = Color.White.copy(alpha = sortOptionTransitionState.alpha),
             modifier = Modifier
-                .align(Alignment.CenterVertically)
+                .align(CenterVertically)
                 .size(16.dp)
 
         )
         Text(
-            text = "Alphabetical Order",
+            text = currentSortOption.sort,
             style = MaterialTheme.typography.subtitle2,
             color = Color.White.copy(alpha = sortOptionTransitionState.alpha),
             modifier = Modifier
-                .align(Alignment.CenterVertically)
+                .align(CenterVertically)
                 .padding(start = 4.dp)
         )
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun SortOptionItem(
+    sort: SortOption,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    var isPressed by remember { mutableStateOf(false) }
+    val sortOptionTransitionState = sortOptionTransition(pressed = isPressed)
+
+    Row(
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        try {
+                            isPressed = true
+                            awaitRelease()
+                        } finally {
+                            isPressed = false
+                            onClick()
+                        }
+                    }
+                )
+            }
+            .fillMaxWidth()
+            .padding(16.dp)
+            .scale(sortOptionTransitionState.scale)
+    ) {
+        Text(
+            text = sort.sort,
+            style = MaterialTheme.typography.subtitle2,
+            color = when {
+                selected -> MaterialTheme.colors.primary
+                else -> Color.White
+            },
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .align(CenterVertically)
+        )
+        AnimatedVisibility(
+            visible = selected,
+            enter = fadeIn(animationSpec = tween(500)),
+            exit = fadeOut(animationSpec = tween(500))
+        ) {
+            Icon(
+                painter = painterResource(id = ic_checkbox),
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary,
+                modifier = Modifier.align(CenterVertically)
+            )
+        }
+    }
+}
+
 @Composable
 private fun BottomSheetContent(
+    sortOptions: List<SortOption>,
+    onSortSelected: (SortOption) -> Unit,
+    currentSortOption: SortOption? = null,
     closeBottomSheet: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -284,26 +356,14 @@ private fun BottomSheetContent(
             style = MaterialTheme.typography.h5,
             modifier = Modifier.padding(16.dp)
         )
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Supersort",
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Text(
-                text = "Last watched",
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Text(
-                text = "Alphabetical",
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Text(
-                text = "Date followed",
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(bottom = 16.dp)
+        for (sort in sortOptions) {
+            SortOptionItem(
+                sort = sort,
+                selected = currentSortOption  == sort,
+                onClick = {
+                    onSortSelected(sort)
+                    closeBottomSheet()
+                }
             )
         }
         Text(
