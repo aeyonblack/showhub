@@ -58,6 +58,7 @@ fun NavGraphBuilder.addLibraryTopLevel(
         startDestination = LeafScreen.Library.createRoute(Screen.Library)
     ) {
         addLibrary(navController, Screen.Library, onHideBottomBar)
+        addShowDetails(navController, Screen.Library)
     }
 }
 

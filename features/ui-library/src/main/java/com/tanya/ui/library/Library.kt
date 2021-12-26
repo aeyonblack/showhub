@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.HorizontalRule
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,13 +19,16 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import app.showhub.common.compose.components.PosterCard
+import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
 import app.showhub.common.compose.utils.Layout
@@ -87,27 +92,22 @@ internal fun Library(
         enabled = sheetState.currentValue == ModalBottomSheetValue.Expanded,
         onBack = {
             scope.launch {
-                onHideBottomBar?.invoke(false)
+                //onHideBottomBar?.invoke(false)
                 sheetState.animateTo(ModalBottomSheetValue.Hidden)
             }
         }
     )
 
-    if (sheetState.currentValue != ModalBottomSheetValue.Expanded) onHideBottomBar?.invoke(false)
+    if (sheetState.currentValue != ModalBottomSheetValue.Expanded)
+        onHideBottomBar?.invoke(false) else {
+        onHideBottomBar?.invoke(true)
+    }
 
     ModalBottomSheetLayout(
-        sheetContent = {
-            Column {
-                Text(text = "modal", style = MaterialTheme.typography.h4)
-                Text(text = "modal", style = MaterialTheme.typography.h4)
-                Text(text = "modal", style = MaterialTheme.typography.h4)
-                Text(text = "modal", style = MaterialTheme.typography.h4)
-                Text(text = "modal", style = MaterialTheme.typography.h4)
-            }
-        },
+        sheetContent = { BottomSheetContent() },
         sheetState = sheetState,
-        sheetShape = RoundedCornerShape(2.dp),
-        scrimColor = MaterialTheme.colors.background.copy(0.35f),
+        sheetShape = RoundedCornerShape(8.dp),
+        scrimColor = MaterialTheme.colors.background.copy(0.5f),
         modifier = Modifier.navigationBarsPadding()
     ) {
         Scaffold(
@@ -120,7 +120,7 @@ internal fun Library(
                 dispatcher = dispatcher
             ) {
                 scope.launch {
-                    onHideBottomBar?.invoke(true)
+                    //onHideBottomBar?.invoke(true)
                     sheetState.animateTo(ModalBottomSheetValue.Expanded)
                 }
             }
@@ -263,6 +263,63 @@ private fun SortOptionButton(
                 .align(Alignment.CenterVertically)
                 .padding(start = 4.dp)
         )
+    }
+}
+
+@Composable
+private fun BottomSheetContent() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Icon(
+            imageVector = Icons.Rounded.HorizontalRule,
+            contentDescription = null,
+            tint = Color.White.copy(alpha = 0.7f),
+            modifier = Modifier
+                .size(48.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Text(
+            text = "Sort by",
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.padding(16.dp)
+        )
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Supersort",
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Text(
+                text = "Last watched",
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Text(
+                text = "Alphabetical",
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Text(
+                text = "Date followed",
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+        Text(
+            text = "Close",
+            style = MaterialTheme.typography.h5,
+            textAlign = TextAlign.Center,
+            fontSize = 13.sp,
+            color = MaterialTheme.colors.onBackground.copy(1f),
+            modifier = Modifier
+                .clickable { /*TODO*/ }
+                .actionButtonBackground(
+                    enabled = true,
+                    alpha = 0.15f
+                )
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
