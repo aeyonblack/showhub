@@ -1,6 +1,7 @@
 package com.tanya.showhub.ui.components
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -37,7 +38,8 @@ internal fun BottomNavBar(
     if (currentRoute in topLevelDestinations) {
         AnimatedVisibility(
             visible = !hideBottomBar,
-            enter = slideInVertically() + fadeIn()
+            enter = fadeIn(animationSpec = tween(1000)),
+            exit = fadeOut(animationSpec = tween(1000))
         ) {
             BottomNavigation(
                 backgroundColor = MaterialTheme.colors.surface,

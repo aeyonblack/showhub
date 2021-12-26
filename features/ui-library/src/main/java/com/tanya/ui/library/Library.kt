@@ -104,7 +104,11 @@ internal fun Library(
     }
 
     ModalBottomSheetLayout(
-        sheetContent = { BottomSheetContent() },
+        sheetContent = {
+            BottomSheetContent {
+                scope.launch { sheetState.animateTo(ModalBottomSheetValue.Hidden) }
+            }
+        },
         sheetState = sheetState,
         sheetShape = RoundedCornerShape(8.dp),
         scrimColor = MaterialTheme.colors.background.copy(0.5f),
@@ -117,12 +121,9 @@ internal fun Library(
             LibraryContent(
                 contentPadding = it,
                 list = list,
-                dispatcher = dispatcher
+                dispatcher = dispatcher,
             ) {
-                scope.launch {
-                    //onHideBottomBar?.invoke(true)
-                    sheetState.animateTo(ModalBottomSheetValue.Expanded)
-                }
+                scope.launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
             }
         }
     }
@@ -267,7 +268,9 @@ private fun SortOptionButton(
 }
 
 @Composable
-private fun BottomSheetContent() {
+private fun BottomSheetContent(
+    closeBottomSheet: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Icon(
             imageVector = Icons.Rounded.HorizontalRule,
@@ -311,7 +314,7 @@ private fun BottomSheetContent() {
             fontSize = 13.sp,
             color = MaterialTheme.colors.onBackground.copy(1f),
             modifier = Modifier
-                .clickable { /*TODO*/ }
+                .clickable { closeBottomSheet() }
                 .actionButtonBackground(
                     enabled = true,
                     alpha = 0.15f
