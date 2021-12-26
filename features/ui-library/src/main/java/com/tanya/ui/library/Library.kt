@@ -281,7 +281,7 @@ private fun LibraryAppBar(
             insets = LocalWindowInsets.current.systemBars,
             applyBottom = false
         ),
-        backgroundColor = Color.Transparent,
+        backgroundColor = Color.Black,
         elevation = 0.dp,
         modifier = modifier.fillMaxWidth()
     )
