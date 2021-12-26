@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.isFinite
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.SearchTextField
+import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
 import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
@@ -122,6 +123,7 @@ private fun SearchList(
                     .clickable { onShowClicked(it.show) }
             )
         }
+        itemSpacer(64.dp)
     }
 }
 

@@ -3,6 +3,7 @@ package com.tanya.ui.library
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,14 +12,19 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import app.showhub.common.compose.components.PosterCard
+import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
 import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
@@ -28,6 +34,8 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R.drawable.ic_sort_arrows
+import com.tanya.data.entities.ShowEntity
+import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.entities.SortOption
 import com.tanya.data.results.FollowedShowEntryWithShow
 import kotlinx.coroutines.launch
@@ -57,7 +65,10 @@ internal fun Library(
         onHideBottomBar = onHideBottomBar,
         list = rememberFlowWithLifeCycle(flow = viewModel.pagedList).collectAsLazyPagingItems()
     ) {
-
+        when (it) {
+            is LibraryAction.OpenShowDetails -> openShowDetails(it.showId)
+            else -> {}
+        }
     }
 }
 
@@ -103,7 +114,11 @@ internal fun Library(
             topBar = { LibraryAppBar() },
             modifier = Modifier.fillMaxSize()
         ) {
-            LibraryContent(contentPadding = it) {
+            LibraryContent(
+                contentPadding = it,
+                list = list,
+                dispatcher = dispatcher
+            ) {
                 scope.launch {
                     onHideBottomBar?.invoke(true)
                     sheetState.animateTo(ModalBottomSheetValue.Expanded)
@@ -117,18 +132,91 @@ internal fun Library(
 private fun LibraryContent(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     list: LazyPagingItems<FollowedShowEntryWithShow>,
+    dispatcher: (LibraryAction) -> Unit,
     openSortOptions: (SortOption) -> Unit
 ) {
     val columns = Layout.columns
     val bodyMargin = Layout.bodyMargin
     val gutter = Layout.gutter
 
+    val genericItemPadding = (gutter - 8.dp).coerceAtLeast(0.dp)
+
     LazyColumn(
         contentPadding = contentPadding,
         modifier = Modifier.fillMaxSize()
     ) {
+
         item { SortOptionButton(openSortOptions = openSortOptions) }
 
+        itemsInGrid(
+            lazyPagingItems = list,
+            columns = columns/4,
+            contentPadding = PaddingValues(
+                horizontal = (bodyMargin - 8.dp).coerceAtLeast(0.dp),
+                vertical = genericItemPadding
+            ),
+            verticalItemPadding = genericItemPadding,
+            horizontalItemPadding = genericItemPadding
+        ) {
+            if (it != null) {
+                FollowedShowItem(
+                    show = it.show,
+                    poster = it.poster,
+                    contentPadding = PaddingValues(8.dp),
+                    onClick = { dispatcher(LibraryAction.OpenShowDetails(it.show.id)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        itemSpacer(16.dp)
+    }
+}
+
+@Composable
+private fun FollowedShowItem(
+    show: ShowEntity,
+    poster: ShowImagesEntity?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+) {
+    Row(
+        modifier
+            .clip(RoundedCornerShape(4.dp))
+            .clickable { onClick() }
+            .padding(contentPadding)
+    ) {
+        PosterCard(
+            showTitle = show.title,
+            posterPath = poster?.path,
+            modifier = Modifier
+                .fillMaxWidth(0.2f)
+                .aspectRatio(2 / 3f)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
+            Text(
+                text = show.title ?: "",
+                style = MaterialTheme.typography.subtitle2
+            )
+            if (show.summary?.isNotEmpty() == true) {
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    Text(
+                        text = show.summary!!,
+                        style = MaterialTheme.typography.caption,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
+                    )
+                }
+            }
+        }
     }
 }
 
