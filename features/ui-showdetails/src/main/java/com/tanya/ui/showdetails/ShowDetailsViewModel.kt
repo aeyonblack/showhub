@@ -1,6 +1,5 @@
 package com.tanya.ui.showdetails
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -128,7 +127,6 @@ internal class ShowDetailsViewModel @Inject constructor(
                     ChangeShowFollowStatus.Action.TOGGLE
                 )
             ).watchStatus()
-            Log.d("showDetailsVM", "onToggleFollowButtonClicked")
         }
     }
 
@@ -162,6 +160,10 @@ internal class ShowDetailsViewModel @Inject constructor(
                 }
             )
         ).watchStatus()
+    }
+
+    private fun onUpdateSeasonEpisodes(action: UpdateSeasonEpisodes) {
+
     }
 
     private fun onUnfollowPreviousSeasonsFollowed(action: UnfollowPreviousSeasonsFollowed) {
