@@ -35,6 +35,7 @@ internal class ShowDetailsViewModel @Inject constructor(
     observeShowFollowStatus: ObserveShowFollowStatus,
     private val changeSeasonFollowStatus: ChangeSeasonFollowStatus,
     observeShowViewStats: ObserveShowViewStats,
+    private val updateEpisodeDetails: UpdateEpisodeDetails
 ) : ViewModel() {
     private val showId: Long = savedStateHandle.get("showId")!!
     private val loadingState = ObservableLoadingCounter()
@@ -78,6 +79,7 @@ internal class ShowDetailsViewModel @Inject constructor(
                     is MarkSeasonUnwatchedAction -> onMarkSeasonUnwatched(it)
                     is MarkSeasonWatchedAction -> onMarkSeasonWatched(it)
                     is UnfollowPreviousSeasonsFollowed -> onUnfollowPreviousSeasonsFollowed(it)
+                    is UpdateSeasonEpisodes -> onUpdateSeasonEpisodes(it)
                     else -> {}
                 }
             }
@@ -163,7 +165,9 @@ internal class ShowDetailsViewModel @Inject constructor(
     }
 
     private fun onUpdateSeasonEpisodes(action: UpdateSeasonEpisodes) {
-
+        action.episodeIds.forEach {
+            updateEpisodeDetails(UpdateEpisodeDetails.Params(it)).watchStatus()
+        }
     }
 
     private fun onUnfollowPreviousSeasonsFollowed(action: UnfollowPreviousSeasonsFollowed) {
