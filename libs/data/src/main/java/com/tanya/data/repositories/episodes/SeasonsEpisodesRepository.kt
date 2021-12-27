@@ -59,46 +59,61 @@ class SeasonsEpisodesRepository @Inject constructor(
     }
 
     suspend fun updateSeasonsEpisodes(showId: Long) {
-        logger.d("about to fetch season with episodes")
         when (val response = traktSeasonsDataSource.getSeasonsEpisodes(showId)) {
             is Success -> {
-                response.data.distinctBy { it.first.number }.associate { (season, episodes) ->
-                    val localSeason = seasonsEpisodesStore.getSeasonWithTraktId(season.traktId!!)
-                        ?: SeasonEntity(showId = showId)
-                    val mergedSeason = when (
-                        val tmdbResponse = tmdbSeasonsDataSource.getSeason(showId, season.number!!)
-                    ) {
-                        is Success -> mergeSeason(localSeason, season, tmdbResponse.data)
-                        else -> mergeSeason(localSeason, season, SeasonEntity.EMPTY)
-                    }
-
-                    // TODO - I can do better than this...
-                    val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
-                        val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
-                            ?: EpisodeEntity(seasonId = mergedSeason.id)
-                        when {
-                            it.number != null -> when (
-                                val tmdbResponse = tmdbEpisodeDataSource
-                                    .getEpisode(showId, season.number, it.number)
-                            ) {
-                                is Success -> {
-                                    mergeEpisode(localEpisode, it, tmdbResponse.data)
-                                }
-                                else -> {
-                                    mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
-                                }
-                            }
-                            else -> mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
-                        }
-                    }
-                    mergedSeason to mergedEpisodes
-                }.also {
-                    seasonsEpisodesStore.save(showId, it)
-                }
-
-                //seasonsLastRequestStore.updateLastRequest(showId)
+                mapSeasonsToEpisodes(showId, response.data)
+                /*seasonsLastRequestStore.updateLastRequest(showId)*/
             }
             is ErrorResult -> throw response.throwable
+        }
+    }
+
+    private suspend fun mapSeasonsToEpisodes(
+        showId: Long,
+        seasonsWithEpisodes: List<Pair<SeasonEntity, List<EpisodeEntity>>>
+    ) {
+        seasonsWithEpisodes
+            .distinctBy { it.first.number }
+            .associate { (season, episodes) ->
+            val localSeason = seasonsEpisodesStore.getSeasonWithTraktId(season.traktId!!)
+                ?: SeasonEntity(showId = showId)
+
+            val mergedSeason = when (
+                val tmdbResponse = tmdbSeasonsDataSource.getSeason(showId, season.number!!)
+            ) {
+                is Success -> mergeSeason(localSeason, season, tmdbResponse.data)
+                else -> mergeSeason(localSeason, season, SeasonEntity.EMPTY)
+            }
+
+            /*val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
+                val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
+                    ?: EpisodeEntity(seasonId = mergedSeason.id)
+                when {
+                    it.number != null -> when (
+                        val tmdbResponse = tmdbEpisodeDataSource
+                            .getEpisode(showId, season.number, it.number)
+                    ) {
+                        is Success -> {
+                            mergeEpisode(localEpisode, it, tmdbResponse.data)
+                        }
+                        else -> {
+                            mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
+                        }
+                    }
+                    else -> mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
+                }
+            }*/
+
+            val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
+                val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
+                    ?: EpisodeEntity(seasonId = mergedSeason.id)
+                mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
+            }
+
+            mergedSeason to mergedEpisodes
+
+        }.also {
+                seasonsEpisodesStore.save(showId, it)
         }
     }
 
