@@ -333,6 +333,7 @@ internal fun ShowDetailsContent(
             item {
                 SeasonsGrid(
                     seasons = seasons,
+                    dispatcher = dispatcher,
                     openSeasonDetails = openSeasonDetails,
                     openSeasonMenu = openSeasonMenu,
                 )
@@ -455,6 +456,7 @@ private fun SheetOption(
 private fun SeasonsGrid(
     seasons: List<SeasonWithEpisodesAndWatches>,
     modifier: Modifier = Modifier,
+    dispatcher: (ShowDetailsAction) -> Unit,
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
     openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
@@ -468,6 +470,7 @@ private fun SeasonsGrid(
         seasons.forEach {
             SeasonChip(
                 seasonWithEpisodes = it,
+                dispatcher = dispatcher,
                 openSeasonDetails = openSeasonDetails,
                 openSeasonMenu = openSeasonMenu
             )
@@ -479,11 +482,17 @@ private fun SeasonsGrid(
 @Composable
 private fun SeasonChip(
     seasonWithEpisodes: SeasonWithEpisodesAndWatches,
+    dispatcher: (ShowDetailsAction) -> Unit,
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
     openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
+    val episodeIds = seasonWithEpisodes.episodes.map { it.episode.id }
+
     Surface(
-        onClick = { openSeasonDetails(seasonWithEpisodes) },
+        onClick = {
+            openSeasonDetails(seasonWithEpisodes)
+            dispatcher(ShowDetailsAction.UpdateSeasonEpisodes(episodeIds))
+        } ,
         modifier = Modifier.padding(4.dp),
     ) {
         Row(modifier = Modifier.width(320.dp)) {
