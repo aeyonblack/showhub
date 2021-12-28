@@ -41,6 +41,9 @@ class SeasonsEpisodesStore @Inject constructor(
         return seasonsDao.seasonsWithEpisodesForShowId(showId)
     }
 
+    fun observePagedSeasonsWithEpisodes(showId: Long) =
+        seasonsDao.pagedSeasonsWithEpisodesForShowId(showId)
+
     fun observeShowSeasonWithEpisodes(seasonId: Long): Flow<SeasonWithEpisodesAndWatches> {
         return seasonsDao.seasonWithEpisodes(seasonId)
     }
