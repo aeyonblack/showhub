@@ -37,6 +37,9 @@ class SeasonsEpisodesRepository @Inject constructor(
         return seasonsEpisodesStore.observeShowSeasonsWithEpisodes(showId)
     }
 
+    fun observePagedSeasonsWithEpisodesWatchedForShow(showId: Long) =
+        seasonsEpisodesStore.observePagedSeasonsWithEpisodes(showId)
+
     fun observeSeason(seasonId: Long) = seasonsEpisodesStore.observeShowSeasonWithEpisodes(seasonId)
 
     fun observeEpisode(episodeId: Long) = seasonsEpisodesStore.observeEpisode(episodeId)
