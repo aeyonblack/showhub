@@ -190,8 +190,8 @@ internal class ShowDetailsViewModel @Inject constructor(
 
     companion object {
         private val PAGING_CONFIG = PagingConfig(
-            pageSize = 10,
-            initialLoadSize = 20
+            pageSize = 5,
+            initialLoadSize = 10
         )
     }
 }

@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
@@ -81,7 +83,11 @@ internal fun ShowDetails(
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
         .collectAsState(initial = ShowDetailsViewState.EMPTY)
-    ShowDetails(state = viewState) {
+    ShowDetails(
+        state = viewState,
+        list = rememberFlowWithLifeCycle(flow = viewModel.pagedSeasonsList)
+            .collectAsLazyPagingItems()
+    ) {
         when (it) {
             is ShowDetailsAction.NavigateUp -> navigateUp()
             is ShowDetailsAction.OpenShowDetails -> openShowDetails(it.showId)
@@ -94,6 +100,7 @@ internal fun ShowDetails(
 @Composable
 internal fun ShowDetails(
     state: ShowDetailsViewState,
+    list: LazyPagingItems<SeasonWithEpisodesAndWatches>,
     dispatcher: (ShowDetailsAction) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -203,7 +210,8 @@ internal fun ShowDetails(
                         ShowDetailsContent(
                             show = state.show,
                             relatedShows = state.relatedShows,
-                            seasons = state.seasons,
+                            //seasons = state.seasons,
+                            seasons = list,
                             listState = listState,
                             backdrop = state.backdropImage,
                             dispatcher = dispatcher,
@@ -240,7 +248,8 @@ internal fun ShowDetails(
 internal fun ShowDetailsContent(
     show: ShowEntity,
     relatedShows: List<RelatedShowEntryWithShow>,
-    seasons: List<SeasonWithEpisodesAndWatches>,
+    /*seasons: List<SeasonWithEpisodesAndWatches>,*/
+    seasons: LazyPagingItems<SeasonWithEpisodesAndWatches>,
     listState: LazyListState,
     backdrop: ShowImagesEntity?,
     dispatcher: (ShowDetailsAction) -> Unit,
@@ -310,7 +319,7 @@ internal fun ShowDetailsContent(
             }
         }
 
-        if (seasons.isNotEmpty()) {
+        if (/*seasons.isNotEmpty()*/ seasons.itemCount > 0) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -323,7 +332,7 @@ internal fun ShowDetailsContent(
                         .padding(horizontal = 16.dp, vertical = 2.dp)
                 )
                 Text(
-                    text = stringResource(R.string.show_seasons_count, seasons.size),
+                    text = stringResource(R.string.show_seasons_count, seasons.itemCount),
                     fontSize = 13.sp,
                     color = MaterialTheme.colors.onBackground.copy(alpha = 0.65f),
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -454,7 +463,8 @@ private fun SheetOption(
 
 @Composable
 private fun SeasonsGrid(
-    seasons: List<SeasonWithEpisodesAndWatches>,
+    //seasons: List<SeasonWithEpisodesAndWatches>,
+    seasons: LazyPagingItems<SeasonWithEpisodesAndWatches>,
     modifier: Modifier = Modifier,
     dispatcher: (ShowDetailsAction) -> Unit,
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
@@ -467,14 +477,24 @@ private fun SeasonsGrid(
             .horizontalScroll(scrollState)
             .padding(12.dp)
     ) {
-        seasons.forEach {
+        for (i in 0 until seasons.itemCount) {
+            seasons[i]?.let {
+                SeasonChip(
+                    seasonWithEpisodes = it,
+                    dispatcher = dispatcher,
+                    openSeasonDetails = openSeasonDetails,
+                    openSeasonMenu = openSeasonMenu
+                )
+            }
+        }
+        /*seasons.forEach {
             SeasonChip(
                 seasonWithEpisodes = it,
                 dispatcher = dispatcher,
                 openSeasonDetails = openSeasonDetails,
                 openSeasonMenu = openSeasonMenu
             )
-        }
+        }*/
     }
 }
 
