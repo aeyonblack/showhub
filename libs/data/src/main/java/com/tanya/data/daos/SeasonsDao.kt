@@ -1,5 +1,6 @@
 package com.tanya.data.daos
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -10,6 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class SeasonsDao : EntityDao<SeasonEntity>() {
+
+    @Transaction
+    @Query("SELECT * FROM seasons WHERE show_id = :showId ORDER BY number=$NUMBER_SPECIALS, number")
+    abstract fun pagedSeasonsWithEpisodesForShowId(showId: Long): PagingSource<Int, SeasonWithEpisodesAndWatches>
 
     @Transaction
     @Query("SELECT * FROM seasons WHERE show_id = :showId ORDER BY number=$NUMBER_SPECIALS, number")

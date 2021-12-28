@@ -60,10 +60,7 @@ class SeasonsEpisodesRepository @Inject constructor(
 
     suspend fun updateSeasonsEpisodes(showId: Long) {
         when (val response = traktSeasonsDataSource.getSeasonsEpisodes(showId)) {
-            is Success -> {
-                mapSeasonsToEpisodes(showId, response.data)
-                /*seasonsLastRequestStore.updateLastRequest(showId)*/
-            }
+            is Success -> mapSeasonsToEpisodes(showId, response.data)
             is ErrorResult -> throw response.throwable
         }
     }
@@ -84,25 +81,6 @@ class SeasonsEpisodesRepository @Inject constructor(
                 is Success -> mergeSeason(localSeason, season, tmdbResponse.data)
                 else -> mergeSeason(localSeason, season, SeasonEntity.EMPTY)
             }
-
-            /*val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
-                val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
-                    ?: EpisodeEntity(seasonId = mergedSeason.id)
-                when {
-                    it.number != null -> when (
-                        val tmdbResponse = tmdbEpisodeDataSource
-                            .getEpisode(showId, season.number, it.number)
-                    ) {
-                        is Success -> {
-                            mergeEpisode(localEpisode, it, tmdbResponse.data)
-                        }
-                        else -> {
-                            mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
-                        }
-                    }
-                    else -> mergeEpisode(localEpisode, it, EpisodeEntity.EMPTY)
-                }
-            }*/
 
             val mergedEpisodes = episodes.distinctBy(EpisodeEntity::number).map {
                 val localEpisode = seasonsEpisodesStore.getEpisodeWithTraktId(it.traktId!!)
