@@ -3,12 +3,16 @@ package com.tanya.ui.showdetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.tanya.base.base.InvokeError
 import com.tanya.base.base.InvokeStarted
 import com.tanya.base.base.InvokeStatus
 import com.tanya.base.base.InvokeSuccess
 import com.tanya.base.extensions.combine
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
+import com.tanya.data.results.SeasonWithEpisodesAndWatches
 import com.tanya.domain.interactors.*
 import com.tanya.domain.interactors.ChangeSeasonWatchedStatus.Action
 import com.tanya.domain.observers.*
@@ -35,12 +39,16 @@ internal class ShowDetailsViewModel @Inject constructor(
     observeShowFollowStatus: ObserveShowFollowStatus,
     private val changeSeasonFollowStatus: ChangeSeasonFollowStatus,
     observeShowViewStats: ObserveShowViewStats,
-    private val updateEpisodeDetails: UpdateEpisodeDetails
+    private val updateEpisodeDetails: UpdateEpisodeDetails,
+    observePagedShowSeasons: ObservePagedShowSeasonsEpisodes
 ) : ViewModel() {
     private val showId: Long = savedStateHandle.get("showId")!!
     private val loadingState = ObservableLoadingCounter()
 
     private val pendingActions = MutableSharedFlow<ShowDetailsAction>()
+
+    val pagedSeasonsList: Flow<PagingData<SeasonWithEpisodesAndWatches>> =
+        observePagedShowSeasons.flow.cachedIn(viewModelScope)
 
     val state = combine(
         loadingState.observable,
@@ -92,6 +100,7 @@ internal class ShowDetailsViewModel @Inject constructor(
         observeShowSeasons(ObserveShowSeasonsEpisodesWatches.Params(showId))
         observeNextEpisodeToWatch(ObserveShowNextEpisodeToWatch.Params(showId))
         observeShowViewStats(ObserveShowViewStats.Params(showId))
+        observePagedShowSeasons(ObservePagedShowSeasonsEpisodes.Params(showId, PAGING_CONFIG))
 
         refresh()
     }
@@ -177,5 +186,12 @@ internal class ShowDetailsViewModel @Inject constructor(
                 action = ChangeSeasonFollowStatus.Action.IGNORE_PREVIOUS
             )
         ).watchStatus()
+    }
+
+    companion object {
+        private val PAGING_CONFIG = PagingConfig(
+            pageSize = 10,
+            initialLoadSize = 20
+        )
     }
 }
