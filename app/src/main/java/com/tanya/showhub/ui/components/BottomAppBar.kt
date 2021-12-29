@@ -23,7 +23,6 @@ import com.tanya.showhub.Screen
 import com.tanya.showhub.extensions.topLevelDestinations
 import com.tanya.showhub.ui.NavigationItem
 
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun BottomNavBar(
@@ -38,8 +37,8 @@ internal fun BottomNavBar(
     if (currentRoute in topLevelDestinations) {
         AnimatedVisibility(
             visible = !hideBottomBar,
-            enter = fadeIn(animationSpec = tween(1000)),
-            exit = fadeOut(animationSpec = tween(1000))
+            enter = fadeIn(animationSpec = tween(600)),
+            exit = fadeOut(animationSpec = tween(600))
         ) {
             BottomNavigation(
                 backgroundColor = MaterialTheme.colors.surface,

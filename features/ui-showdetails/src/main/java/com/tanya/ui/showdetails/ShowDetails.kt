@@ -7,7 +7,9 @@ import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.selection.toggleable
@@ -466,15 +468,15 @@ private fun SeasonsGrid(
     //seasons: List<SeasonWithEpisodesAndWatches>,
     seasons: LazyPagingItems<SeasonWithEpisodesAndWatches>,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     dispatcher: (ShowDetailsAction) -> Unit,
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
     openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
-    val scrollState = rememberScrollState()
 
-    StaggeredGrid(
+    /*StaggeredGrid(
         modifier = modifier
-            .horizontalScroll(scrollState)
+            .horizontalScroll(rememberScrollState())
             .padding(12.dp)
     ) {
         for (i in 0 until seasons.itemCount) {
@@ -487,15 +489,7 @@ private fun SeasonsGrid(
                 )
             }
         }
-        /*seasons.forEach {
-            SeasonChip(
-                seasonWithEpisodes = it,
-                dispatcher = dispatcher,
-                openSeasonDetails = openSeasonDetails,
-                openSeasonMenu = openSeasonMenu
-            )
-        }*/
-    }
+    }*/
 }
 
 @OptIn(ExperimentalMaterialApi::class)
