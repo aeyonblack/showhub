@@ -3,6 +3,7 @@ package app.showhub.common.compose.extensions
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -21,6 +22,12 @@ fun LazyListScope.itemSpacer(height: Dp) {
     }
 }
 
+fun LazyListScope.horizontalSpacer(width: Dp) {
+    item {
+        Spacer(modifier = Modifier.width(width))
+    }
+}
+
 
 fun <T : Any> LazyListScope.horizontalGrid(
     lazyPagingItems: LazyPagingItems<T>,
@@ -33,16 +40,24 @@ fun <T : Any> LazyListScope.horizontalGrid(
     val columns = ceil(lazyPagingItems.itemCount / rows.toDouble()).toInt()
 
     for (column in 0 until columns) {
+
+        if (column == 0) horizontalSpacer(18.dp)
+
         item {
-            Column {
+            Column(
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
                 for (row in 0 until rows) {
                     val index = (column * rows) + row
                     if (index < lazyPagingItems.itemCount) {
                         itemContent(lazyPagingItems[index])
                     }
+                    if (row < rows - 1) Spacer(modifier = Modifier.height(4.dp))
                 }
             }
         }
+
+        if (column >= columns - 1) horizontalSpacer(21.dp)
     }
 }
 
@@ -141,4 +156,11 @@ fun <T> LazyListScope.itemsInGrid(
             itemSpacer(contentPadding.calculateBottomPadding())
         }
     }
+}
+
+@Composable
+fun LazyListState.OnBottomReached(
+    loadMore: () -> Unit
+) {
+
 }

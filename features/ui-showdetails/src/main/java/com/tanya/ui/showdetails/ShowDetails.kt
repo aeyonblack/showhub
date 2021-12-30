@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,6 +46,7 @@ import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.extensions.horizontalGrid
 import app.showhub.common.compose.theme.yellow400
+import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
@@ -251,7 +253,6 @@ internal fun ShowDetails(
 internal fun ShowDetailsContent(
     show: ShowEntity,
     relatedShows: List<RelatedShowEntryWithShow>,
-    /*seasons: List<SeasonWithEpisodesAndWatches>,*/
     seasons: LazyPagingItems<SeasonWithEpisodesAndWatches>,
     listState: LazyListState,
     backdrop: ShowImagesEntity?,
@@ -471,12 +472,18 @@ private fun SeasonsGrid(
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
     openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
+    val columns = Layout.columns
+    val bodyMargin = Layout.bodyMargin
+    val gutter = Layout.gutter
+
+    val genericItemPadding = (gutter - 8.dp).coerceAtLeast(0.dp)
+
     LazyRow(
         state = rememberLazyListState()
     ) {
         horizontalGrid(
             lazyPagingItems = seasons,
-            rows = 3
+            rows = 3,
         ) {
             if (it != null) {
                 SeasonChip(
@@ -520,8 +527,7 @@ private fun SeasonChip(
         onClick = {
             openSeasonDetails(seasonWithEpisodes)
             dispatcher(ShowDetailsAction.UpdateSeasonEpisodes(episodeIds))
-        } ,
-        modifier = Modifier.padding(4.dp),
+        },
     ) {
         Row(modifier = Modifier.width(320.dp)) {
             PosterCard(
