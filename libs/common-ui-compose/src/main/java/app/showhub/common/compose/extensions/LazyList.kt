@@ -3,7 +3,6 @@ package app.showhub.common.compose.extensions
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -156,11 +155,4 @@ fun <T> LazyListScope.itemsInGrid(
             itemSpacer(contentPadding.calculateBottomPadding())
         }
     }
-}
-
-@Composable
-fun LazyListState.OnBottomReached(
-    loadMore: () -> Unit
-) {
-
 }

@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,7 +45,6 @@ import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
 import app.showhub.common.compose.extensions.horizontalGrid
 import app.showhub.common.compose.theme.yellow400
-import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.google.accompanist.insets.LocalWindowInsets
@@ -472,12 +470,6 @@ private fun SeasonsGrid(
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
     openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
-    val columns = Layout.columns
-    val bodyMargin = Layout.bodyMargin
-    val gutter = Layout.gutter
-
-    val genericItemPadding = (gutter - 8.dp).coerceAtLeast(0.dp)
-
     LazyRow(
         state = rememberLazyListState()
     ) {
@@ -495,22 +487,6 @@ private fun SeasonsGrid(
             }
         }
     }
-    /*StaggeredGrid(
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
-            .padding(12.dp)
-    ) {
-        for (i in 0 until seasons.itemCount) {
-            seasons[i]?.let {
-                SeasonChip(
-                    seasonWithEpisodes = it,
-                    dispatcher = dispatcher,
-                    openSeasonDetails = openSeasonDetails,
-                    openSeasonMenu = openSeasonMenu
-                )
-            }
-        }
-    }*/
 }
 
 @OptIn(ExperimentalMaterialApi::class)
