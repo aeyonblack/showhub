@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import kotlin.math.ceil
 
 fun LazyListScope.itemSpacer(height: Dp) {
     item {
@@ -17,6 +18,31 @@ fun LazyListScope.itemSpacer(height: Dp) {
                 .height(height)
                 .fillParentMaxWidth()
         )
+    }
+}
+
+
+fun <T : Any> LazyListScope.horizontalGrid(
+    lazyPagingItems: LazyPagingItems<T>,
+    rows: Int,
+    contentPadding: PaddingValues = PaddingValues(),
+    horizontalItemPadding: Dp = 0.dp,
+    verticalItemPadding: Dp = 0.dp,
+    itemContent: @Composable LazyItemScope.(T?) -> Unit
+) {
+    val columns = ceil(lazyPagingItems.itemCount / rows.toDouble()).toInt()
+
+    for (column in 0 until columns) {
+        item {
+            Column {
+                for (row in 0 until rows) {
+                    val index = (column * rows) + row
+                    if (index < lazyPagingItems.itemCount) {
+                        itemContent(lazyPagingItems[index])
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -43,6 +43,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import app.showhub.common.compose.components.*
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.copy
+import app.showhub.common.compose.extensions.horizontalGrid
 import app.showhub.common.compose.theme.yellow400
 import app.showhub.common.compose.utils.LocalShowhubDateTimeFormatter
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
@@ -465,15 +466,28 @@ private fun SheetOption(
 
 @Composable
 private fun SeasonsGrid(
-    //seasons: List<SeasonWithEpisodesAndWatches>,
     seasons: LazyPagingItems<SeasonWithEpisodesAndWatches>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     dispatcher: (ShowDetailsAction) -> Unit,
     openSeasonDetails: (SeasonWithEpisodesAndWatches) -> Unit,
     openSeasonMenu: (SeasonWithEpisodesAndWatches) -> Unit
 ) {
-
+    LazyRow(
+        state = rememberLazyListState()
+    ) {
+        horizontalGrid(
+            lazyPagingItems = seasons,
+            rows = 3
+        ) {
+            if (it != null) {
+                SeasonChip(
+                    seasonWithEpisodes = it,
+                    dispatcher = dispatcher,
+                    openSeasonDetails = openSeasonDetails,
+                    openSeasonMenu = openSeasonMenu
+                )
+            }
+        }
+    }
     /*StaggeredGrid(
         modifier = modifier
             .horizontalScroll(rememberScrollState())
