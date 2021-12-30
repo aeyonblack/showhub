@@ -321,7 +321,7 @@ internal fun ShowDetailsContent(
             }
         }
 
-        if (/*seasons.isNotEmpty()*/ seasons.itemCount > 0) {
+        if (seasons.itemCount > 0) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))
             }

@@ -5,8 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -14,13 +14,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import app.showhub.common.compose.components.AppBar
+import app.showhub.common.compose.components.FollowedShowItem
 import app.showhub.common.compose.components.PosterCard
+import app.showhub.common.compose.extensions.itemsInGridIndexed
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.results.EntryWithShow
+import com.tanya.data.results.FollowedShowEntryWithShow
 
 @Composable
 fun Home(
@@ -41,6 +48,8 @@ internal fun Home(
         .collectAsState(initial = HomeViewState.EMPTY)
     Home(
         state = viewState,
+        followedShows = rememberFlowWithLifeCycle(flow = viewModel.pagedFollowedShows)
+            .collectAsLazyPagingItems(),
         openShowDetails = openShowDetails
     )
 }
@@ -48,41 +57,67 @@ internal fun Home(
 @Composable
 internal fun Home(
     state: HomeViewState,
+    followedShows: LazyPagingItems<FollowedShowEntryWithShow>,
     openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
 ) {
-    Scaffold(
-        topBar = { AppBar("Hello!")},
+    LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            /*trending items*/
-            item {
-                CarouselWithHeader(
-                    items = state.trendingItems,
-                    title = "People are watching",
-                    refreshing = state.trendingRefreshing,
-                    onItemClick = {
-                        openShowDetails(it.id, null, null)
-                    }
-                )
-            }
-            /*popular items*/
-            item {
-                CarouselWithHeader(
-                    items = state.popularItems,
-                    title = "Top rated",
-                    refreshing = state.popularRefreshing,
-                    onItemClick = {
-                        openShowDetails(it.id, null, null)
-                    }
-                )
+        item {AppBar(title = "Hey there!")}
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        /*following shows*/
+        if (followedShows.itemCount > 0) {
+            itemsInGridIndexed(
+                lazyPagingItems = followedShows,
+                columns = 2,
+                horizontalItemPadding = 8.dp,
+                verticalItemPadding = 8.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) { show, index ->
+                if (show != null && index < 4) {
+                    FollowedShowItem(
+                        show = show.show,
+                        poster = show.poster,
+                        showInfo = false,
+                        posterShape = RoundedCornerShape(0.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        posterWidth = 0.25f,
+                        titleFontWeight = Bold,
+                        backgroundColor = Color.DarkGray.copy(0.5f),
+                        onClick = { openShowDetails(show.show.id, null, null) }
+                    )
+                }
             }
         }
+
+        /*trending items*/
+        item {
+            CarouselWithHeader(
+                items = state.trendingItems,
+                title = "People are watching",
+                refreshing = state.trendingRefreshing,
+                onItemClick = {
+                    openShowDetails(it.id, null, null)
+                }
+            )
+        }
+        /*popular items*/
+        item {
+            CarouselWithHeader(
+                items = state.popularItems,
+                title = "Top rated",
+                refreshing = state.popularRefreshing,
+                onItemClick = {
+                    openShowDetails(it.id, null, null)
+                }
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(128.dp)) }
     }
 }
 

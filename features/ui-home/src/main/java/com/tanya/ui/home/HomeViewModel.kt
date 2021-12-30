@@ -1,12 +1,17 @@
 package com.tanya.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.tanya.common.ui.view.util.ObservableLoadingCounter
 import com.tanya.common.ui.view.util.collectInto
+import com.tanya.data.entities.SortOption
+import com.tanya.data.results.FollowedShowEntryWithShow
 import com.tanya.domain.interactors.UpdatePopularShows
 import com.tanya.domain.interactors.UpdateTrendingShows
+import com.tanya.domain.observers.ObservePagedFollowedShows
 import com.tanya.domain.observers.ObservePopularShows
 import com.tanya.domain.observers.ObserveTrendingShows
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +24,16 @@ internal class HomeViewModel @Inject constructor(
     private val updatePopularShows: UpdatePopularShows,
     observePopularShows: ObservePopularShows,
     private val updateTrendingShows: UpdateTrendingShows,
-    observeTrendingShows: ObserveTrendingShows
+    observeTrendingShows: ObserveTrendingShows,
+    observePagedFollowedShows: ObservePagedFollowedShows,
 ): ViewModel() {
     private val trendingLoadingState = ObservableLoadingCounter()
     private val popularLoadingState = ObservableLoadingCounter()
 
     private val pendingActions = MutableSharedFlow<HomeAction>()
+
+    val pagedFollowedShows: Flow<PagingData<FollowedShowEntryWithShow>> =
+        observePagedFollowedShows.flow.cachedIn(viewModelScope)
 
     val state: StateFlow<HomeViewState> = combine(
         trendingLoadingState.observable,
@@ -45,6 +54,14 @@ internal class HomeViewModel @Inject constructor(
     )
 
     init {
+
+        observePagedFollowedShows(
+            ObservePagedFollowedShows.Params(
+                pagingConfig = PAGING_CONFIG,
+                sort = SortOption.LAST_WATCHED
+            )
+        )
+
         observeTrendingShows(ObserveTrendingShows.Params(10))
         observePopularShows(ObservePopularShows.Params(10))
 
@@ -53,6 +70,7 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
+    @Suppress("SameParameterValue")
     private fun refresh(b: Boolean) {
         viewModelScope.launch {
             updatePopularShows(UpdatePopularShows.Params(UpdatePopularShows.Page.REFRESH, b))
@@ -62,5 +80,12 @@ internal class HomeViewModel @Inject constructor(
             updateTrendingShows(UpdateTrendingShows.Params(UpdateTrendingShows.Page.REFRESH, b))
                 .collectInto(trendingLoadingState)
         }
+    }
+
+    companion object {
+        private val PAGING_CONFIG = PagingConfig(
+            pageSize = 4,
+            initialLoadSize = 4,
+        )
     }
 }

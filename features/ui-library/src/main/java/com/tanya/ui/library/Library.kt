@@ -20,20 +20,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import app.showhub.common.compose.components.PosterCard
+import app.showhub.common.compose.components.FollowedShowItem
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
@@ -46,8 +44,6 @@ import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.tanya.common.ui.resources.R.drawable.ic_checkbox
 import com.tanya.common.ui.resources.R.drawable.ic_sort_arrows
-import com.tanya.data.entities.ShowEntity
-import com.tanya.data.entities.ShowImagesEntity
 import com.tanya.data.entities.SortOption
 import com.tanya.data.results.FollowedShowEntryWithShow
 import kotlinx.coroutines.launch
@@ -183,53 +179,6 @@ private fun LibraryContent(
         }
 
         itemSpacer(16.dp)
-    }
-}
-
-@Composable
-private fun FollowedShowItem(
-    show: ShowEntity,
-    poster: ShowImagesEntity?,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
-) {
-    Row(
-        modifier
-            .clip(RoundedCornerShape(4.dp))
-            .clickable { onClick() }
-            .padding(contentPadding)
-    ) {
-        PosterCard(
-            showTitle = show.title,
-            posterPath = poster?.path,
-            modifier = Modifier
-                .fillMaxWidth(0.2f)
-                .aspectRatio(2 / 3f)
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .align(CenterVertically)
-        ) {
-            Text(
-                text = show.title ?: "",
-                style = MaterialTheme.typography.subtitle2
-            )
-            if (show.summary?.isNotEmpty() == true) {
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(
-                        text = show.summary!!,
-                        style = MaterialTheme.typography.caption,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 2
-                    )
-                }
-            }
-        }
     }
 }
 

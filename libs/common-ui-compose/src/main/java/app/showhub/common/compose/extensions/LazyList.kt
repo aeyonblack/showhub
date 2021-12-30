@@ -108,6 +108,52 @@ fun <T : Any> LazyListScope.itemsInGrid(
     }
 }
 
+fun <T : Any> LazyListScope.itemsInGridIndexed(
+    lazyPagingItems: LazyPagingItems<T>,
+    columns: Int,
+    contentPadding: PaddingValues = PaddingValues(),
+    horizontalItemPadding: Dp = 0.dp,
+    verticalItemPadding: Dp = 0.dp,
+    itemContent: @Composable LazyItemScope.(T?, index: Int) -> Unit
+) {
+    val rows = when {
+        lazyPagingItems.itemCount % columns == 0 -> lazyPagingItems.itemCount / columns
+        else -> (lazyPagingItems.itemCount / columns) + 1
+    }
+
+    for (row in 0 until rows) {
+        if (row == 0) itemSpacer(contentPadding.calculateTopPadding())
+
+        item {
+            val layoutDirection = LocalLayoutDirection.current
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = contentPadding.calculateStartPadding(layoutDirection),
+                        end = contentPadding.calculateEndPadding(layoutDirection)
+                    )
+            ) {
+                for (column in 0 until columns) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        val index = (row * columns) + column
+                        if (index < lazyPagingItems.itemCount) {
+                            itemContent(lazyPagingItems[index], index)
+                        }
+                    }
+                    if (column < columns - 1) {
+                        Spacer(modifier = Modifier.width(horizontalItemPadding))
+                    }
+                }
+            }
+        }
+
+        if (row < rows - 1) {
+            itemSpacer(verticalItemPadding)
+        }
+    }
+}
+
 fun <T> LazyListScope.itemsInGrid(
     items: List<T>,
     columns: Int,
