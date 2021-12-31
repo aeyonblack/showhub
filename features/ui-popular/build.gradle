@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-kapt'
+    id 'kotlin-android'
+    id 'dagger.hilt.android.plugin'
+}
+
+kapt {
+    useBuildCache true
+    correctErrorTypes true
+}
+
+android {
+    compileSdk buildConfig.compileSdk
+
+    defaultConfig {
+        minSdk buildConfig.minSdk
+        targetSdk buildConfig.targetSdk
+        manifestPlaceholders += ['appAuthRedirectScheme': 'empty']
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion libs.versions.compose.get()
+    }
+}
+
+dependencies {
+    implementation project(':libs:base')
+    implementation project(':libs:base-android')
+    implementation project(':libs:domain')
+    implementation project(':libs:common-ui-compose')
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.androidx.paging.compose)
+
+    implementation(libs.bundles.compose)
+
+    implementation(libs.accompanist.insets)
+
+    implementation(libs.androidx.hilt.compose)
+    implementation(libs.hilt.library)
+    kapt(libs.hilt.compiler)
+}
