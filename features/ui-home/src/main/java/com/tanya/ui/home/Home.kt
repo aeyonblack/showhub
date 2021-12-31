@@ -31,17 +31,23 @@ import com.tanya.data.results.FollowedShowEntryWithShow
 
 @Composable
 fun Home(
-    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
+    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit,
+    openPopularShows: () -> Unit,
+    openTrendingShows: () -> Unit
 ) {
     Home(
         viewModel = hiltViewModel(),
-        openShowDetails = openShowDetails
+        openShowDetails = openShowDetails,
+        openPopularShows = openPopularShows,
+        openTrendingShows = openTrendingShows
     )
 }
 
 @Composable
 internal fun Home(
     viewModel: HomeViewModel,
+    openPopularShows: () -> Unit,
+    openTrendingShows: () -> Unit,
     openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
@@ -50,13 +56,17 @@ internal fun Home(
         state = viewState,
         followedShows = rememberFlowWithLifeCycle(flow = viewModel.pagedFollowedShows)
             .collectAsLazyPagingItems(),
-        openShowDetails = openShowDetails
+        openShowDetails = openShowDetails,
+        openPopularShows = openPopularShows,
+        openTrendingShows = openTrendingShows
     )
 }
 
 @Composable
 internal fun Home(
     state: HomeViewState,
+    openTrendingShows: () -> Unit,
+    openPopularShows: () -> Unit,
     followedShows: LazyPagingItems<FollowedShowEntryWithShow>,
     openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
 ) {
@@ -99,6 +109,7 @@ internal fun Home(
                 items = state.trendingItems,
                 title = "People are watching",
                 refreshing = state.trendingRefreshing,
+                onMoreClicked = openTrendingShows,
                 onItemClick = {
                     openShowDetails(it.id, null, null)
                 }
@@ -111,6 +122,7 @@ internal fun Home(
                 items = state.popularItems,
                 title = "Top rated",
                 refreshing = state.popularRefreshing,
+                onMoreClicked = openPopularShows,
                 onItemClick = {
                     openShowDetails(it.id, null, null)
                 }
@@ -126,6 +138,7 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
     items: List<T>,
     title: String,
     refreshing: Boolean,
+    onMoreClicked: () -> Unit,
     onItemClick: (ShowEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -136,7 +149,7 @@ private fun <T: EntryWithShow<*>> CarouselWithHeader(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { onMoreClicked() },
                     modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
                     Text(text = "All")
