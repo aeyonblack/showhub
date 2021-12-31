@@ -63,11 +63,10 @@ internal fun Home(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        item {AppBar(title = "Hey there!")}
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        item { AppBar(title = "Hey there!") }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
 
         /*following shows*/
         if (followedShows.itemCount > 0) {
@@ -105,6 +104,7 @@ internal fun Home(
                 }
             )
         }
+
         /*popular items*/
         item {
             CarouselWithHeader(
