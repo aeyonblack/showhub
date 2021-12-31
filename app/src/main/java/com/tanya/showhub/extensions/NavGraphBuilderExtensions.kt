@@ -7,6 +7,7 @@ import com.tanya.showhub.Screen
 import com.tanya.showhub.ui.app.About
 import com.tanya.ui.home.Home
 import com.tanya.ui.library.Library
+import com.tanya.ui.popular.Popular
 import com.tanya.ui.search.Search
 import com.tanya.ui.showdetails.ShowDetails
 
@@ -34,6 +35,7 @@ fun NavGraphBuilder.addHomeTopLevel(
     ) {
         addHome(navController, Screen.Home)
         addShowDetails(navController, Screen.Home)
+        addPopularShows(navController, Screen.Home)
     }
 }
 
@@ -155,6 +157,12 @@ fun NavGraphBuilder.addPopularShows(
     root: Screen
 ) {
     composable(LeafScreen.Popular.createRoute(root)) {
+        Popular(
+            openShowsDetails = {
+                navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
+            },
+            navigateUp = navController::navigateUp
+        )
     }
 }
 
