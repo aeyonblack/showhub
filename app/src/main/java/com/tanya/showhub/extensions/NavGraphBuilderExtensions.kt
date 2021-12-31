@@ -166,3 +166,12 @@ fun NavGraphBuilder.addPopularShows(
     }
 }
 
+fun NavGraphBuilder.addTrendingShows(
+    navController: NavController,
+    root: Screen
+) {
+    composable(LeafScreen.Trending.createRoute(root)) {
+
+    }
+}
+
