@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.isFinite
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.SearchTextField
+import app.showhub.common.compose.extensions.bodyWidth
 import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
 import app.showhub.common.compose.utils.Layout
@@ -166,21 +167,3 @@ private fun SearchRow(
         }
     }
 }
-
-
-@SuppressLint("UnnecessaryComposedModifier")
-fun Modifier.bodyWidth() = fillMaxWidth()
-    .wrapContentWidth(align = Alignment.CenterHorizontally)
-    .composed {
-        val bodyMaxWidth = Layout.bodyMaxWidth
-        if (bodyMaxWidth.isFinite) widthIn(max = bodyMaxWidth) else this
-    }
-    .composed {
-        padding(
-            rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.systemBars,
-                applyBottom = false,
-                applyTop = false,
-            )
-        )
-    }
