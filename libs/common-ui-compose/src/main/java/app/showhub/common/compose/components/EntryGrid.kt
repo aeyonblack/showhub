@@ -28,7 +28,7 @@ import com.tanya.data.results.EntryWithShow
 fun <E: Entry> EntryGrid(
     lazyPagingItems: LazyPagingItems<out EntryWithShow<E>>,
     title: String,
-    onNavigateUp: () -> Unit,
+    navigateUp: () -> Unit,
     openShowDetails: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,7 +36,7 @@ fun <E: Entry> EntryGrid(
         topBar = {
             EntryGridAppBar(
                 title = title,
-                onNavigateUp = onNavigateUp,
+                onNavigateUp = navigateUp,
                 refreshing = lazyPagingItems.loadState.refresh == LoadState.Loading,
                 onRefreshActionClick = { lazyPagingItems.refresh() },
                 modifier = Modifier.fillMaxWidth()
