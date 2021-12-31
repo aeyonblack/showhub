@@ -66,14 +66,12 @@ fun NavGraphBuilder.addLibraryTopLevel(
     }
 }
 
-fun NavGraphBuilder.addAboutTopLevel(
-    navController: NavController
-) {
+fun NavGraphBuilder.addAboutTopLevel() {
     navigation(
         route = Screen.About.route,
         startDestination = LeafScreen.About.createRoute(Screen.About)
     ) {
-        addAbout(navController, Screen.About)
+        addAbout()
     }
 }
 
@@ -125,8 +123,6 @@ fun NavGraphBuilder.addLibrary(
 }
 
 fun NavGraphBuilder.addAbout(
-    navController: NavController,
-    root: Screen
 ) {
     composable(LeafScreen.About.createRoute(Screen.About)) {
         About()
