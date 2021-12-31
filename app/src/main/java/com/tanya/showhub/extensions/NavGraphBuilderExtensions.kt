@@ -10,6 +10,7 @@ import com.tanya.ui.library.Library
 import com.tanya.ui.popular.Popular
 import com.tanya.ui.search.Search
 import com.tanya.ui.showdetails.ShowDetails
+import com.tanya.ui.trending.Trending
 
 /*These extension functions are for adding top level
 * destinations and all destinations that can be reached from them
@@ -36,6 +37,7 @@ fun NavGraphBuilder.addHomeTopLevel(
         addHome(navController, Screen.Home)
         addShowDetails(navController, Screen.Home)
         addPopularShows(navController, Screen.Home)
+        addTrendingShows(navController, Screen.Home)
     }
 }
 
@@ -171,7 +173,12 @@ fun NavGraphBuilder.addTrendingShows(
     root: Screen
 ) {
     composable(LeafScreen.Trending.createRoute(root)) {
-
+        Trending(
+            openShowDetails = {
+                navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
+            },
+            navigateUp = navController::navigateUp
+        )
     }
 }
 
