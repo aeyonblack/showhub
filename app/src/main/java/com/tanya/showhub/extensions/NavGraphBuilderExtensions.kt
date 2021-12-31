@@ -81,6 +81,12 @@ fun NavGraphBuilder.addHome(
         Home(
             openShowDetails = { showId, seasonId, episodeId ->
                 navController.navigate(LeafScreen.ShowDetails.createRoute(root, showId))
+            },
+            openPopularShows = {
+
+            },
+            openTrendingShows = {
+                /*TODO*/
             }
         )
     }
@@ -141,6 +147,14 @@ fun NavGraphBuilder.addShowDetails(
                 navController.navigate(LeafScreen.ShowDetails.createRoute(root, it))
             }
         )
+    }
+}
+
+fun NavGraphBuilder.addPopularShows(
+    navController: NavController,
+    root: Screen
+) {
+    composable(LeafScreen.Popular.createRoute(root)) {
     }
 }
 

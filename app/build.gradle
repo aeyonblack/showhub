@@ -92,6 +92,7 @@ dependencies {
     implementation project(":features:ui-showdetails")
     implementation project(":features:ui-search")
     implementation project(":features:ui-library")
+    implementation project(":features:ui-popular")
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
