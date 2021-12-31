@@ -88,7 +88,7 @@ fun NavGraphBuilder.addHome(
                 navController.navigate(LeafScreen.Popular.createRoute(root))
             },
             openTrendingShows = {
-                /*TODO*/
+                navController.navigate(LeafScreen.Trending.createRoute(root))
             }
         )
     }
