@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.tanya.domain.observers.ObservePagedPopularShows
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-class PopularShowsViewModel @Inject constructor(
+@HiltViewModel
+internal class PopularShowsViewModel @Inject constructor(
     observePagedPopularShows: ObservePagedPopularShows
 ) : ViewModel() {
 

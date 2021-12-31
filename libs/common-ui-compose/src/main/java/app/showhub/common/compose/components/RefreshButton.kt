@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import com.tanya.common.ui.resources.R.drawable.ic_back
+import com.tanya.common.ui.resources.R.drawable.ic_refresh
 
 @Composable
 fun RefreshButton(
@@ -18,7 +18,7 @@ fun RefreshButton(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(id = ic_back),
+            painter = painterResource(id = ic_refresh),
             tint = Color.White,
             contentDescription = null
         )
