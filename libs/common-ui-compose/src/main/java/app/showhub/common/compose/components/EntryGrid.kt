@@ -1,8 +1,7 @@
 package app.showhub.common.compose.components
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -13,9 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import app.showhub.common.compose.extensions.bodyWidth
-import app.showhub.common.compose.extensions.itemsInGrid
-import app.showhub.common.compose.utils.Layout
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
@@ -43,49 +39,8 @@ fun <E: Entry> EntryGrid(
             )
         },
         modifier = modifier,
-    ) { paddingValues ->
-        val columns = Layout.columns
-        val bodyMargin = Layout.bodyMargin
-        val gutter = Layout.gutter
+    ) {
 
-        LazyColumn(
-            contentPadding = paddingValues,
-            modifier = Modifier.bodyWidth().fillMaxHeight(),
-        ) {
-            itemsInGrid(
-                lazyPagingItems = lazyPagingItems,
-                columns = columns / 2,
-                contentPadding = PaddingValues(horizontal = bodyMargin, vertical = gutter),
-                verticalItemPadding = gutter,
-                horizontalItemPadding = gutter,
-            ) { entry ->
-                val mod = Modifier
-                    .aspectRatio(2 / 3f)
-                    .fillMaxWidth()
-                if (entry != null) {
-                    PosterCard(
-                        showTitle = entry.show.title,
-                        posterPath = entry.poster?.path,
-                        onClick = { openShowDetails(entry.show.id) },
-                        modifier = mod
-                    )
-                } else {
-                    // TODO: Add shimmer animation
-                }
-            }
-
-            if (lazyPagingItems.loadState.append == LoadState.Loading) {
-                item {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp)
-                    ) {
-                        CircularProgressIndicator(Modifier.align(Alignment.Center))
-                    }
-                }
-            }
-        }
     }
 }
 
