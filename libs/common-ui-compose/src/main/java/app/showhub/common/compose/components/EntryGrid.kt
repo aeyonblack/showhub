@@ -40,7 +40,11 @@ fun <E: Entry> EntryGrid(
         },
         modifier = modifier,
     ) {
-
+        LazyGrid(
+            list = lazyPagingItems,
+            contentPadding = it,
+            openShowDetails = openShowDetails
+        )
     }
 }
 
