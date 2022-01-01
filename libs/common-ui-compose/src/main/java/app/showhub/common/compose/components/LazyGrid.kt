@@ -19,7 +19,8 @@ import com.tanya.data.results.EntryWithShow
 fun <E: Entry> LazyGrid(
     list: LazyPagingItems<out EntryWithShow<E>>,
     contentPadding: PaddingValues,
-    openShowDetails: (showId: Long) -> Unit
+    openShowDetails: (showId: Long) -> Unit,
+    optionsRow: (@Composable () -> Unit)? = null
 ) {
     val columns = Layout.columns
     val bodyMargin = Layout.bodyMargin
@@ -29,6 +30,11 @@ fun <E: Entry> LazyGrid(
         contentPadding = contentPadding,
         modifier = Modifier.bodyWidth().fillMaxHeight(),
     ) {
+
+        if (optionsRow != null) {
+            item { optionsRow() }
+        }
+
         itemsInGrid(
             lazyPagingItems = list,
             columns = columns / 2,

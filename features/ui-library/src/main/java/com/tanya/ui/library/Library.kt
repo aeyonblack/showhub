@@ -1,13 +1,10 @@
 package com.tanya.ui.library
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -24,6 +21,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
@@ -32,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import app.showhub.common.compose.components.FollowedShowItem
+import app.showhub.common.compose.components.LazyGrid
 import app.showhub.common.compose.extensions.actionButtonBackground
 import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
@@ -42,8 +41,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
-import com.tanya.common.ui.resources.R.drawable.ic_checkbox
-import com.tanya.common.ui.resources.R.drawable.ic_sort_arrows
+import com.tanya.common.ui.resources.R.drawable.*
 import com.tanya.data.entities.SortOption
 import com.tanya.data.results.FollowedShowEntryWithShow
 import kotlinx.coroutines.launch
@@ -144,6 +142,78 @@ private fun LibraryContent(
     dispatcher: (LibraryAction) -> Unit,
     openSortOptionsMenu: () -> Unit
 ) {
+    var layout by remember { mutableStateOf(LayoutType.LIST) }
+
+    Crossfade(targetState = layout) { type ->
+        if (type == LayoutType.LIST) {
+            ListLayout(
+                list = list,
+                contentPadding = contentPadding,
+                currentSortOption = currentSortOption ,
+                onChangeLayout = { layout = it },
+                dispatcher = dispatcher,
+                openSortOptionsMenu = openSortOptionsMenu
+            )
+        } else {
+            GridLayout(
+                list = list,
+                contentPadding = contentPadding,
+                currentSortOption = currentSortOption,
+                onChangeLayout = { layout = it },
+                dispatcher = dispatcher,
+                openSortOptionsMenu = openSortOptionsMenu
+            )
+        }
+    }
+}
+
+@Composable
+private fun GridLayout(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    list: LazyPagingItems<FollowedShowEntryWithShow>,
+    currentSortOption: SortOption,
+    onChangeLayout: (LayoutType) -> Unit,
+    dispatcher: (LibraryAction) -> Unit,
+    openSortOptionsMenu: () -> Unit
+) {
+    LazyGrid(
+        list = list,
+        contentPadding = contentPadding,
+        openShowDetails = { dispatcher(LibraryAction.OpenShowDetails(it)) }
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            SortOptionButton(
+                openSortOptionsMenu = openSortOptionsMenu,
+                currentSortOption = currentSortOption
+            )
+            IconButton(
+                onClick = { onChangeLayout(LayoutType.LIST) },
+            ) {
+                Icon(
+                    painter = painterResource(id = ic_list),
+                    tint = Color.White.copy(1f),
+                    contentDescription = null
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ListLayout(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    list: LazyPagingItems<FollowedShowEntryWithShow>,
+    currentSortOption: SortOption,
+    onChangeLayout: (LayoutType) -> Unit,
+    dispatcher: (LibraryAction) -> Unit,
+    openSortOptionsMenu: () -> Unit
+) {
     val columns = Layout.columns
     val bodyMargin = Layout.bodyMargin
     val gutter = Layout.gutter
@@ -155,7 +225,29 @@ private fun LibraryContent(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        item { SortOptionButton(openSortOptionsMenu = openSortOptionsMenu, currentSortOption = currentSortOption) }
+        item {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                SortOptionButton(
+                    openSortOptionsMenu = openSortOptionsMenu,
+                    currentSortOption = currentSortOption
+                )
+                IconButton(
+                    onClick = { onChangeLayout(LayoutType.GRID) },
+                ) {
+                    Icon(
+                        painter = painterResource(id = ic_grid),
+                        tint = Color.White.copy(1f),
+                        contentDescription = null
+                    )
+                }
+            }
+        }
 
         itemsInGrid(
             lazyPagingItems = list,
@@ -205,7 +297,6 @@ private fun SortOptionButton(
                     }
                 )
             }
-            .padding(16.dp)
             .scale(sortOptionTransitionState.scale)
 
     ) {
@@ -221,6 +312,7 @@ private fun SortOptionButton(
         Text(
             text = currentSortOption.sort,
             style = MaterialTheme.typography.subtitle2,
+            fontWeight = FontWeight.SemiBold,
             color = Color.White.copy(alpha = sortOptionTransitionState.alpha),
             modifier = Modifier
                 .align(CenterVertically)
@@ -387,4 +479,6 @@ private class SortOptionTransition(
     val alpha by alpha
 }
 
-private enum class PressState {PRESSED, RELEASED}
+private enum class PressState { PRESSED, RELEASED }
+
+private enum class LayoutType { GRID, LIST }

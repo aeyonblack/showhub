@@ -57,7 +57,7 @@ internal fun AppNavigation(
         addHomeTopLevel(navHostController)
         addSearchTopLevel(navHostController)
         addLibraryTopLevel(navHostController, onHideBottomBar)
-        addAboutTopLevel(navHostController)
+        addAboutTopLevel()
     }
 }
 
