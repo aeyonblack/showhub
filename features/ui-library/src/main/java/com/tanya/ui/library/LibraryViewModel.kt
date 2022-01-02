@@ -44,18 +44,22 @@ internal class LibraryViewModel @Inject constructor(
     //private val sort = MutableStateFlow(SortOption.SUPER_SORT)
     private val sort = dataStore.sortOption
 
+    private val layout = dataStore.layout
+
     val state: StateFlow<LibraryViewState> = combine(
         loadingState.observable,
         showSelection.observeSelectedShowIds(),
         showSelection.observeIsSelectionOpen(),
-        sort
-    ) { loading, selectedShowIds, isSelectionOpen, sort ->
+        sort,
+        layout
+    ) { loading, selectedShowIds, isSelectionOpen, sort, layout ->
         LibraryViewState(
             isLoading = loading,
             selectionOpen = isSelectionOpen,
             selectedShowIds = selectedShowIds,
             availableSorts = availableSorts,
-            sort = sort
+            sort = sort,
+            layout = layout
         )
     }.stateIn(
         scope = viewModelScope,
@@ -74,6 +78,7 @@ internal class LibraryViewModel @Inject constructor(
                 when (it) {
                     LibraryAction.RefreshAction -> {}
                     is LibraryAction.ChangeSort -> setSort(it.sort)
+                    is LibraryAction.ChangeLayout -> setLayout(it.layout)
                     else -> {}
                 }
             }
@@ -94,6 +99,12 @@ internal class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             //this@LibraryViewModel.sort.emit(sort)
             dataStore.updateSortOption(sort)
+        }
+    }
+
+    private fun setLayout(layout: LayoutType) {
+        viewModelScope.launch {
+            dataStore.updateLayout(layout)
         }
     }
 
