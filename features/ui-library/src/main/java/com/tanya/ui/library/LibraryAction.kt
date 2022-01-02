@@ -5,5 +5,6 @@ import com.tanya.data.entities.SortOption
 internal sealed class LibraryAction {
     object RefreshAction: LibraryAction()
     data class ChangeSort(val sort: SortOption): LibraryAction()
+    data class ChangeLayout(val layout: LayoutType): LibraryAction()
     data class OpenShowDetails(val showId: Long): LibraryAction()
 }
