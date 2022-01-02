@@ -22,7 +22,8 @@ import javax.inject.Inject
 internal class LibraryViewModel @Inject constructor(
     private val updateFollowedShows: UpdateFollowedShows,
     private val observePagedFollowedShows: ObservePagedFollowedShows,
-    private val changeShowFollowStatus: ChangeShowFollowStatus
+    private val changeShowFollowStatus: ChangeShowFollowStatus,
+    private val dataStore: LibarayDataStore
 ): ViewModel() {
 
     private val pendingActions = MutableSharedFlow<LibraryAction>()
@@ -40,7 +41,8 @@ internal class LibraryViewModel @Inject constructor(
         SortOption.DATE_ADDED
     )
 
-    private val sort = MutableStateFlow(SortOption.SUPER_SORT)
+    //private val sort = MutableStateFlow(SortOption.SUPER_SORT)
+    private val sort = dataStore.sortOption
 
     val state: StateFlow<LibraryViewState> = combine(
         loadingState.observable,
@@ -79,10 +81,10 @@ internal class LibraryViewModel @Inject constructor(
 
     }
 
-    private fun updateDataSource() {
+    private suspend fun updateDataSource() {
         observePagedFollowedShows(
             ObservePagedFollowedShows.Params(
-                sort = sort.value,
+                sort = sort.first(),
                 pagingConfig = PAGING_CONFIG
             )
         )
@@ -90,7 +92,8 @@ internal class LibraryViewModel @Inject constructor(
 
     private fun setSort(sort: SortOption) {
         viewModelScope.launch {
-            this@LibraryViewModel.sort.emit(sort)
+            //this@LibraryViewModel.sort.emit(sort)
+            dataStore.updateSortOption(sort)
         }
     }
 

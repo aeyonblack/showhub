@@ -481,4 +481,7 @@ private class SortOptionTransition(
 
 private enum class PressState { PRESSED, RELEASED }
 
-private enum class LayoutType { GRID, LIST }
+enum class LayoutType(val type: String) {
+    GRID("grid"),
+    LIST("list")
+}

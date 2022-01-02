@@ -15,6 +15,8 @@ import app.showhub.common.compose.utils.Layout
 import com.tanya.data.Entry
 import com.tanya.data.results.EntryWithShow
 
+
+
 @Composable
 fun <E: Entry> LazyGrid(
     list: LazyPagingItems<out EntryWithShow<E>>,
