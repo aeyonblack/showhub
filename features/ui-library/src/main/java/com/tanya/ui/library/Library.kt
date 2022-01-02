@@ -126,6 +126,7 @@ internal fun Library(
                 contentPadding = it,
                 list = list,
                 currentSortOption = state.sort,
+                layout = state.layout,
                 dispatcher = dispatcher,
             ) {
                 scope.launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
@@ -139,18 +140,17 @@ private fun LibraryContent(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     list: LazyPagingItems<FollowedShowEntryWithShow>,
     currentSortOption: SortOption,
+    layout: LayoutType,
     dispatcher: (LibraryAction) -> Unit,
     openSortOptionsMenu: () -> Unit
 ) {
-    var layout by remember { mutableStateOf(LayoutType.LIST) }
-
     Crossfade(targetState = layout) { type ->
         if (type == LayoutType.LIST) {
             ListLayout(
                 list = list,
                 contentPadding = contentPadding,
                 currentSortOption = currentSortOption ,
-                onChangeLayout = { layout = it },
+                onChangeLayout = { dispatcher(LibraryAction.ChangeLayout(it)) },
                 dispatcher = dispatcher,
                 openSortOptionsMenu = openSortOptionsMenu
             )
@@ -159,7 +159,7 @@ private fun LibraryContent(
                 list = list,
                 contentPadding = contentPadding,
                 currentSortOption = currentSortOption,
-                onChangeLayout = { layout = it },
+                onChangeLayout = { dispatcher(LibraryAction.ChangeLayout(it)) },
                 dispatcher = dispatcher,
                 openSortOptionsMenu = openSortOptionsMenu
             )
