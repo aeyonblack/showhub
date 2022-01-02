@@ -1,6 +1,5 @@
 package com.tanya.ui.search
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,22 +7,16 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.isFinite
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.showhub.common.compose.components.PosterCard
 import app.showhub.common.compose.components.SearchTextField
 import app.showhub.common.compose.extensions.bodyWidth
 import app.showhub.common.compose.extensions.itemSpacer
 import app.showhub.common.compose.extensions.itemsInGrid
-import app.showhub.common.compose.utils.Layout
 import app.showhub.common.compose.utils.rememberFlowWithLifeCycle
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.statusBarsPadding
 import com.tanya.data.entities.ShowEntity
 import com.tanya.data.entities.ShowImagesEntity
@@ -79,12 +72,6 @@ private fun SearchBox(
             var searchQuery by remember {
                 mutableStateOf(TextFieldValue(state.query))
             }
-            Text(
-                text = "Search",
-                style = MaterialTheme.typography.h4,
-                color = Color.White.copy(alpha = 1f),
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
             SearchTextField(
                 value = searchQuery,
                 onValueChange = {
@@ -92,7 +79,9 @@ private fun SearchBox(
                     dispatcher(SearchAction.Search(it.text))
                 },
                 hint = "e.g. Family Guy",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             )
         }
     }
@@ -139,7 +128,7 @@ private fun SearchRow(
             showTitle = show.title,
             posterPath = poster?.path,
             modifier = Modifier
-                .fillMaxWidth(0.2f)
+                .fillMaxWidth(0.25f)
                 .aspectRatio(2 / 3f)
         )
 

@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.showhub.common.compose.theme.green500
+import app.showhub.common.compose.theme.pink500
 import com.tanya.common.ui.resources.R.drawable
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -34,7 +34,7 @@ fun SearchTextField(
             Icon(
                 painter = painterResource(id = drawable.ic_search),
                 contentDescription = null,
-                tint = Color.Black,
+                tint = Color.Black.copy(0.7f),
                 modifier = Modifier.size(16.dp)
             )
         },
@@ -48,7 +48,7 @@ fun SearchTextField(
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = null,
-                        tint = Color.Black,
+                        tint = Color.Black.copy(0.7f),
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -61,7 +61,7 @@ fun SearchTextField(
             ) },
         maxLines = 1,
         singleLine = true,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(32.dp),
         textStyle = MaterialTheme.typography.h5.copy(fontSize = 15.sp),
 
         colors = TextFieldDefaults.textFieldColors(
@@ -72,7 +72,7 @@ fun SearchTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             disabledPlaceholderColor = Color.Gray,
-            cursorColor = green500.copy(alpha = 0.5f)
+            cursorColor = pink500.copy(alpha = 0.9f)
         ),
         modifier = modifier
     )
