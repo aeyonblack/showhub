@@ -1,6 +1,7 @@
 package com.tanya.showhub.ui.app
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,6 +34,8 @@ import com.tanya.showhub.ui.components.BottomNavBar
 internal fun App(
     navController: NavHostController,
     selectedNavigation: Screen,
+    openGithubLink: () -> Unit,
+    openLinkedInLink: () -> Unit,
     onNavigationSelected: (Screen) -> Unit
 ) {
     var hideBottomBar by remember { mutableStateOf(false) }
@@ -53,6 +56,8 @@ internal fun App(
         ) {
             AppNavigation(
                 navHostController = navController,
+                openGithubLink = openGithubLink,
+                openLinkedInLink = openLinkedInLink,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
@@ -64,24 +69,10 @@ internal fun App(
 }
 
 @Composable
-internal fun About() {
-    /*Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Premium") },
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.systemBars,
-                    applyBottom = false
-                ),
-                elevation = 0.dp,
-                backgroundColor = Color.Black,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-    }*/
+internal fun About(
+    openGithubLink: () -> Unit,
+    openLinkedInLink: () -> Unit
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             state = rememberLazyListState(),
@@ -117,14 +108,16 @@ internal fun About() {
                         text = "Github",
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
-                            .align(CenterHorizontally)
+                            .align(CenterHorizontally),
+                        onClick = openGithubLink
                     )
                     ExternalLink(
                         icon = ic_linkedin,
                         text = "LinkedIn",
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .align(CenterHorizontally)
+                            .align(CenterHorizontally),
+                        onClick = openLinkedInLink
                     )
                 }
             }
@@ -166,7 +159,8 @@ private fun PersonInfo(
 private fun ExternalLink(
     icon: Int,
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -177,6 +171,7 @@ private fun ExternalLink(
             )
             .padding(horizontal = 8.dp, vertical = 16.dp)
             .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Icon(
             painter = painterResource(id = icon),

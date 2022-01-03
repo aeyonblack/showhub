@@ -66,12 +66,18 @@ fun NavGraphBuilder.addLibraryTopLevel(
     }
 }
 
-fun NavGraphBuilder.addAboutTopLevel() {
+fun NavGraphBuilder.addAboutTopLevel(
+    openGithubLink: () -> Unit,
+    openLinkedInLink: () -> Unit
+) {
     navigation(
         route = Screen.About.route,
         startDestination = LeafScreen.About.createRoute(Screen.About)
     ) {
-        addAbout()
+        addAbout(
+            openGithubLink = openGithubLink,
+            openLinkedInLink = openLinkedInLink
+        )
     }
 }
 
@@ -123,9 +129,14 @@ fun NavGraphBuilder.addLibrary(
 }
 
 fun NavGraphBuilder.addAbout(
+    openGithubLink: () -> Unit,
+    openLinkedInLink: () -> Unit
 ) {
     composable(LeafScreen.About.createRoute(Screen.About)) {
-        About()
+        About(
+            openGithubLink = openGithubLink,
+            openLinkedInLink = openLinkedInLink
+        )
     }
 }
 

@@ -47,6 +47,8 @@ sealed class LeafScreen(private val route: String) {
 internal fun AppNavigation(
     navHostController: NavHostController,
     modifier:Modifier = Modifier,
+    openGithubLink: () -> Unit,
+    openLinkedInLink: () -> Unit,
     onHideBottomBar: ((Boolean) -> Unit)?
 ) {
     NavHost(
@@ -57,7 +59,10 @@ internal fun AppNavigation(
         addHomeTopLevel(navHostController)
         addSearchTopLevel(navHostController)
         addLibraryTopLevel(navHostController, onHideBottomBar)
-        addAboutTopLevel()
+        addAboutTopLevel(
+            openGithubLink = openGithubLink,
+            openLinkedInLink = openLinkedInLink
+        )
     }
 }
 

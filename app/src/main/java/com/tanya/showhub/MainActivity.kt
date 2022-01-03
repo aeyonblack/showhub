@@ -1,5 +1,7 @@
 package com.tanya.showhub
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val navController = rememberNavController()
             val selectedItem by navController.currentScreenAsState()
@@ -38,6 +41,8 @@ class MainActivity : ComponentActivity() {
                         App(
                             navController = navController,
                             selectedNavigation = selectedItem,
+                            openGithubLink = { openLink("https://github.com/aeyonblack") },
+                            openLinkedInLink = { openLink("https://www.linkedin.com/in/tanya-masvita") },
                             onNavigationSelected = {
                                 navController.navigate(it.route) {
                                     launchSingleTop = true
@@ -52,5 +57,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun openLink(url: String) {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(url)
+        )
+        startActivity(intent)
     }
 }
