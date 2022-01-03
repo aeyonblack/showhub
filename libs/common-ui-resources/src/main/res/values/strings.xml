@@ -26,4 +26,8 @@
     <string name="genre_label_comedy">Comedy</string>
     <string name="genre_label_horror">Horror</string>
     <string name="genre_label_mystery">Mystery</string>
+
+    <string name="about_description">Showhub is an open source Android Project that explores
+        and attempts to exploit the latest in android development
+        including several jetpack libraries i.e compose, navigation…</string>
 </resources>
