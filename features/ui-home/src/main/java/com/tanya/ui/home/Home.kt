@@ -48,7 +48,7 @@ internal fun Home(
     viewModel: HomeViewModel,
     openPopularShows: () -> Unit,
     openTrendingShows: () -> Unit,
-    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
+    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit,
 ) {
     val viewState by rememberFlowWithLifeCycle(flow = viewModel.state)
         .collectAsState(initial = HomeViewState.EMPTY)
@@ -58,8 +58,12 @@ internal fun Home(
             .collectAsLazyPagingItems(),
         openShowDetails = openShowDetails,
         openPopularShows = openPopularShows,
-        openTrendingShows = openTrendingShows
-    )
+        openTrendingShows = openTrendingShows,
+    ) {
+        when (it) {
+            HomeAction.RefreshAction -> viewModel.submitAction(it)
+        }
+    }
 }
 
 @Composable
@@ -68,13 +72,19 @@ internal fun Home(
     openTrendingShows: () -> Unit,
     openPopularShows: () -> Unit,
     followedShows: LazyPagingItems<FollowedShowEntryWithShow>,
-    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit
+    openShowDetails: (showId: Long, seasonId: Long?, episodeId: Long?) -> Unit,
+    dispatcher: (HomeAction) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        item { AppBar(title = "Hey there!") }
+        item {
+            AppBar(
+                title = "Hey there!",
+                onRefresh = { dispatcher(HomeAction.RefreshAction) }
+            )
+        }
 
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
