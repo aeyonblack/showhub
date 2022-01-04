@@ -19,7 +19,8 @@ import com.tanya.common.ui.resources.R.drawable
 
 @Composable
 fun AppBar(
-    title: String
+    title: String,
+    onRefresh: (() -> Unit)? = null
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -39,7 +40,7 @@ fun AppBar(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             IconButton(
-                onClick = { /*TODO*/ }
+                onClick = { onRefresh?.invoke() }
             ) {
                 Icon(
                     painter = painterResource(id = drawable.ic_refresh),
