@@ -1,6 +1,7 @@
 package com.tanya.domain.interactors
 
 import android.util.Log
+import com.tanya.base.util.AppCoroutineDispatchers
 import com.tanya.data.android.repository.images.ShowImagesStore
 import com.tanya.data.android.repository.shows.ShowsStore
 import com.tanya.data.daos.ShowDao
@@ -9,7 +10,6 @@ import com.tanya.data.extensions.fetch
 import com.tanya.data.repositories.episodes.SeasonsEpisodesRepository
 import com.tanya.data.repositories.followedshows.FollowedShowsRepository
 import com.tanya.domain.Interactor
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -19,10 +19,11 @@ class UpdateFollowedShows @Inject constructor(
     private val seasonsEpisodesRepository: SeasonsEpisodesRepository,
     private val showsStore: ShowsStore,
     private val showImagesStore: ShowImagesStore,
-    private val showDao: ShowDao
+    private val showDao: ShowDao,
+    private val dispatchers: AppCoroutineDispatchers
 ) : Interactor<UpdateFollowedShows.Params>() {
 
-    override suspend fun doWork(params: Params) = withContext(Dispatchers.IO) {
+    override suspend fun doWork(params: Params) = withContext(dispatchers.io) {
         if (params.forceRefresh || followedShowsRepository.needFollowedShowsSync()) {
             followedShowsRepository.syncFollowedShows()
         }
