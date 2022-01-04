@@ -3,13 +3,17 @@ package com.tanya.trakt.auth
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.tanya.base.actions.ShowTasks
+import com.tanya.base.util.AppCoroutineDispatchers
 import com.tanya.trakt.TraktAuthState
 import com.uwetrottmann.trakt5.TraktV2
 import dagger.Lazy
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthState
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,7 +24,8 @@ import javax.inject.Singleton
 class TraktManager @Inject constructor(
     @Named("auth") private val authPrefs: SharedPreferences,
     private val showTasks: ShowTasks,
-    private val traktClient: Lazy<TraktV2>
+    private val traktClient: Lazy<TraktV2>,
+    private val dispatchers: AppCoroutineDispatchers
 ) {
 
     private val authState = MutableStateFlow(EmptyAuthState)
@@ -32,7 +37,7 @@ class TraktManager @Inject constructor(
 
     init {
         // Observer which updates local state
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(dispatchers.io) {
             authState.collect { authState ->
                 updateAuthState(authState)
 
@@ -44,8 +49,8 @@ class TraktManager @Inject constructor(
         }
 
         // Read the auth state from prefs
-        GlobalScope.launch(Dispatchers.Main) {
-            val state = withContext(Dispatchers.IO) { readAuthState() }
+        GlobalScope.launch(dispatchers.main) {
+            val state = withContext(dispatchers.io) { readAuthState() }
             authState.value = state
         }
     }
@@ -64,11 +69,11 @@ class TraktManager @Inject constructor(
     }
 
     fun onNewAuthState(newState: AuthState) {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(dispatchers.main) {
             // Update our local state
             authState.value = newState
         }
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(dispatchers.io) {
             // Persist auth state
             persistAuthState(newState)
         }
