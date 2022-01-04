@@ -68,7 +68,7 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             pendingActions.collect {
                 when (it) {
-                    HomeAction.RefreshAction -> refresh(true);
+                    HomeAction.RefreshAction -> refresh(true)
                 }
             }
         }
