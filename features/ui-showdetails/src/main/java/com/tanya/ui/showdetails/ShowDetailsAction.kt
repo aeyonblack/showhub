@@ -5,6 +5,7 @@ import com.tanya.data.entities.ActionDate
 internal sealed class ShowDetailsAction {
     object NavigateUp : ShowDetailsAction()
     object FollowShowToggleAction: ShowDetailsAction()
+    object RefreshAction: ShowDetailsAction()
 
     data class MarkSeasonWatchedAction(
         val seasonId: Long,

@@ -640,7 +640,7 @@ private fun ShowDetailsAppBar(
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { ShowDetailsAction.RefreshAction },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_refresh),
