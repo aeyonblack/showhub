@@ -82,6 +82,7 @@ internal class ShowDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             pendingActions.collect {
                 when (it) {
+                    RefreshAction -> refresh()
                     is ChangeSeasonFollowedAction -> onChangeSeasonFollowStatus(it)
                     FollowShowToggleAction -> onToggleFollowButtonClicked()
                     is MarkSeasonUnwatchedAction -> onMarkSeasonUnwatched(it)
