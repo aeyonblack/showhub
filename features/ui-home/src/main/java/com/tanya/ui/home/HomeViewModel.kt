@@ -66,6 +66,14 @@ internal class HomeViewModel @Inject constructor(
         observePopularShows(ObservePopularShows.Params(10))
 
         viewModelScope.launch {
+            pendingActions.collect {
+                when (it) {
+                    HomeAction.RefreshAction -> refresh(true);
+                }
+            }
+        }
+
+        viewModelScope.launch {
             refresh(true)
         }
     }
@@ -79,6 +87,12 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             updateTrendingShows(UpdateTrendingShows.Params(UpdateTrendingShows.Page.REFRESH, b))
                 .collectInto(trendingLoadingState)
+        }
+    }
+
+    fun submitAction(action: HomeAction) {
+        viewModelScope.launch {
+            pendingActions.emit(action)
         }
     }
 
