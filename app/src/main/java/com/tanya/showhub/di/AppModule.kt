@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.tanya.base.android.appinitializer.extensions.withLocale
 import com.tanya.base.di.*
+import com.tanya.base.util.AppCoroutineDispatchers
 import com.tanya.showhub.BuildConfig
 import com.tanya.tmdb.TmdbModule
 import com.tanya.trakt.TraktModule
@@ -12,6 +13,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import javax.inject.Named
@@ -29,6 +31,14 @@ object AppModule {
     @ApplicationId
     @Provides
     fun provideApplicationId(application: Application): String = application.packageName
+
+    @Singleton
+    @Provides
+    fun provideCoroutineDispatchers() = AppCoroutineDispatchers(
+        io = Dispatchers.IO,
+        main = Dispatchers.Main,
+        computation = Dispatchers.Default
+    )
 
     @Provides
     @Named("tmdb-api")
