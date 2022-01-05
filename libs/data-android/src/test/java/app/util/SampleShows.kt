@@ -2,6 +2,7 @@ package app.util
 
 import com.tanya.data.ShowhubDatabase
 import com.tanya.data.entities.EpisodeEntity
+import com.tanya.data.entities.EpisodeWatchEntity
 import com.tanya.data.entities.SeasonEntity
 import com.tanya.data.entities.ShowEntity
 import org.threeten.bp.OffsetDateTime
@@ -106,3 +107,15 @@ val s2e3 = EpisodeEntity(
 
 val s1_episodes = listOf(s1e1, s1e2, s1e3)
 val s2_episodes = listOf(s2e1, s2e2, s2e3)
+
+/*episode watch entries*/
+const val s1e1_watch_id = 1L
+const val s1e2_watch_id2 = 2L
+
+val s1e1_watch = EpisodeWatchEntity(
+    id = s1e1_watch_id,
+    watchedAt = OffsetDateTime.now(),
+    episodeId = s1e1.id,
+    traktId = 21943
+)
+val s1e2_watch = s1e1_watch.copy(id = s1e2_watch_id2, traktId = 7824)
