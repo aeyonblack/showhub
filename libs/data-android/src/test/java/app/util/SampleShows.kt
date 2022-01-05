@@ -105,6 +105,7 @@ val s2e3 = EpisodeEntity(
     firstAired = firstAired.plusWeeks(54)
 )
 
+/*episodes for each season in collections*/
 val s1_episodes = listOf(s1e1, s1e2, s1e3)
 val s2_episodes = listOf(s2e1, s2e2, s2e3)
 
