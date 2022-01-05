@@ -103,3 +103,6 @@ val s2e3 = EpisodeEntity(
     traktId = 483543,
     firstAired = firstAired.plusWeeks(54)
 )
+
+val s1_episodes = listOf(s1e1, s1e2, s1e3)
+val s2_episodes = listOf(s2e1, s2e2, s2e3)
