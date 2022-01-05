@@ -113,7 +113,7 @@ private fun SearchList(
                     .clickable { onShowClicked(it.show) }
             )
         }
-        itemSpacer(64.dp)
+        itemSpacer(128.dp)
     }
 }
 
