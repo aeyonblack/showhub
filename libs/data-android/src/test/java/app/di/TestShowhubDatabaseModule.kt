@@ -5,6 +5,7 @@ import androidx.room.Room
 import app.util.FakeTransactionRunner
 import app.util.ShowhubDatabaseFake
 import com.tanya.base.util.Logger
+import com.tanya.data.ShowhubDatabase
 import com.uwetrottmann.tmdb2.Tmdb
 import com.uwetrottmann.trakt5.TraktV2
 import dagger.Module
@@ -37,7 +38,7 @@ object TestRoomDatabaseModule {
 
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext context: Context) =
+    fun provideDatabase(@ApplicationContext context: Context): ShowhubDatabase =
         Room.inMemoryDatabaseBuilder(context, ShowhubDatabaseFake::class.java)
             .allowMainThreadQueries()
             .build()

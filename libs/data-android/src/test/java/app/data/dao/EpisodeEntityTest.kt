@@ -1,31 +1,32 @@
 package app.data.dao
 
-import android.database.sqlite.SQLiteConstraintException
-import app.DatabaseSpec
-import app.util.*
+import app.DatabaseTest
+import app.util.insertShow
+import app.util.s1
+import app.util.s1e1
 import com.tanya.data.ShowhubDatabase
 import com.tanya.data.android.repository.database.DatabaseModuleBinds
 import com.tanya.data.daos.EpisodesDao
 import com.tanya.data.daos.SeasonsDao
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.SoftAssertions
-import org.junit.jupiter.api.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
 @UninstallModules(DatabaseModuleBinds::class)
-class EpisodeEntitySpec : DatabaseSpec() {
+class EpisodeEntityTest : DatabaseTest() {
 
     @Inject lateinit var database: ShowhubDatabase
     @Inject lateinit var episodesDao: EpisodesDao
     @Inject lateinit var seasonsDao: SeasonsDao
 
-    @BeforeEach
+    @Before
     fun setup() {
         hiltRule.inject()
         runBlocking {
@@ -34,19 +35,29 @@ class EpisodeEntitySpec : DatabaseSpec() {
         }
     }
 
-    @Nested
+    @Test
+    fun databaseHasOneEpisodeWithId() = testScope.runBlockingTest {
+        episodesDao.insert(s1e1)
+        assertThat(episodesDao.episodeWithId(s1e1.id)).isEqualTo(s1e1)
+    }
+
+
+  /*  @Nested
     @DisplayName("When one episode is inserted into the database")
     inner class EpisodeInsertedIntoDatabase {
 
         @BeforeEach
-        fun setup() = runBlocking {
-            episodesDao.insert(s1e1)
+        fun setup() {
+            runBlocking {
+                episodesDao.insert(s1e1)
+            }
         }
 
         @Test
         @DisplayName("quering the database with the id of " +
                 "the inserted episode returns that episode")
         fun databaseHasOneEpisodeWithId() = testScope.runBlockingTest {
+            episodesDao.insert(s1e1)
             assertThat(episodesDao.episodeWithId(s1e1.id)).isEqualTo(s1e1)
         }
 
@@ -131,9 +142,9 @@ class EpisodeEntitySpec : DatabaseSpec() {
 
         }
 
-    }
+    }*/
 
-    @AfterEach
+    @After
     fun tearDown() {
         testScope.cleanupTestCoroutines()
     }
