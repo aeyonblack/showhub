@@ -85,30 +85,6 @@ class EpisodeEntityTest : DatabaseTest() {
             ).first()?.episode
         ).isEqualTo(s1e2)
 
-        /*softly.assertThat(
-            episodesDao.observeNextEpisodeForShowAfter(
-                showId = showId,
-                seasonNumber = 1,
-                episodeNumber = 0
-            ).first()?.episode
-        ).isEqualTo(s1e2)
-
-        softly.assertThat(
-            episodesDao.observeNextEpisodeForShowAfter(
-                showId = showId,
-                seasonNumber = 1,
-                episodeNumber = 1
-            ).first()?.episode
-        ).isEqualTo(s1e3)
-
-        softly.assertThat(
-            episodesDao.observeNextEpisodeForShowAfter(
-                showId = showId,
-                seasonNumber = 1,
-                episodeNumber = 2
-            ).first()?.episode
-        ).isNull()*/
-
         softly.assertAll()
 
     }
