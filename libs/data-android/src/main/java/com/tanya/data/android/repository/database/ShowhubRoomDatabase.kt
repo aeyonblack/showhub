@@ -21,7 +21,8 @@ import com.tanya.data.views.FollowedShowsWatchStats
         EpisodeEntity::class,
         EpisodeWatchEntity::class,
         SeasonEntity::class,
-        WatchedShowEntity::class
+        WatchedShowEntity::class,
+        RecommendedShowEntity::class
     ],
     views = [
         FollowedShowsWatchStats::class,
