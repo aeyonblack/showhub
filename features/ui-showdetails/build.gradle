@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk buildConfig.minSdk
         targetSdk buildConfig.targetSdk
-
+        manifestPlaceholders += ['appAuthRedirectScheme': 'empty']
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments["dagger.hilt.disableModulesHaveInstallInCheck"] = "true"

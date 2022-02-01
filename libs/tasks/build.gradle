@@ -15,6 +15,7 @@ android {
     defaultConfig {
         minSdk buildConfig.minSdk
         targetSdk buildConfig.targetSdk
+        manifestPlaceholders += ['appAuthRedirectScheme': 'empty']
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11

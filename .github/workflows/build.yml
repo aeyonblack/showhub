@@ -9,15 +9,51 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      TERM: dumb
+      TMDB_API_KEY: ${{secrets.TMDB_API_KEY}}
+      TRAKT_CLIENT_ID: ${{secrets.TRAKT_CLIENT_ID}}
+      TRAKT_CLIENT_SECRET: ${{secrets.TRAKT_CLIENT_SECRET}}
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v2
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      - uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Copy ci-gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Write app secrets to local.properties
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          echo TRAKT_CLIENT_ID=\"$TRAKT_CLIENT_ID\" > ./local.properties
+          echo TMDB_API_KEY=\"$TMDB_API_KEY\" >> ./local.properties
+          echo TRAKT_CLIENT_SECRET=\"$TRAKT_CLIENT_SECRET\" >> ./local.properties
+
+      - name: Show local.properties contents
+        run: |
+          ls -la
+          cat local.properties
+
+      - name: Perform lint checks
+        run: ./gradlew app:lintDebug
+
+      - name: Build and Test
+        run: ./gradlew libs:data-android:testDebug
+
+      - name: Copy test results
+        if: always()
+        run: |
+          mkdir -p junit
+          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} junit/ \;
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: junit-results
+          path: junit
