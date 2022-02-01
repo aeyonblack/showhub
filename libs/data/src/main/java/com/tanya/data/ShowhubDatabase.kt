@@ -13,5 +13,4 @@ interface ShowhubDatabase {
     fun followedShowsDao(): FollowedShowsDao
     fun seasonDao(): SeasonsDao
     fun showFtsDao(): ShowFtsDao
-    fun recommendedDao(): RecommendedDao
 }

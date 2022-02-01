@@ -708,15 +708,6 @@
         },
         "indices": [
           {
-            "name": "index_watched_episodes_trakt_id",
-            "unique": true,
-            "columnNames": [
-              "trakt_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_watched_episodes_trakt_id` ON `${TABLE_NAME}` (`trakt_id`)"
-          },
-          {
             "name": "index_watched_episodes_episode_id",
             "unique": false,
             "columnNames": [
@@ -724,6 +715,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_watched_episodes_episode_id` ON `${TABLE_NAME}` (`episode_id`)"
+          },
+          {
+            "name": "index_watched_episodes_trakt_id",
+            "unique": true,
+            "columnNames": [
+              "trakt_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_watched_episodes_trakt_id` ON `${TABLE_NAME}` (`trakt_id`)"
           }
         ],
         "foreignKeys": [

@@ -1,28 +1,18 @@
 package com.tanya.data.android.repository.recommended
 
-import com.dropbox.android.external.store4.Fetcher
-import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
-import com.dropbox.android.external.store4.StoreBuilder
-import com.tanya.base.android.appinitializer.util.ShowhubLogger
-import com.tanya.data.daos.RecommendedDao
-import com.tanya.data.daos.ShowDao
 import com.tanya.data.entities.RecommendedShowEntity
-import com.tanya.data.repositories.recommended.TraktRecommendedShowsDataSource
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.map
-import javax.inject.Singleton
 
 typealias RecommendedShowStore = Store<Int, List<RecommendedShowEntity>>
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object RecommendedShowsModule {
-
-    @Singleton
+    /*TODO*/
+    /*@Singleton
     @Provides
     fun provideRecommendedShowStore(
         recommendedShows: TraktRecommendedShowsDataSource,
@@ -63,5 +53,5 @@ internal object RecommendedShowsModule {
             delete = recommendedDao::deletePage,
             deleteAll = recommendedDao::deleteAll
         )
-    ).build()
+    ).build()*/
 }

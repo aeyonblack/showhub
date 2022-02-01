@@ -40,7 +40,5 @@ object DatabaseDaoModule {
     @Provides
     fun provideShowFtsDao(db: ShowhubDatabase) = db.showFtsDao()
 
-    @Provides
-    fun provideRecommendedDao(db: ShowhubDatabase) = db.recommendedDao()
 
 }

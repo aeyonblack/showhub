@@ -1,12 +1,14 @@
 package com.tanya.data.daos
 
 import androidx.paging.PagingSource
+import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.tanya.data.entities.RecommendedShowEntity
 import com.tanya.data.results.RecommendedEntryWithShow
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 abstract class RecommendedDao : PaginatedEntryDao<RecommendedShowEntity, RecommendedEntryWithShow>() {
     @Transaction
     @Query("SELECT * FROM recommended WHERE page = :page ORDER BY id ASC")
