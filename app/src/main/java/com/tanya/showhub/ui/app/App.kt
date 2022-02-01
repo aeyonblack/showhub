@@ -141,7 +141,7 @@ private fun PersonInfo(
             modifier = Modifier.size(32.dp).align(CenterVertically)
         ) {
             Image(
-                painter = painterResource(id = profileimg),
+                painter = painterResource(id = profile_2022),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )
