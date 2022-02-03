@@ -41,6 +41,14 @@ android {
         buildConfigField("String", "TRAKT_CLIENT_SECRET", localProperties['TRAKT_CLIENT_SECRET'])
     }
 
+    signingConfigs {
+        release {
+            if (useReleaseKey) {
+
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
