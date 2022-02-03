@@ -17,7 +17,11 @@ kapt {
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("./local.properties")))
 
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(rootProject.file("./keystore.properties")))
+
 def useReleaseKey = rootProject.file("release/showhub-upload-keystore.jks").exists()
+
 
 android {
     compileSdk buildConfig.compileSdk
@@ -44,7 +48,10 @@ android {
     signingConfigs {
         release {
             if (useReleaseKey) {
-
+                storeFile rootProject.file(keystoreProperties['STORE_FILE'])
+                keyAlias keystoreProperties['KEY_ALIAS']
+                keyPassword KeystoreProperties['KEY_PASSWORD']
+                storePassword KeystoreProperties['STORE_PASSWORD']
             }
         }
     }
