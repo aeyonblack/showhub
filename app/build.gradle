@@ -17,6 +17,8 @@ kapt {
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("./local.properties")))
 
+def useReleaseKey = rootProject.file("release/showhub-upload-keystore.jks").exists()
+
 android {
     compileSdk buildConfig.compileSdk
 
@@ -26,6 +28,8 @@ android {
         targetSdk buildConfig.targetSdk
         versionCode 1
         versionName "1.0"
+
+        resConfigs "en"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
