@@ -89,7 +89,7 @@ accompanist-pager-pager = { module = "com.google.accompanist:accompanist-pager",
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanist" }
 
 # ---------------------------------------ANDROID GRADLE PLUGIN--------------------------------------
-android-plugin-gradle = { module = "com.android.tools.build:gradle", version = "7.1.0-beta01"}
+android-plugin-gradle = { module = "com.android.tools.build:gradle", version = "7.1.1"}
 
 # ---------------------------------------KOTLIN-----------------------------------------------------
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
