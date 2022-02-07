@@ -6,7 +6,7 @@ Showhub is a source for tv information that connects to trakt.tv as well as tmdb
 Showhub makes use of the latest libraries and frameworks from Google and the opensource community including
   
   * Kotlin Coroutines
-  * Jetpack Compose for the UI
+  * Jetpack Compose 
   * Dropbox store
   * Navigation and other Architecture Components
   * Github Actions for automatic builds and deployment to Google Play
