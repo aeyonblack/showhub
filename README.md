@@ -1,5 +1,5 @@
 # Showhub
-### Discover Top-rated TvShows Worldwide
+### Discover top rated Tv shows worldwide
 Showhub is a source for tv information that connects to trakt.tv as well as tmdb and has a lot of cool functionalities. It allows users to discover and track their favorite tv shows.
 
 ### Android Development
