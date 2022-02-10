@@ -2,7 +2,12 @@
 ### Discover top rated tv shows worldwide
 Showhub is a source for tv information that connects to trakt.tv as well as tmdb and has a lot of cool functionalities. It allows users to discover and track their favorite tv shows.
 
-### Android Development
+### Download
+<a href="https://play.google.com/store/apps/details?id=com.tanya.showhub" target="_blank">
+<img src="https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png" width=240 />
+</a>
+
+### Technical Details
 Showhub makes use of the latest libraries and frameworks from Google and the opensource community including
   
   * Kotlin Coroutines
