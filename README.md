@@ -3,11 +3,13 @@
 Showhub is a source for tv information that connects to trakt.tv as well as tmdb and has a lot of cool functionalities. It allows users to discover and track their favorite tv shows.
 
 ### Download
+
 <a href="https://play.google.com/store/apps/details?id=com.tanya.showhub" target="_blank">
 <img src="https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png" width=240 />
 </a>
 
 ### Technical Details
+
 Showhub makes use of the latest libraries and frameworks from Google and the opensource community including
   
   * Kotlin Coroutines
@@ -17,6 +19,7 @@ Showhub makes use of the latest libraries and frameworks from Google and the ope
   * Github Actions for automatic builds and deployment to Google Play
 
 ### How to Run
+
 You will need Android Studio Bumble Bee and the latest android gradle plugin 7.1.1 (stable)
 
 You also need to supply API keys for Trakt and TMDb
