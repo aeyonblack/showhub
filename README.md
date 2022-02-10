@@ -21,10 +21,10 @@ You also need to supply API keys for Trakt and TMDb
 
 ### Screenshots
 
-<div align = "center">
-  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/res/screenshots/image1.png?raw=true" width="250">
-  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/res/screenshots/image2.png?raw=true" width="250">
-  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/res/screenshots/image3.png?raw=true" width="250">
-  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/res/screenshots/image4.png?raw=true" width="250">
-  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/res/screenshots/image5.png?raw=true" width="250">
+<div>
+  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/image1.png?raw=true" width="250">
+  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/image2.png?raw=true" width="250">
+  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/image3.png?raw=true" width="250">
+  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/image4.png?raw=true" width="250">
+  <img src = "https://github.com/aeyonblack/showhub/blob/master/libs/common-ui-resources/src/main/image5.png?raw=true" width="250">
 </div>
