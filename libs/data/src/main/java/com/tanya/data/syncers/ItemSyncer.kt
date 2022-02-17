@@ -3,8 +3,6 @@ package com.tanya.data.syncers
 import com.tanya.data.daos.EntityDao
 import com.tanya.data.entities.BaseEntity
 
-/*TODO - understand how this works */
-
 class ItemSyncer<LocalType : BaseEntity, NetworkType, Key>(
     private val insertEntity: suspend (LocalType) -> Long,
     private val updateEntity: suspend (LocalType) -> Unit,
