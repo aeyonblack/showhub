@@ -24,10 +24,7 @@ class ItemSyncer<LocalType : BaseEntity, NetworkType, Key>(
 
         for (networkEntity in networkValues) {
 
-            val remoteId = networkEntityToKey(networkEntity)
-            if (remoteId == null) {
-                break
-            }
+            val remoteId = networkEntityToKey(networkEntity) ?: break
 
             val dbEntityForId = currentDbEntities.find {
                 localEntityToKey(it) == remoteId
