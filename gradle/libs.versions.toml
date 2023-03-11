@@ -1,7 +1,7 @@
 [versions]
 compose = "1.0.4"
 jupiter = "5.8.1"
-kotlin = "1.5.31"
+kotlin = "1.8.10"
 coroutines = "1.5.2"
 gradleDependencyUpdates = "0.39.0"
 hilt = "2.39.1"
