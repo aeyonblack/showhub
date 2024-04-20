@@ -3,11 +3,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-android'
     id 'kotlin-kapt'
-}
-
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
+    //id 'com.google.devtools.ksp'
 }
 
 /**
@@ -32,8 +28,8 @@ android {
         targetSdk buildConfig.targetSdk
         versionCode 2
         versionName "1.0.1"
+        resourceConfigurations += ['en']
 
-        resConfigs "en"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -63,23 +59,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        ignoreTestSources true
-        abortOnError true
-        checkDependencies true
-    }
 
     buildFeatures {
         compose true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.get()
+        kotlinCompilerExtensionVersion '1.5.11'
     }
 
     packagingOptions {
@@ -95,6 +85,13 @@ android {
                 useJUnitPlatform()
             }
         }
+    }
+    namespace 'com.tanya.showhub'
+    lint {
+        abortOnError true
+        checkDependencies true
+        checkReleaseBuilds false
+        ignoreTestSources true
     }
 }
 

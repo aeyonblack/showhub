@@ -5,10 +5,11 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        id 'com.android.application' version '7.1.1'
-        id 'com.android.library' version '7.1.1'
-        id 'org.jetbrains.kotlin.android' version '1.5.31'
-        id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+        id 'com.android.application' version '8.3.2'
+        id 'com.android.library' version '8.3.2'
+        id 'org.jetbrains.kotlin.android' version '1.6.21'
+        //id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+        id 'com.google.devtools.ksp' version '1.9.21-1.0.15' apply false
     }
 }
 dependencyResolutionManagement {
@@ -23,7 +24,7 @@ dependencyResolutionManagement {
 rootProject.name = "Showhub"
 include ':app'
 
-enableFeaturePreview("VERSION_CATALOGS")
+//enableFeaturePreview("VERSION_CATALOGS")
 include ':libs:common-ui-compose'
 include ':libs:common-ui-resources'
 include ':features:ui-home'

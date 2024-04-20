@@ -1,10 +1,10 @@
 package com.tanya.data.android.repository.recommended
 
-import com.dropbox.android.external.store4.Store
 import com.tanya.data.entities.RecommendedShowEntity
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.mobilenativefoundation.store.store5.Store
 
 typealias RecommendedShowStore = Store<Int, List<RecommendedShowEntity>>
 

@@ -1,6 +1,5 @@
 package com.tanya.domain.observers
 
-import com.dropbox.android.external.store4.StoreRequest
 import com.tanya.base.util.AppCoroutineDispatchers
 import com.tanya.data.android.repository.shows.ShowsStore
 import com.tanya.data.entities.ShowEntity
@@ -10,6 +9,7 @@ import com.tanya.domain.observers.ObserveShowDetails.Params
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import org.mobilenativefoundation.store.store5.StoreReadRequest
 import javax.inject.Inject
 
 class ObserveShowDetails @Inject constructor(
@@ -18,7 +18,7 @@ class ObserveShowDetails @Inject constructor(
 ) : SubjectInteractor<Params, ShowEntity>() {
 
     override fun createObservable(params: Params): Flow<ShowEntity> {
-        return showsStore.stream(StoreRequest.cached(params.showId, refresh = false))
+        return showsStore.stream(StoreReadRequest.cached(params.showId, refresh = false))
             .filterForResult()
             .map { it.requireData() }
             .flowOn(dispatchers.computation)

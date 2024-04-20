@@ -1,7 +1,7 @@
 package com.tanya.data.daos
 
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Transaction
 import com.tanya.data.PaginatedEntry
 import com.tanya.data.results.EntryWithShow

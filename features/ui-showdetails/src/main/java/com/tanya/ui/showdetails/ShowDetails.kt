@@ -112,14 +112,15 @@ internal fun ShowDetails(
     val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val seasonWithEpisodes: MutableState<SeasonWithEpisodesAndWatches?> = remember { mutableStateOf(null)}
 
-    BoxWithConstraints {
+    Box {
 
         BackHandler(
             enabled = modalBottomSheetState.currentValue == ModalBottomSheetValue.Expanded
                     || isEpisodesSheetOpen,
             onBack = {
                 scope.launch {
-                    modalBottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
+                    //modalBottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
+                    modalBottomSheetState.hide()
                 }
                 if (isEpisodesSheetOpen) isEpisodesSheetOpen = false
             }
@@ -227,7 +228,8 @@ internal fun ShowDetails(
                         ) {
                             seasonWithEpisodes.value = it
                             scope.launch {
-                                modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                //modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                modalBottomSheetState.hide()
                             }
                         }
                     }

@@ -1,33 +1,34 @@
 [versions]
-compose = "1.0.4"
+compose = "1.6.5"
 jupiter = "5.8.1"
-kotlin = "1.5.31"
+kotlin = "1.9.23"
+ksp = "1.9.21-1.0.15"
 coroutines = "1.5.2"
 gradleDependencyUpdates = "0.39.0"
-hilt = "2.39.1"
+hilt = "2.48"
 androidx_hilt = "1.0.0"
 accompanist = "0.20.0"
-androidx_lifecycle = "2.4.0"
+androidx_lifecycle = "2.7.0"
 paging = "3.1.0-beta01"
-room = "2.4.0-beta01"
+room = "2.6.1"
 androidx_test = "1.4.0"
 coil = "1.4.0"
 retrofit = "2.9.0"
 okhttp = "4.9.2"
 threetenbp = "1.5.2"
-dagger = "2.39.1"
+dagger = "2.48"
 assertj = "3.20.2"
 glide = "4.12.0"
 
 [libraries]
 # ---------------------------------------ANDROIDX---------------------------------------------------
-androidx-core = { module = "androidx.core:core-ktx", version = "1.6.0" }
-androidx-activity-compose = {module = "androidx.activity:activity-compose", version = "1.3.1"}
+androidx-core = { module = "androidx.core:core-ktx", version = "1.12.0" }
+androidx-activity-compose = {module = "androidx.activity:activity-compose", version = "1.8.2"}
 androidx-archCoreTesting = "androidx.arch.core:core-testing:2.1.0"
 androidx-browser = "androidx.browser:browser:1.3.0"
 androidx-collection = "androidx.collection:collection-ktx:1.1.0"
 androidx-emoji = "androidx.emoji:emoji:1.1.0"
-androidx-navigation-compose = "androidx.navigation:navigation-compose:2.4.0-alpha10"
+androidx-navigation-compose = "androidx.navigation:navigation-compose:2.7.7"
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-work-runtime = "androidx.work:work-runtime-ktx:2.7.0"
 androidx-startup-runtime = "androidx.startup:startup-runtime:1.1.0"
@@ -89,7 +90,7 @@ accompanist-pager-pager = { module = "com.google.accompanist:accompanist-pager",
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanist" }
 
 # ---------------------------------------ANDROID GRADLE PLUGIN--------------------------------------
-android-plugin-gradle = { module = "com.android.tools.build:gradle", version = "7.1.1"}
+android-plugin-gradle = { module = "com.android.tools.build:gradle", version = "8.3.2" }
 
 # ---------------------------------------KOTLIN-----------------------------------------------------
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -133,6 +134,7 @@ dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 # ---------------------------------------utilities--------------------------------------------------
 gradle-dependency-updates = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleDependencyUpdates"}
 
+
 leakCanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
 mockK = "io.mockk:mockk:1.12.0"
@@ -149,6 +151,8 @@ glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = 
 robolectric = "org.robolectric:robolectric:4.7.3"
 
 store = "com.dropbox.mobile.store:store4:4.0.2-KT15"
+
+mobilenativefoundation-store = "org.mobilenativefoundation.store:store5:5.1.0-alpha02"
 
 threeTenAbp = "com.jakewharton.threetenabp:threetenabp:1.3.1"
 

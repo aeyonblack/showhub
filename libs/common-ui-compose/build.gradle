@@ -14,15 +14,16 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.get()
+        kotlinCompilerExtensionVersion '1.5.11'
     }
+    namespace 'com.tanya.common.ui.compose'
 }
 
 dependencies {
@@ -33,6 +34,7 @@ dependencies {
 
     implementation(libs.androidx.core)
     api(libs.androidx.lifecycle.runtime)
+    api(libs.androidx.navigation.compose)
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.glide)

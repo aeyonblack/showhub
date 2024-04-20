@@ -1,10 +1,6 @@
 package com.tanya.data.android.repository.relatedshows
 
 import android.util.Log
-import com.dropbox.android.external.store4.Fetcher
-import com.dropbox.android.external.store4.SourceOfTruth
-import com.dropbox.android.external.store4.Store
-import com.dropbox.android.external.store4.StoreBuilder
 import com.tanya.base.data.entities.Success
 import com.tanya.data.daos.RelatedShowsDao
 import com.tanya.data.daos.ShowDao
@@ -15,6 +11,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.map
+import org.mobilenativefoundation.store.store5.Fetcher
+import org.mobilenativefoundation.store.store5.SourceOfTruth
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.StoreBuilder
 import javax.inject.Singleton
 
 typealias RelatedShowsStore = Store<Long, List<RelatedShowEntity>>

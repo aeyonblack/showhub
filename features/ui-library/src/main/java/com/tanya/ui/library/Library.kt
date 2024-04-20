@@ -93,7 +93,8 @@ internal fun Library(
         enabled = sheetState.currentValue == ModalBottomSheetValue.Expanded,
         onBack = {
             scope.launch {
-                sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                //sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                sheetState.hide()
             }
         }
     )
@@ -110,7 +111,10 @@ internal fun Library(
                 currentSortOption = state.sort,
                 onSortSelected = { dispatcher(LibraryAction.ChangeSort(it)) }
             ) {
-                scope.launch { sheetState.animateTo(ModalBottomSheetValue.Hidden) }
+                scope.launch {
+                    //sheetState.animateTo(ModalBottomSheetValue.Hidden)
+                    sheetState.hide()
+                }
             }
         },
         sheetState = sheetState,
@@ -129,7 +133,10 @@ internal fun Library(
                 layout = state.layout,
                 dispatcher = dispatcher,
             ) {
-                scope.launch { sheetState.animateTo(ModalBottomSheetValue.Expanded) }
+                scope.launch {
+                    //sheetState.animateTo(ModalBottomSheetValue.Expanded)
+                    sheetState.hide()
+                }
             }
         }
     }

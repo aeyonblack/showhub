@@ -1,12 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    //id 'com.google.devtools.ksp'
     id 'kotlin-kapt'
-}
-
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
 }
 
 android {
@@ -28,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     testOptions {
         unitTests {
@@ -41,6 +37,7 @@ android {
             }
         }
     }
+    namespace 'com.tanya.data.android'
 }
 
 dependencies {
@@ -49,6 +46,7 @@ dependencies {
     implementation project(":libs:data")
 
     api(libs.androidx.room.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     kapt(libs.androidx.room.compiler)
@@ -59,11 +57,9 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
-    //testImplementation(libs.junit.jupiter)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockK)
     testImplementation(libs.assertj)
-    //testRuntimeOnly(libs.junit.jupiter.engine)
 
     testImplementation(libs.androidx.archCoreTesting)
     testImplementation(libs.androidx.test.core)
@@ -73,8 +69,8 @@ dependencies {
     testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.hilt.testing)
 
-    kaptTest(libs.androidx.room.compiler)
-    kaptTest(libs.hilt.compiler)
+    kapt(libs.androidx.room.compiler)
+    kapt(libs.hilt.compiler)
 
     testImplementation("org.threeten:threetenbp:${libs.versions.threetenbp.get()}")
     testImplementation(libs.kotlin.coroutines.android)

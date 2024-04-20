@@ -1,11 +1,11 @@
 package com.tanya.data.extensions
 
-import com.dropbox.android.external.store4.Store
-import com.dropbox.android.external.store4.StoreResponse
-import com.dropbox.android.external.store4.fresh
-import com.dropbox.android.external.store4.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNot
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.StoreReadResponse
+import org.mobilenativefoundation.store.store5.impl.extensions.fresh
+import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 /**
  * Fetch store items from the cache or network depending on whether
@@ -25,6 +25,7 @@ suspend inline fun <Key : Any, Output : Any> Store<Key, Output>.fetch(
  * Filter out Loading data and null data,
  * Only return a flow containing relevant data dispatched by the store
  */
-fun <T> Flow<StoreResponse<T>>.filterForResult(): Flow<StoreResponse<T>> = filterNot {
-    it is StoreResponse.Loading || it is StoreResponse.NoNewData
+
+fun <T> Flow<StoreReadResponse<T>>.filterForResult(): Flow<StoreReadResponse<T>> = filterNot {
+    it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData
 }

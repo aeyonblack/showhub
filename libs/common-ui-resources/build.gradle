@@ -9,4 +9,5 @@ android {
         minSdk buildConfig.minSdk
         targetSdk buildConfig.targetSdk
     }
+    namespace 'com.tanya.common.ui.resources'
 }
