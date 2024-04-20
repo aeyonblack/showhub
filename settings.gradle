@@ -24,7 +24,6 @@ dependencyResolutionManagement {
 rootProject.name = "Showhub"
 include ':app'
 
-//enableFeaturePreview("VERSION_CATALOGS")
 include ':libs:common-ui-compose'
 include ':libs:common-ui-resources'
 include ':features:ui-home'

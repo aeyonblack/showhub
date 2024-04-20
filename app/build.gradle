@@ -66,6 +66,7 @@ android {
 
     buildFeatures {
         compose true
+        buildConfig true
     }
 
     composeOptions {
@@ -78,14 +79,6 @@ android {
         }
     }
 
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-            all {
-                useJUnitPlatform()
-            }
-        }
-    }
     namespace 'com.tanya.showhub'
     lint {
         abortOnError true
