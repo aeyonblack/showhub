@@ -18,7 +18,7 @@ okhttp = "4.9.2"
 threetenbp = "1.5.2"
 dagger = "2.48"
 assertj = "3.20.2"
-glide = "4.12.0"
+glide = "4.16.0"
 
 [libraries]
 # ---------------------------------------ANDROIDX---------------------------------------------------
@@ -148,7 +148,7 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj"}
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide"}
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide"}
 
-robolectric = "org.robolectric:robolectric:4.7.3"
+robolectric = "org.robolectric:robolectric:4.12.1"
 
 store = "com.dropbox.mobile.store:store4:4.0.2-KT15"
 

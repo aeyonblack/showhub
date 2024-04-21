@@ -2,16 +2,25 @@ package app.data.dao
 
 import android.database.sqlite.SQLiteConstraintException
 import app.DatabaseTest
-import app.util.*
+import app.util.insertShow
+import app.util.s1
+import app.util.s1_episodes
+import app.util.s1e1
+import app.util.s1e2
+import app.util.showId
 import com.tanya.data.ShowhubDatabase
 import com.tanya.data.android.repository.database.DatabaseModuleBinds
 import com.tanya.data.daos.EpisodesDao
 import com.tanya.data.daos.SeasonsDao
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions
 import org.junit.After
@@ -30,6 +39,7 @@ class EpisodeEntityTest : DatabaseTest() {
 
     @Before
     fun setup() {
+        Dispatchers.setMain(StandardTestDispatcher())
         hiltRule.inject()
         runBlocking {
             insertShow(database)
@@ -38,40 +48,40 @@ class EpisodeEntityTest : DatabaseTest() {
     }
 
     @Test
-    fun databaseHasOneEpisodeWithId() = testScope.runBlockingTest {
+    fun databaseHasOneEpisodeWithId() = runTest {
         episodesDao.insert(s1e1)
         assertThat(episodesDao.episodeWithId(s1e1.id)).isEqualTo(s1e1)
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    fun insertingEpisodeWithDuplicateTraktId() = testScope.runBlockingTest {
+    fun insertingEpisodeWithDuplicateTraktId() = runTest {
         episodesDao.insert(s1e1)
         episodesDao.insert(s1e1.copy(id = 0))
     }
 
     @Test
-    fun databaseEmptyOnDelete() = testScope.runBlockingTest {
+    fun databaseEmptyOnDelete() = runTest {
         episodesDao.insert(s1e1)
         episodesDao.delete(s1e1)
         assertThat(episodesDao.episodeWithId(s1e1.id)).isNull()
     }
 
     @Test
-    fun deletingShowSeaonWithEpisode() = testScope.runBlockingTest {
+    fun deletingShowSeaonWithEpisode() = runTest {
         episodesDao.insert(s1e1)
         seasonsDao.delete(s1)
         assertThat(episodesDao.episodeWithId(s1e1.id)).isNull()
     }
 
     @Test
-    fun showIdForEpisodeId() = testScope.runBlockingTest {
+    fun showIdForEpisodeId() = runTest {
         episodesDao.insert(s1e1)
         assertThat(episodesDao.showIdForEpisodeId(s1e1.id)).isEqualTo(showId)
     }
 
     @Test
     @Ignore("Problem with test case at the moment")
-    fun nextEpisodeForShowId() = testScope.runBlockingTest {
+    fun nextEpisodeForShowId() = runTest {
 
         episodesDao.insertAll(s1_episodes)
 
@@ -91,7 +101,7 @@ class EpisodeEntityTest : DatabaseTest() {
 
     @After
     fun tearDown() {
-        testScope.cleanupTestCoroutines()
+        Dispatchers.resetMain()
     }
 
 }
