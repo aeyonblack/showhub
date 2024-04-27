@@ -64,8 +64,6 @@ import com.tanya.ui.showdetails.SelectionState.SELECTED
 import com.tanya.ui.showdetails.SelectionState.UNSELECTED
 import kotlinx.coroutines.launch
 
-/*TODO - Add more features and reduce LOC*/
-
 @Composable
 fun ShowDetails(
     navigateUp: () -> Unit,
@@ -119,7 +117,6 @@ internal fun ShowDetails(
                     || isEpisodesSheetOpen,
             onBack = {
                 scope.launch {
-                    //modalBottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
                     modalBottomSheetState.hide()
                 }
                 if (isEpisodesSheetOpen) isEpisodesSheetOpen = false
@@ -182,7 +179,7 @@ internal fun ShowDetails(
             ) {
                 Scaffold(
                     topBar = {
-                        var appBarHeight by remember { mutableStateOf(0) }
+                        var appBarHeight by remember { mutableIntStateOf(0) }
                         val showAppBarBackground by remember {
                             derivedStateOf {
                                 val visibleItemsInfo = listState.layoutInfo.visibleItemsInfo
@@ -398,8 +395,11 @@ private fun BackdropImage(
     listState: LazyListState,
     modifier: Modifier = Modifier
 ) {
-    var decay by remember { mutableStateOf(1f)}
-    decay = 1/(listState.firstVisibleItemScrollOffset/80f)
+    var decay by remember { mutableFloatStateOf(1f)}
+    val e = remember {
+        derivedStateOf { 1/(listState.firstVisibleItemScrollOffset/80f) }
+    }
+    decay = e.value
     Surface(modifier = modifier) {
         Box {
             if (backdrop != null) {
@@ -589,14 +589,14 @@ private fun ShowDetailsAppBar(
             showBackground -> Color.Black
             else -> Color.Transparent
         },
-        animationSpec = tween()
+        animationSpec = tween(), label = ""
     )
     
     TopAppBar(
         title = {
             Crossfade(
                 targetState = showBackground && title != null,
-                animationSpec = tween(1000)
+                animationSpec = tween(1000), label = ""
             ) {
                 if (it) Text(
                     text = title!!,
