@@ -1,7 +1,11 @@
 plugins {
     id 'kotlin'
-    //id 'com.google.devtools.ksp'
     id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes true
+    useBuildCache true
 }
 
 dependencies {

@@ -1,9 +1,13 @@
 plugins {
     id 'com.android.library'
-    //id 'com.google.devtools.ksp'
-    id 'kotlin-kapt'
     id 'kotlin-android'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes true
+    useBuildCache true
 }
 
 android {

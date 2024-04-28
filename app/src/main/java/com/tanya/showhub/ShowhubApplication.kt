@@ -18,8 +18,9 @@ class ShowhubApplication: Application(), Configuration.Provider {
         initializers.init(this)
     }
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration
+            .Builder()
             .setWorkerFactory(workerFactory)
             .build()
 }
